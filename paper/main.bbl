@@ -1,0 +1,30 @@
+\begin{thebibliography}{1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\providecommand{\doi}[1]{https://doi.org/#1}
+
+\bibitem{anthropic2024mcp}
+Anthropic: Model Context Protocol specification (2024), \url{https://modelcontextprotocol.io}
+
+\bibitem{goodfellow2016deep}
+Goodfellow, I., Bengio, Y., Courville, A.: Deep Learning. MIT Press, Cambridge, MA (2016)
+
+\bibitem{kumar2025mcpguardian}
+Kumar, A., Patel, R., Chen, L.: MCP Guardian: Securing Model Context Protocol against runtime exploitation. arXiv preprint arXiv:2504.12757 (2025)
+
+\bibitem{liu2008isolation}
+Liu, F.T., Ting, K.M., Zhou, Z.H.: Isolation forest. In: 2008 Eighth IEEE International Conference on Data Mining, pp. 413--422. IEEE (2008)
+
+\bibitem{mindguard2025}
+Wang, Z., Zhao, Y., Song, C., Wang, H.: MindGuard: Defending against LLM agent attacks with context-aware intent invariants. arXiv preprint arXiv:2508.20412 (2025)
+
+\bibitem{rosado2026pinning}
+Rosado, T.: Capability pinning for runtime security in agentic model context protocol gateways. Technical Disclosure Commons, Paper 10604 (2026), \url{https://www.tdcommons.org/dpubs_series/10604}
+
+\bibitem{scholkopf2001estimating}
+Sch{\"o}lkopf, B., Platt, J.C., Shawe-Taylor, J., Smola, A.J., Williamson, R.C.: Estimating the support of a high-dimensional distribution. Neural Computation \textbf{13}(7), 1443--1471 (2001)
+
+\bibitem{shieldmcp2026}
+ShieldMCP Project: ShieldMCP: Runtime security and output sanitization middleware for MCP tool gateways (2026), \url{https://github.com/mcp-security/shieldmcp}
+
+\end{thebibliography}

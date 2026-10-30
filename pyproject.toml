@@ -1,0 +1,107 @@
+[project]
+name = "mcp-runtime-sentinel"
+version = "0.2.0"
+description = "Intent-conditioned runtime trust and anomaly detection for MCP servers"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.24,<3"]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.8,<1",
+    "mypy>=1.13,<2",
+    "pip-audit>=2.7,<3",
+    "coverage>=7.6,<8",
+]
+
+[project.scripts]
+mcp-sentinel = "sentinel.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["sentinel*"]
+
+[tool.setuptools.package-data]
+sentinel = ["dashboard_assets/*.html", "dashboard_assets/*.css", "dashboard_assets/*.js"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+include = ["sentinel/**/*.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+# Research-only report and study modules contain generated table rows and
+# explanatory strings whose widths do not affect runtime behavior. Keep the
+# line-length rule enabled for the gateway and other production modules.
+[tool.ruff.lint.per-file-ignores]
+"sentinel/ablation.py" = ["E501"]
+"sentinel/adaptation_study.py" = ["E501"]
+"sentinel/compare.py" = ["E501"]
+"sentinel/degradation_report.py" = ["E501"]
+"sentinel/degradation_study.py" = ["E501"]
+"sentinel/diagnostics.py" = ["E501"]
+"sentinel/final_verification.py" = ["E501"]
+"sentinel/fusion_study.py" = ["E501"]
+"sentinel/matched_poisoning.py" = ["E501"]
+"sentinel/matched_poisoning_report.py" = ["E501"]
+"sentinel/matched_poisoning_stats.py" = ["E501"]
+"sentinel/novelty_experiment.py" = ["E501"]
+"sentinel/novelty_figures.py" = ["E501"]
+"sentinel/novelty_report.py" = ["E501"]
+"sentinel/novelty_scenarios.py" = ["E501"]
+"sentinel/plots.py" = ["E501"]
+"sentinel/promotion_factorial.py" = ["E501"]
+"sentinel/research_tables.py" = ["E501"]
+"sentinel/sequence_analysis.py" = ["E501"]
+"sentinel/sequence_baselines.py" = ["E501"]
+"sentinel/sequence_features.py" = ["E501"]
+"sentinel/tradeoff_analysis.py" = ["E501"]
+"sentinel/verification_budget_study.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+files = [
+    "sentinel/gateway.py",
+    "sentinel/cli.py",
+    "sentinel/http_limits.py",
+    "sentinel/audit_log.py",
+    "sentinel/policy.py",
+]
+check_untyped_defs = true
+warn_unused_ignores = true
+no_implicit_reexport = true
+show_error_codes = true
+follow_imports_for_stubs = true
+
+[[tool.mypy.overrides]]
+module = ["sentinel.*"]
+strict = false
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = [
+    "sentinel.gateway",
+    "sentinel.cli",
+    "sentinel.http_limits",
+    "sentinel.audit_log",
+    "sentinel.policy",
+]
+strict = true
+follow_imports = "normal"
+
+[[tool.mypy.overrides]]
+module = ["numpy", "numpy.*"]
+follow_imports = "skip"
+
+[tool.coverage.run]
+branch = true
+source = ["sentinel"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = true

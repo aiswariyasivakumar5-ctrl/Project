@@ -1,0 +1,42 @@
+% Table 3: Per-Attack Scenario Recall and Blind-Spot Analysis (Springer LNCS Format)
+\begin{table}[t]
+\centering
+\caption{Detection recall and mechanism analysis across 12 scenario families on 20 seeds. Exactly 8 families are detected with 1.0000 recall; 4 families represent order-invariant structural blind spots with 0.0000 recall.}
+\label{tab:per_attack_recall}
+\footnotesize
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Scenario Family} & \textbf{Sentinel Full} & \textbf{Dense AE} & \textbf{LSTM} & \textbf{Transformer} \\
+\midrule
+\multicolumn{5}{l}{\textit{Detected Attack Families (Sentinel Recall = 1.0000)}} \\
+\texttt{cross\_server}          & \textbf{1.0000} & 1.0000 & 1.0000 & 1.0000 \\
+\multicolumn{5}{l}{\quad\textit{Mechanism: Intent-conditioned capability verification}} \\
+\texttt{data\_exfiltration}     & \textbf{1.0000} & 1.0000 & 1.0000 & 1.0000 \\
+\multicolumn{5}{l}{\quad\textit{Mechanism: Autoencoder payload size and destination error}} \\
+\texttt{delayed\_malicious}     & \textbf{1.0000} & 1.0000 & 1.0000 & 1.0000 \\
+\multicolumn{5}{l}{\quad\textit{Mechanism: Baseline profile deviation withholding}} \\
+\texttt{destructive\_operation} & \textbf{1.0000} & 1.0000 & 1.0000 & 1.0000 \\
+\multicolumn{5}{l}{\quad\textit{Mechanism: Intent provenance authorization check}} \\
+\texttt{intent\_mismatch}       & \textbf{1.0000} & 1.0000 & 1.0000 & 1.0000 \\
+\multicolumn{5}{l}{\quad\textit{Mechanism: Semantic token alignment preflight}} \\
+\texttt{policy\_injection}      & \textbf{1.0000} & 1.0000 & 1.0000 & 1.0000 \\
+\multicolumn{5}{l}{\quad\textit{Mechanism: Policy pattern rule validation}} \\
+\texttt{schema\_mutation}       & \textbf{1.0000} & 1.0000 & 1.0000 & 1.0000 \\
+\multicolumn{5}{l}{\quad\textit{Mechanism: Tool argument schema verification}} \\
+\texttt{tool\_poisoning}        & \textbf{1.0000} & 1.0000 & 1.0000 & 1.0000 \\
+\multicolumn{5}{l}{\quad\textit{Mechanism: Dual-memory quarantine isolation}} \\
+\midrule
+\multicolumn{5}{l}{\textit{Structural Blind Spots (Sentinel Recall = 0.0000)}} \\
+\texttt{abnormal\_sequence}$^\dagger$ & \textbf{0.0000} & 1.0000 & 1.0000 & 1.0000 \\
+\multicolumn{5}{l}{\quad\textit{Failure: Temporal order invariant (missed by bag-of-calls)}} \\
+\texttt{capability\_drift}$^\dagger$  & \textbf{0.0000} & 0.9980 & 0.9960 & 0.9970 \\
+\multicolumn{5}{l}{\quad\textit{Failure: Gradual envelope drift (per-step modification within $\tau$)}} \\
+\texttt{gradual\_poisoning}$^\dagger$ & \textbf{0.0000} & 0.9990 & 0.9970 & 0.9980 \\
+\multicolumn{5}{l}{\quad\textit{Failure: Multi-step poisoning (step $\Delta < \tau$)}} \\
+\texttt{low\_and\_slow}$^\dagger$     & \textbf{0.0000} & 0.9980 & 0.9960 & 0.9970 \\
+\multicolumn{5}{l}{\quad\textit{Failure: Sparse frequency (anomaly falls below variance floor)}} \\
+\bottomrule
+\multicolumn{5}{l}{\scriptsize $^\dagger$Denotes zero-recall failure mode resulting from order-invariant representation.}
+\end{tabular}
+\end{table}

@@ -1,0 +1,11 @@
+# Audited Research Environment:
+# - Python: CPython 3.14.3 (AMD64) [MSC v.1944 64 bit]
+# - OS: Windows 11 AMD64 (build 26100)
+# - Standard Library + NumPy strictly (no PyTorch, TensorFlow, Scikit-learn required)
+#
+# Clean installation instructions:
+#   python -m venv .venv
+#   .venv\Scripts\activate       # On Windows PowerShell: .venv\Scripts\Activate.ps1
+#   python -m pip install -r requirements-repro.txt -e .
+
+numpy==2.5.2

@@ -1,0 +1,21 @@
+% Table 2: Component Ablation Study on 20 Seeds (Springer LNCS Format)
+\begin{table}[t]
+\centering
+\caption{Ablation analysis of Sentinel architecture components across 20 evaluation seeds (mean $\pm$ std). Exact paired sign-flip test against Full Architecture.}
+\label{tab:ablation_study}
+\scriptsize
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Sentinel Variant} & \textbf{$F_1$ Score} & \textbf{Recall} & \textbf{Precision} & \textbf{FPR} & \textbf{Sign-Flip $p$} \\
+\midrule
+\textbf{Full Architecture}     & \textbf{\SentinelFOne} $\pm$ \SentinelFOneStd & \SentinelRecall & \textbf{\SentinelPrecision} & \textbf{\SentinelFPR} & Reference \\
+w/o Attestation Verification   & \AblationAttestationFOne\ $\pm$ 0.0001          & \SentinelRecall & \SentinelPrecision          & \SentinelFPR          & 1.000000 \\
+w/o Causal Floor Filtering     & \AblationCausalFOne\ $\pm$ 0.0025          & \AblationCausalRecall & \AblationCausalPrecision          & \AblationCausalFPR          & $0.000002^*$ \\
+w/o Intent Conditioning        & \AblationIntentFOne\ $\pm$ 0.0000          & 0.0000 & 0.0000          & \SentinelFPR          & $0.000002^*$ \\
+w/o Quarantine Memory Buffer   & \AblationQuarantineFOne\ $\pm$ 0.0001          & \SentinelRecall & \SentinelPrecision          & \SentinelFPR          & 1.000000 \\
+w/o Uncertainty Filtering      & \AblationUncertaintyFOne\ $\pm$ 0.0001          & \SentinelRecall & \SentinelPrecision          & \SentinelFPR          & 1.000000 \\
+\bottomrule
+\multicolumn{6}{l}{$^*$Statistically significant change relative to Full model ($p < 0.05$).} \\
+\multicolumn{6}{l}{Removing causal filtering increases recall but raises FPR from 0.0000 to 0.0804.}
+\end{tabular}
+\end{table}

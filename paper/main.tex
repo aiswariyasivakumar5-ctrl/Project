@@ -1,0 +1,193 @@
+\documentclass{llncs}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{microtype}
+
+% Load source-derived headline metrics as LaTeX macros.
+\input{numbers.tex}
+
+\begin{document}
+
+\title{MCP Runtime Sentinel: Context-Bound Authorization and Evidence-Gated Runtime Adaptation for Model Context Protocol Gateways}
+\titlerunning{MCP Runtime Sentinel}
+
+% Anonymized for Double-Blind Review
+\author{Anonymous Authors}
+\authorrunning{Anonymous et al.}
+\institute{Anonymized submission}
+
+\maketitle
+
+\begin{abstract}
+Autonomous artificial intelligence (AI) agents increasingly rely on external tool integrations such as the Model Context Protocol (MCP). Runtime execution introduces risks including tool poisoning, cross-server confused deputy invocations, and behavioral drift. We present MCP Runtime Sentinel, an inspectable, pure-NumPy runtime gateway for context-bound invocation authorization and evidence-gated model adaptation. Sentinel combines reconstruction error, lexical intent alignment, temporal sequence features, cross-server causal provenance, and attestation checks with capability-isolated trust decay and a dual-memory quarantine buffer. In synthetic evaluations, the headline comparison spans 20 seeds and \SentinelNormalEvents\ benign test events; the separate novelty matrix spans \NoveltySeedsCount\ seeds and \NoveltyPhasesCount\ phase executions. For the baseline comparison, Sentinel achieved mean precision \SentinelPrecision, recall \SentinelRecall, and pooled observed false-positive rate \SentinelObservedFPR (exact 95\% Clopper--Pearson upper bound \SentinelFPRBound). It detected \DetectedAttackFamilies\ of \TotalAttackFamilies\ attack families, while disclosing failures on order-invariant scenarios. Deep neural baselines achieved higher recall (\DenseAERecall) with higher false-positive rates (\DenseAECalibrationFPR). These results are limited to synthetic mock workloads and do not establish production security performance.
+\keywords{Model Context Protocol \and Runtime Security \and Tool Poisoning \and Anomaly Detection \and Capability Trust \and Double-Blind Review}
+\end{abstract}
+
+\section{Introduction}
+Large Language Model (LLM) agents are transitioning from isolated chat interfaces into proactive autonomous systems equipped with tool invocation capabilities. The Model Context Protocol (MCP)~\cite{anthropic2024mcp} has emerged as an open standard enabling host agents to query local and remote MCP servers exposing tools, resources, and contextual prompts. However, granting agents access to heterogeneous external services creates severe attack surfaces. Traditional access control mechanisms authenticate whether a client is authorized to invoke a tool, but cannot verify whether a specific invocation semantically aligns with the user's intended plan, whether previous tool responses were maliciously manipulated, or whether an upstream server is gradually modifying its parameter distribution to compromise downstream workflows.
+
+Monitoring runtime traffic introduces a secondary vulnerability: model adaptation. In dynamic environments, legitimate tool schemas and parameter envelopes evolve over time (e.g., software version upgrades or expanded data schemas). If an anomaly detector continuously updates its baseline on uninspected runtime traffic, adversaries can launch gradual poisoning attacks to expand the detector's acceptance region.
+
+In this work, we present \textbf{MCP Runtime Sentinel}, an inspectable, pure-NumPy runtime security gateway positioned as a transparent reverse proxy between host agents and MCP servers. Sentinel addresses runtime authorization and adaptive baseline corruption through three integrated contributions:
+\begin{enumerate}
+    \item \textbf{Context-Bound Multi-Signal Inspection}: A unified detection engine that scores each tool call across six orthogonal dimensions: behavioral autoencoder reconstruction error, lexical intent alignment, temporal transition history, cross-server causal taint, capability-specific trust, and cryptographic attestation.
+    \item \textbf{Capability-Scoped Trust Governance (Design D1)}: Decoupled trust tracking per capability (\texttt{server::tool}), preventing a compromised or noisy tool from causing collateral denial-of-service on legitimate capabilities exposed by the same server.
+    \item \textbf{Evidence-Gated Dual-Memory Adaptation}: Separation of runtime memory into active production profiles and a quarantined candidate buffer. Candidates require corroborated, multi-identity observations before promotion.
+\end{enumerate}
+
+\paragraph{Operating Trade-off Framing.} We explicitly evaluate Sentinel at a conservative, high-precision operating threshold. In enterprise tool gateways, false positives halt operational workflows and erode operator trust. Sentinel achieves an observed test false-positive rate of \SentinelObservedFPR\ (upper bound $\le \SentinelFPRBound$), whereas deep neural baselines carry a $\sim\DenseAECalibrationFPR$ false-alarm rate. In exchange, Sentinel accepts lower aggregate recall (\SentinelRecall), completely missing four order-invariant and slow-drift attack families.
+
+\section{Threat Model and Assumptions}
+\label{sec:threat_model}
+We consider an enterprise deployment where an autonomous LLM agent interacts with local or remote MCP servers via JSON-RPC over HTTP or stdio. The adversary's objective is to execute unauthorized operations, exfiltrate sensitive data, manipulate tool responses, or poison the gateway's baseline profiles.
+
+\paragraph{Adversarial Capabilities.} The adversary may:
+\begin{enumerate}
+    \item Compromise one or more MCP tool servers to return malicious payloads, inject instructions into tool outputs, or alter schema parameters.
+    \item Forge cross-server calls, attempting confused-deputy attacks where server $A$ tricks the agent into invoking server $B$'s privileged capabilities.
+    \item Launch single-identity or colluding multi-identity poisoning attacks, submitting poisoned tool invocations designed to expand baseline envelopes.
+    \item Execute slow-and-low or order-manipulation attacks that preserve marginal call statistics while violating temporal invariants.
+\end{enumerate}
+
+\paragraph{Trust Assumptions and Boundaries.} The Sentinel gateway process, its local operating system, and the initial enrollment/training dataset are trusted. The identity issuer is trusted, ensuring caller headers cannot forge cryptographically signed session tokens. However, the host agent, the network transport, and all upstream MCP servers are untrusted. Sentinel does not claim to defend against compromised gateway memory, provide distributed consensus, or roll back irreversible physical side effects caused before response inspection. All evaluations in this study utilize synthetic workloads; no claims of production or real-world security guarantees are made.
+
+\section{Design and Architecture}
+\label{sec:design}
+Sentinel operates as an intercepting reverse proxy inspecting inbound tool requests and outbound tool responses.
+
+\subsection{Multi-Signal Anomaly Scoring Engine}
+Each invocation $e = (s, t, a, c)$ for server $s$, tool $t$, arguments $a$, and context $c$ is evaluated across six inspection terms:
+\begin{equation}
+R(e) = w_r \cdot S_{\text{recon}} + w_i \cdot S_{\text{intent}} + w_s \cdot S_{\text{seq}} + w_c \cdot S_{\text{causal}} + w_a \cdot S_{\text{attest}} + w_t \cdot (1 - T_{s,t})
+\end{equation}
+\begin{itemize}
+    \item \textbf{Reconstruction Error ($S_{\text{recon}}$)}: A pure-NumPy lightweight autoencoder trained on benign argument shapes and numerical envelopes. Reconstruction loss $\mathcal{L}(x, \hat{x}) = \|x - \hat{x}\|_2^2$ flags out-of-distribution payloads.
+    \item \textbf{Intent Alignment ($S_{\text{intent}}$)}: Evaluates lexical token overlap between declared user intent and invoked tool signatures.
+    \item \textbf{Sequence Dependency ($S_{\text{seq}}$)}: A transition probability matrix tracking valid sequential call pairs $(t_{k-1} \to t_k)$.
+    \item \textbf{Causal Provenance ($S_{\text{causal}}$)}: Enforces single-use causal tokens binding sensitive read outputs to subsequent write destinations, preventing unauthorized cross-server data flow.
+    \item \textbf{Attestation Verification ($S_{\text{attest}}$)}: Verifies SHA-256 binary and schema manifests against pre-enrolled capability envelopes.
+    \item \textbf{Capability Trust ($T_{s,t}$)}: Continuous dynamic trust tracking per capability.
+\end{itemize}
+
+\subsection{Capability-Isolated Trust Governance (Design D1)}
+Earlier gateway designs tracked trust globally at the server level ($T_s$). When an adversary compromised a single tool (e.g., \texttt{data\_fetch}), server-wide trust collapse resulted in 99.5\% collateral blocking of benign tools on the same server. Design D1 isolates trust to individual capability tuples $(s, t)$.
+
+Trust degrades upon uncorroborated causal violations according to a 3-in-10 rolling window. If 3 causal anomalies occur within 10 invocations, trust drops below the confirmation threshold ($0.70$), triggering interactive operator confirmation (\texttt{CONFIRM}). Uncorroborated causal flows cap trust degradation at $0.55$, preventing automated escalation to permanent capability isolation (\texttt{ISOLATE}, threshold $\le 0.18$) without multi-signal corroboration. In clean traffic, trust recovers at rate $\delta_{\text{rec}} = 0.006$ per valid invocation toward baseline floor $0.20$.
+
+\subsection{Dual-Memory Evidence-Gated Adaptation}
+To accommodate legitimate tool updates without vulnerability to poisoning, Sentinel segregates state into:
+\begin{enumerate}
+    \item \textbf{Active Memory}: Parameter envelopes currently used to gate production requests.
+    \item \textbf{Quarantine Buffer}: Holds candidate updates until independent criteria are met: observation across at least 3 distinct authenticated session identities, zero security incidents during quarantine, and optional operator approval.
+\end{enumerate}
+
+\section{Empirical Evaluation}
+\label{sec:evaluation}
+We conduct all experiments using pure Python and NumPy on audited multi-seed benchmarks across \NoveltySeedsCount\ seeds (20001--20020 for comparisons, 30001--30020 for the novelty matrix).
+
+\subsection{Baseline Comparison}
+Table~\ref{tab:baseline_comparison} summarizes performance across six architectures evaluated on \TestEventsPerSeed\ test events per seed (\BenignTestEventsPerSeed\ benign and \AttackTestEventsPerSeed\ attack events) across 12 adversarial scenario families: Sentinel, Dense Autoencoder~\cite{goodfellow2016deep}, sequential models (LSTM, Transformer), One-Class SVM~\cite{scholkopf2001estimating}, and Isolation Forest~\cite{liu2008isolation}.
+
+\input{tables/table1_baselines.tex}
+
+Sentinel achieves an $F_1$ score of \SentinelFOne\ $\pm$ \SentinelFOneStd\ and mean precision \SentinelPrecision. Across the pooled comparison runs, one false positive was observed among \SentinelNormalEvents\ benign test events (observed rate \SentinelObservedFPR; exact 95\% Clopper--Pearson upper bound \SentinelFPRBound). Deep neural baselines (Dense Autoencoder, LSTM, Transformer) achieve higher recall (0.7663--0.8601) but exhibit an unacceptable $\sim\DenseAECalibrationFPR$ false-positive rate on benign test traffic. Fig.~\ref{fig:tradeoff} illustrates this trade-off.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.72\textwidth]{figures/fig1_model_tradeoff.pdf}
+\caption{Precision-recall and false-alarm trade-off between Sentinel and deep neural baselines across 20 evaluation seeds.}
+\label{fig:tradeoff}
+\end{figure}
+
+\subsection{Diagnosing the Baseline Calibration Gap and Matched-FPR Contradiction}
+In Phase 1 and Phase 2 audits, two apparent contradictions were diagnosed and resolved:
+\paragraph{Calibration Gap.} Deep neural baselines were calibrated to 1\% FPR on validation data, yet yielded $\sim\DenseAECalibrationFPR$ test FPR. Investigation revealed that benign canary queries in the \texttt{cross\_server} scenario introduce sensitive substrings (e.g., \texttt{"token"}). Standardized feature scalers trained on validation splits exhibited zero variance for these tokens; when encountered in test, scaled features reached clipping boundaries ($+10.0$), driving autoencoder reconstruction loss to $\sim 10.88$ (against threshold $1.38$). Baselines thus experienced 100\% false alarms on benign cross-server calls ($125 / 1{,}750 = \DenseAECalibrationFloor$).
+
+\paragraph{Matched-FPR Analysis.} Under a continuous raw-score threshold sweep at a test FPR cap of 1\%, Sentinel maintains recall \MatchedFPRSentinelRawRecall, whereas neural baseline recall drops to \MatchedFPRNeuralRawRecall\ (detecting only gross reconstruction anomalies such as tool poisoning and data exfiltration while missing subtle policy and sequence violations). This raw-score threshold sweep is a descriptive ROC analysis because its threshold is selected using benign scores from the same test split, rather than an independently calibrated operating point. In contrast, under operational decision-rule deployment calibrated on validation data, Sentinel operates at recall \MatchedFPRDecisionRuleRecall\ with pooled observed FPR \SentinelObservedFPR\ (1 false alarm in 35,000 benign events), whereas neural baselines require accepting an observed FPR of \DenseAECalibrationFloor\ to maintain their headline recall. If constrained to a validation-percentile cutoff strictly below their observed false alarm floor, neural baseline test recall collapses to 0.0000.
+
+\subsection{Ablation Study}
+Table~\ref{tab:ablation_study} reports component ablations across 20 seeds. Removing intent conditioning reduces recall to $0.0000$ ($p < 0.00001$), demonstrating that intent tokens are necessary for cross-server and injection detection. Removing causal filtering increases recall to \AblationCausalRecall\ (+0.2500) and $F_1$ to \AblationCausalFOne, but causes FPR to spike from \SentinelFPR\ to \AblationCausalFPR, verifying that causal floor filtering is the primary mechanism preserving high precision.
+
+\input{tables/table2_ablations.tex}
+
+\subsection{Per-Attack Scenario Recall and Structural Blind Spots}
+Table~\ref{tab:per_attack_recall} details per-scenario detection. Sentinel exhibits an all-or-nothing detection profile: exactly \DetectedAttackFamilies\ attack families are detected with 1.0000 recall, while \ZeroRecallFamilies\ families are completely missed ($0.0000$ recall).
+
+\input{tables/table3_scenarios.tex}
+
+The four undetected families (\texttt{abnormal\_sequence}, \texttt{capability\_drift}, \texttt{gradual\_poisoning}, \texttt{low\_and\_slow}) stem directly from Sentinel's order-invariant bag-of-calls representation and step-wise threshold bounds. In gradual drift, per-step parameter modifications ($\Delta < \tau$) remain below the reconstruction threshold, escaping detection.
+
+\subsection{Novelty Matrix v3: Publication-Scale Statistical Hypotheses}
+We executed the full $6 \text{ variants} \times 8 \text{ scenarios}$ novelty matrix across \NoveltySeedsCount\ new seeds (30001--30020, \NoveltyPhasesCount\ total phase executions) with seed-driven jitter. Table~\ref{tab:novelty_v3_primary} presents exact paired sign-flip tests with Holm-Bonferroni correction.
+
+\input{tables/table4_novelty_v3.tex}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.72\textwidth]{figures/fig2_capability_isolation.pdf}
+\caption{Benign capability false-positive rate under capability laundering across 20 seeds. Sentinel Full prevents collateral restriction, whereas omitting capability trust causes 99.5\% false alarms.}
+\label{fig:cap_isolation}
+\end{figure}
+
+Capability isolation is confirmed ($p = \NoveltyCapIsoP$, Holm $p = \NoveltyCapIsoHolmP$, effect $\NoveltyCapIsoDiff$). As shown in Fig.~\ref{fig:cap_isolation}, without capability trust, attack traffic on a single tool collapses the entire server trust, falsely isolating benign capabilities in 99.5\% of calls. Single-actor poisoning resistance is likewise significant ($p = \NoveltySingleActorP$, preventing 3,000 malicious updates). In contrast, \texttt{intent\_consistency} and \texttt{review\_requirement} represent true null/parity results ($p = 1.0000$), preserved in full adherence to open-science reporting.
+
+\subsection{Poisoning Resistance and Capability-Trust Held-Out Validation}
+Table~\ref{tab:poisoning_summary} details the 20-seed matched poisoning study (700 evaluation cells).
+
+\input{tables/table5_matched_poisoning.tex}
+
+Gated dual memory completely prevents malicious profile updates under single-identity poisoning (0.0 updates vs 12.0 in immediate learning). However, when an adversary coordinates multiple colluding identities, requests bypass quarantine, causing identical contamination (12.0 updates, 1.000 contamination).
+
+On held-out validation across 20 new seeds and two new scenarios (\texttt{mixed\_benign\_spurious\_causal} and \texttt{slow\_benign\_parameter\_drift}), Design D1 maintained zero false isolations. Sensitivity analysis over all constants ($\pm 25\%$) confirmed that false isolation rates remained strictly 0.0\%.
+
+\subsection{Runtime Inspection Overhead}
+Table~\ref{tab:gateway_latency} and Fig.~\ref{fig:latency} report end-to-end latency benchmarks.
+
+\input{tables/table6_latency.tex}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.60\textwidth]{figures/fig3_gateway_latency.pdf}
+\caption{Gateway latency overhead breakdown. Sentinel adds \ProxyOverheadMs~ms net proxy overhead.}
+\label{fig:latency}
+\end{figure}
+
+Direct loopback calls to mock MCP servers average \DirectLatencyMs~ms. Positioning Sentinel as an inline proxy increases latency to \GatewayLatencyMs~ms, representing a net overhead of \ProxyOverheadMs~ms. This sub-millisecond overhead is negligible compared to standard LLM inference latencies (500--2,000 ms).
+
+\section{Limitations and Threats to Validity}
+\label{sec:limitations}
+We disclose the following limitations:
+\begin{enumerate}
+    \item \textbf{Synthetic Workloads}: All evaluations are conducted on synthetic mock MCP servers. The scenarios encode selected threat patterns and do not establish their prevalence or representativeness in real agent traffic.
+    \item \textbf{Order-Invariant Blind Spots}: Sentinel uses a bag-of-calls representation that completely misses 4 attack families (\texttt{abnormal\_sequence}, \texttt{capability\_drift}, \texttt{gradual\_poisoning}, \texttt{low\_and\_slow}).
+    \item \textbf{Colluding Sybil Attacks}: Dual-memory quarantine isolates single-identity adversaries but fails against colluding identities that meet the multi-identity threshold.
+    \item \textbf{Withhold-Only Enforcement}: Sentinel can withhold responses or block calls, but cannot roll back external side effects executed prior to response receipt.
+    \item \textbf{Transport Scope}: The prototype evaluates HTTP JSON-RPC and in-process bindings; streaming transports (SSE) and raw stdio framing require additional middleware.
+\end{enumerate}
+
+\section{Related Work}
+\label{sec:related_work}
+\paragraph{MCP Guardian.} Kumar et al.~\cite{kumar2025mcpguardian} proposed a security layer for MCP providing WAF payload filtering, rate limiting, and manual human-in-the-loop approvals. While MCP Guardian focuses on ingress prompt-injection filtering and access control, Sentinel provides behavioral autoencoder inspection, capability-scoped trust decay, and evidence-gated model adaptation.
+
+\paragraph{MindGuard.} MindGuard~\cite{mindguard2025} tracks and attributes MCP tool poisoning using Decision Dependence Graphs (DDGs) derived from LLM internal attention weights. MindGuard requires white-box access to model attention heads. In contrast, Sentinel operates strictly as an external gateway, requiring zero internal model access.
+
+\paragraph{Capability Pinning.} Rosado~\cite{rosado2026pinning} proposed capability-envelope pinning with block-and-re-approve enforcement on structural changes. Rosado's disclosure relies on cryptographic workload identities. Sentinel complements this approach by tracking dynamic runtime trust per capability and gating adaptation via multi-identity quarantine buffers.
+
+\paragraph{ShieldMCP.} ShieldMCP~\cite{shieldmcp2026} provides open-source runtime security middleware and output sanitization for MCP tool invocations. While ShieldMCP enforces rule-based filtering and preflight screening, Sentinel introduces multi-signal behavioral anomaly detection, dynamic capability trust decay, and evidence-gated model adaptation.
+
+\section{Conclusion}
+\label{sec:conclusion}
+MCP Runtime Sentinel demonstrates that inspectable, lightweight runtime gateways can enforce strict high-precision security policies without deep neural framework overhead. Across \NoveltySeedsCount\ seeds and \NoveltyPhasesCount\ matrix phases, Sentinel maintains an observed false-positive rate of \SentinelObservedFPR\ ($\le \SentinelFPRBound$) with \ProxyOverheadMs~ms net overhead, successfully isolating \DetectedAttackFamilies\ of \TotalAttackFamilies\ attack families and mitigating single-identity poisoning. By transparently reporting structural blind spots, null hypothesis results, and baseline calibration nuances, this work establishes an honest foundation for autonomous tool security.
+
+\section*{Data and Code Availability}
+The code, verification test suite, reproduction pipeline, and derived artifacts are included with this repository. Reported numbers, tables, and figures can be regenerated from the retained artifact files using \texttt{scripts/reproduce\_all.py}. Raw multi-seed evaluation traces ($\sim$9.2~GB) are indexed by checksums in the repository manifest. An external archive deposit and persistent DOI are pending; access details will be added after a deposit is completed.
+
+\providecommand{\refname}{References}
+\renewcommand{\refname}{References}
+\bibliographystyle{splncs04}
+\bibliography{refs}
+
+\end{document}

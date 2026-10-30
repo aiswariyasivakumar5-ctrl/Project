@@ -1,0 +1,26 @@
+% Table 4: Publication-Scale Novelty Matrix v3 Primary Hypothesis Tests (Springer LNCS Format)
+\begin{table}[t]
+\centering
+\caption{Primary hypothesis tests on Novelty Matrix v3 across 20 held-out seeds (30001--30020, 1,320 phases). Exact paired sign-flip randomization with Holm-Bonferroni correction.}
+\label{tab:novelty_v3_primary}
+\footnotesize
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{llccc}
+\toprule
+\textbf{Hypothesis \& Contrast} & \textbf{Scenario} & \textbf{Mean Diff [95\% CI]} & \textbf{Exact $p$} & \textbf{Holm $p_{\text{adj}}$} \\
+\midrule
+\textbf{Capability Isolation}   & \texttt{capability\_laundering} & \NoveltyCapIsoDiff & $\NoveltyCapIsoP^*$ & $\NoveltyCapIsoHolmP^*$ \\
+\textit{Full vs. w/o Cap Trust} &                                 & [-0.9957, -0.9949] &                     &                         \\
+\addlinespace[3pt]
+\textbf{Single-Actor Poisoning} & \texttt{distributed\_poisoning} & \NoveltySingleActorDiff & $\NoveltySingleActorP^*$ & $\NoveltySingleActorHolmP^*$ \\
+\textit{Full vs. w/o Dual Mem}  &                                 & [-3000.0, -3000.0]      &                          &                              \\
+\addlinespace[3pt]
+\textbf{Intent Consistency}     & \texttt{coordinated\_servers}   & \NoveltyIntentDiff & \NoveltyIntentP & \NoveltyIntentHolmP \\
+\textit{Full vs. w/o Intent Prov} &                               & [0.0000, 0.0000]   &                 &                     \\
+\addlinespace[3pt]
+\textbf{Review Requirement}     & \texttt{multi\_actor\_poisoning}& \NoveltyReviewDiff & \NoveltyReviewP & \NoveltyReviewHolmP \\
+\textit{Appr Req vs. Full}      &                                 & [0.0000, 0.0000]   &                 &                     \\
+\bottomrule
+\multicolumn{5}{l}{\scriptsize $^*$Statistically significant at family-wise $\alpha = 0.05$. Hypotheses 3 and 4 reflect true null/parity results.}
+\end{tabular}
+\end{table}

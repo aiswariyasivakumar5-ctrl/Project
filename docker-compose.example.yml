@@ -1,0 +1,75 @@
+services:
+  mock-upstream:
+    build: .
+    command: ["mock-server", "--host", "0.0.0.0", "--port", "8790", "--streamable-http", "--require-sessions"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.create_connection(('127.0.0.1',8790),2); s.close()"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+      start_period: 2s
+    read_only: true
+    tmpfs: ["/tmp"]
+
+  enroll:
+    build: .
+    command: ["baseline", "--upstream", "http://mock-upstream:8790", "--server-id", "local-mcp", "--state-file", "/data/state.json"]
+    depends_on:
+      mock-upstream:
+        condition: service_healthy
+    volumes:
+      - sentinel-data:/data
+    environment:
+      MCP_SENTINEL_STATE_KEY: ${MCP_SENTINEL_STATE_KEY:?set a state integrity key}
+    read_only: true
+    tmpfs: ["/tmp"]
+
+  gateway:
+    build: .
+    command:
+      - gateway
+      - --upstream
+      - http://mock-upstream:8790
+      - --server-id
+      - local-mcp
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8788"
+      - --state-file
+      - /data/state.json
+      - --audit-log
+      - /data/audit.jsonl
+      - --tls-cert
+      - /certs/server.crt
+      - --tls-key
+      - /certs/server.key
+      - --allowed-host
+      - 127.0.0.1:8788
+      - --allowed-host
+      - localhost:8788
+      - --allow-tool
+      - safe_read
+      - --allow-tool
+      - calculate
+      - --rate-limit
+      - "20"
+      - --rate-burst
+      - "40"
+    depends_on:
+      enroll:
+        condition: service_completed_successfully
+    environment:
+      MCP_SENTINEL_CLIENT_TOKEN: ${MCP_SENTINEL_CLIENT_TOKEN:?set a high-entropy client token}
+      MCP_SENTINEL_OPERATOR_TOKEN: ${MCP_SENTINEL_OPERATOR_TOKEN:?set a different high-entropy operator token}
+      MCP_SENTINEL_STATE_KEY: ${MCP_SENTINEL_STATE_KEY:?set a state integrity key}
+    volumes:
+      - sentinel-data:/data
+      - ./certs:/certs:ro
+    ports:
+      - "127.0.0.1:8788:8788"
+    read_only: true
+    tmpfs: ["/tmp"]
+
+volumes:
+  sentinel-data:

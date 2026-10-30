@@ -1,0 +1,16 @@
+% Table 6: Gateway Runtime Performance & Overhead (Springer LNCS Format)
+\begin{table}[t]
+\centering
+\caption{Runtime inspection latency and proxy overhead measured over 20 evaluation seeds.}
+\label{tab:gateway_latency}
+\scriptsize
+\begin{tabular}{lccl}
+\toprule
+\textbf{Configuration} & \textbf{Measured Latency} & \textbf{Std Error} & \textbf{Description} \\
+\midrule
+Direct Mock Server     & \DirectLatencyMs\ ms      & $\pm$ \DirectLatencyStdMs\ ms & Direct loopback call to mock arithmetic MCP server \\
+Sentinel Gateway       & \GatewayLatencyMs\ ms     & $\pm$ \GatewayLatencyStdMs\ ms & Full reverse-proxy inspection, intent check, AE inference \\
+Sentinel Net Overhead  & \ProxyOverheadMs\ ms      & $\pm$ \ProxyOverheadStdMs\ ms & Net proxy processing latency introduced by Sentinel \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,26 @@
+% Table 5: 20-Seed Matched Poisoning Study Summary (Springer LNCS Format)
+\begin{table}[t]
+\centering
+\caption{Matched poisoning outcomes across 20 seeds (31001--31020). Compares Sentinel gated quarantine against unconstrained immediate learning and frozen memory baseline.}
+\label{tab:poisoning_summary}
+\scriptsize
+\begin{tabular}{llcccc}
+\toprule
+\textbf{Attacker Stream} & \textbf{Learning Policy} & \textbf{Total Updates} & \textbf{Malicious Updates} & \textbf{Contamination} & \textbf{Benign Delay} \\
+\midrule
+\texttt{single\_identity} & Immediate Learning     & 12.0 $\pm$ 0.00 & 12.0 $\pm$ 0.00 & 1.000 & NA \\
+                          & \textbf{Gated (Sentinel)} & \textbf{0.0 $\pm$ 0.00} & \textbf{0.0 $\pm$ 0.00} & \textbf{0.000} & NA \\
+\midrule
+\texttt{colluding}        & Immediate Learning     & 12.0 $\pm$ 0.00 & 12.0 $\pm$ 0.00 & 1.000 & NA \\
+                          & \textbf{Gated (Sentinel)} & 12.0 $\pm$ 0.00 & 12.0 $\pm$ 0.00 & 1.000 & NA \\
+\midrule
+\texttt{mixed}            & Immediate Learning     & 12.0 $\pm$ 0.00 & 4.0 $\pm$ 0.00  & 0.333 & 0.0 steps \\
+                          & \textbf{Gated (Sentinel)} & 12.0 $\pm$ 0.00 & 4.0 $\pm$ 0.00  & 0.333 & 2.0 steps \\
+\midrule
+\texttt{clean}            & Immediate Learning     & 12.0 $\pm$ 0.00 & 0.0 $\pm$ 0.00  & 0.000 & 0.0 steps \\
+                          & \textbf{Gated (Sentinel)} & 12.0 $\pm$ 0.00 & 0.0 $\pm$ 0.00  & 0.000 & 2.0 steps \\
+                          & Frozen Memory          & 0.0 $\pm$ 0.00  & 0.0 $\pm$ 0.00  & 0.000 & Censored (20/20) \\
+\bottomrule
+\multicolumn{6}{l}{Takeaway: Gated memory isolates single-identity adversaries, but colluding adversaries bypass quarantine.} \\
+\end{tabular}
+\end{table}

@@ -1,0 +1,55 @@
+name: Tests and production checks
+on: [push, pull_request]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e '.[dev]' build
+      - run: python -m pip check
+      - run: ruff check sentinel
+      - run: mypy sentinel/gateway.py sentinel/cli.py sentinel/http_limits.py sentinel/audit_log.py sentinel/policy.py
+      - run: coverage run -m pytest
+      - run: coverage report --include='sentinel/gateway.py,sentinel/http_limits.py,sentinel/audit_log.py,sentinel/policy.py' --fail-under=85
+      - run: pip-audit
+      - run: python -m build
+      - run: docker build -t mcp-runtime-sentinel:ci .
+
+  platform-tests:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.14']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e .
+      - run: python -m pip check
+      - run: python -m unittest discover -s tests -v
+
+  docker-smoke:
+    runs-on: ubuntu-latest
+    env:
+      MCP_SENTINEL_CLIENT_TOKEN: test-client-token-that-is-long-enough-for-ci
+      MCP_SENTINEL_OPERATOR_TOKEN: test-operator-token-that-is-different-and-long
+      MCP_SENTINEL_STATE_KEY: test-state-integrity-key-for-ci-build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: mkdir -p certs && openssl req -x509 -newkey rsa:2048 -nodes -keyout certs/server.key -out certs/server.crt -days 1 -subj '/CN=localhost' -addext 'subjectAltName=DNS:localhost,IP:127.0.0.1'
+      - run: docker compose -f docker-compose.example.yml up --build -d
+      - run: python scripts/docker_smoke.py
+      - run: docker compose -f docker-compose.example.yml restart gateway
+      - run: python scripts/docker_smoke.py
+      - run: docker compose -f docker-compose.example.yml exec -T gateway python -m sentinel.cli verify-audit /data/audit.jsonl
+      - if: always()
+        run: docker compose -f docker-compose.example.yml down -v

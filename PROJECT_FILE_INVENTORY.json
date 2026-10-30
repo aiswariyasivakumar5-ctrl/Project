@@ -1,0 +1,2363 @@
+{
+  "assessment_date": "2026-09-22",
+  "project": "/Users/shamkumar/Desktop/mcp/MCP-Runtime-Sentinel-main",
+  "files": 275,
+  "all_match_zip": true,
+  "inventory": [
+    {
+      "path": ".github/workflows/tests.yml",
+      "bytes": 508,
+      "sha256": "7590dc341a95b5b282223227500354a755a133d10fcbb79edf2115e8fc753177",
+      "matches_zip": true
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 81,
+      "sha256": "ec15a1690fbbe0c164909fe4a811969b9aa37fda35c3d48b3f2f8c23cc3df0b4",
+      "matches_zip": true
+    },
+    {
+      "path": "README.md",
+      "bytes": 14058,
+      "sha256": "892a4777237dd8510717a44899586678934c46f3e93018aea509fc370d4b6f4a",
+      "matches_zip": true,
+      "headings": [
+        "MCP Runtime Sentinel",
+        "Current project status",
+        "Quick Start",
+        "Implemented MVP",
+        "Run",
+        "Real MCP gateway",
+        "Research experiments",
+        "Research Reproduction",
+        "Comparative ML baselines",
+        "Statistical analysis and ablations",
+        "Enforcement bands",
+        "Research roadmap",
+        "Safety and patent note",
+        "Member 4 gateway handoff \u2014 September 18, 2026"
+      ]
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 10493,
+      "sha256": "3c70b2273c2e44c9d2125d9057cfbd600cb24ca7a5ea3ce513a5f1204aa42278",
+      "matches_zip": true,
+      "headings": [
+        "Architecture and research boundary",
+        "Runtime path",
+        "Gateway request and response flow",
+        "Gateway trace record",
+        "Failure and security policy",
+        "Causal representation",
+        "Intent provenance and replay scenarios",
+        "Behavioral attestation",
+        "Novelty under investigation"
+      ]
+    },
+    {
+      "path": "docs/claims_audit.md",
+      "bytes": 3068,
+      "sha256": "c8c379c30eb81fc5409f39f67a4cadcf91cdf413e46d0d3f948c3c08124237f0",
+      "matches_zip": true,
+      "headings": [
+        "Claims audit",
+        "A. Supported by current evidence",
+        "B. Plausible hypotheses requiring additional validation",
+        "C. Claims that must not be made",
+        "Claim taxonomy"
+      ]
+    },
+    {
+      "path": "docs/comparison.md",
+      "bytes": 4988,
+      "sha256": "cc49a5789b184a7cd3e587486448f739a73144ae0ebf16ce185e7dfd696b9372",
+      "matches_zip": true,
+      "headings": [
+        "Comparative ML evaluation",
+        "Models",
+        "Common representation",
+        "Split and calibration",
+        "Commands",
+        "Stored results",
+        "Integrity and limitations"
+      ]
+    },
+    {
+      "path": "docs/contribution_log.md",
+      "bytes": 10866,
+      "sha256": "83864db2e97e1c29ab707b0a3f3adfc72e572a648b42605ff880e55804736044",
+      "matches_zip": true,
+      "headings": [
+        "Contribution and conception log",
+        "Entry template",
+        "YYYY-MM-DD \u2014 Short contribution title",
+        "Initial records requiring team confirmation",
+        "2026-08-31 \u2014 Approved MCP Runtime Sentinel research prototype",
+        "2026-09-01 \u2014 Evidence-gated capability trust extension",
+        "Decision log",
+        "2026-09-17 \u2014 Three-step validation preparation (pending review)",
+        "2026-09-17 \u2014 Existing learning-guard consistency (pending review)",
+        "2026-09-17 \u2014 Review evidence lifecycle corrections (pending review)",
+        "2026-09-17 \u2014 Retention, HTTP limits and reviewed adaptation (pending review)",
+        "2026-09-17 \u2014 Runtime boundary hardening (pending review)",
+        "2026-09-17 \u2014 Live novelty experiment framework (pending review)",
+        "2026-09-17 \u2014 Runtime correctness and opt-in gateway integration (pending review)",
+        "2026-09-18 \u2014 Member 4 gateway integration completion (pending team review)",
+        "2026-09-20 \u2014 Integration-freeze candidate preparation"
+      ]
+    },
+    {
+      "path": "docs/demo.md",
+      "bytes": 3837,
+      "sha256": "524394448048bbd8bb5c43e7e74cfac594991eaf3597af5291a2f5e2a626d91c",
+      "matches_zip": true,
+      "headings": [
+        "Local Windows demonstration",
+        "Prerequisites and installation",
+        "Automated local demo",
+        "Manual three-terminal workflow",
+        "Shutdown"
+      ]
+    },
+    {
+      "path": "docs/dependencies.md",
+      "bytes": 2204,
+      "sha256": "fb26f6a7b63e018bd49b0c64258ad821fb614f73c8d2eda9bc3ed8e82ae690f3",
+      "matches_zip": true,
+      "headings": [
+        "Dependencies and installation",
+        "Runtime",
+        "Capability matrix",
+        "Fresh PowerShell installation",
+        "Verification"
+      ]
+    },
+    {
+      "path": "docs/experiments.md",
+      "bytes": 5934,
+      "sha256": "15bab3a24fc32119a38fd072528bdab464333f24146f821b1882250fc07d4b23",
+      "matches_zip": true,
+      "headings": [
+        "Reproducible research evaluation",
+        "Methodology",
+        "Workloads and scenarios",
+        "Commands",
+        "Metrics and outputs",
+        "Baselines and ablations",
+        "Current limitations"
+      ]
+    },
+    {
+      "path": "docs/final_architecture.md",
+      "bytes": 2337,
+      "sha256": "01aa21b7c7375ca2b6edf19ee4048c6dee0111a7a96c9814f435a5ab86414481",
+      "matches_zip": true,
+      "headings": [
+        "Final implemented architecture",
+        "Enforcement boundaries",
+        "State and evidence",
+        "Attestation boundary",
+        "Explicit non-components"
+      ]
+    },
+    {
+      "path": "docs/final_limitations.md",
+      "bytes": 3105,
+      "sha256": "17ade9636a265434f7431da058877c739b66ba560188f2058e09982a057d9a79",
+      "matches_zip": true,
+      "headings": [
+        "Consolidated limitations",
+        "Evidence and generalization",
+        "Detection and calibration",
+        "Sequence baselines",
+        "Gateway and enforcement",
+        "Attestation",
+        "Research and legal scope"
+      ]
+    },
+    {
+      "path": "docs/gateway_completion.md",
+      "bytes": 4801,
+      "sha256": "c3fe8e02b62aa4f641d731757bfd3b8c439cd525fb09999ce5a797f1c6b8699f",
+      "matches_zip": true,
+      "headings": [
+        "Member 4 \u2014 gateway integration handoff (2026-09-18)",
+        "Completed engineering",
+        "Configuration",
+        "Validation and evidence",
+        "Review boundary"
+      ]
+    },
+    {
+      "path": "docs/gateway_pull_request.md",
+      "bytes": 1025,
+      "sha256": "e3c9d2950388d9e603edf4f01128eb44e65485fa2d35f8d6ec873c46e973e8dc",
+      "matches_zip": true,
+      "headings": [
+        "Complete gateway configuration and audit evidence"
+      ]
+    },
+    {
+      "path": "docs/integration_freeze_candidate.md",
+      "bytes": 3184,
+      "sha256": "c1dc2179e2d9fae906b6c3189b4c00dcdd0c663d1aafcd8fe25a41b9990d6c8b",
+      "matches_zip": true,
+      "headings": [
+        "Integration-freeze candidate",
+        "Candidate identity",
+        "Machine-verifiable evidence",
+        "Human gates that remain open",
+        "Required review record",
+        "After approval"
+      ]
+    },
+    {
+      "path": "docs/novelty_development_findings.md",
+      "bytes": 3337,
+      "sha256": "e6b52b8f04b34bfc2833e6bc8637c768b19de573fff48af3fe8d1923846b190d",
+      "matches_zip": true,
+      "headings": [
+        "Novelty development verification \u2014 September 17",
+        "Verification",
+        "Observed behavior",
+        "Next implementation priorities"
+      ]
+    },
+    {
+      "path": "docs/novelty_experiments.md",
+      "bytes": 8319,
+      "sha256": "c25739a16b9936f13d257aadc25e61bf64f8b767d7ed952fb42a2d99492f78a6",
+      "matches_zip": true,
+      "headings": [
+        "Novelty development experiments",
+        "Run",
+        "Variants",
+        "Scenario catalog",
+        "Phase isolation and measurements",
+        "Optional validation-only score calibration",
+        "Threat assumptions",
+        "Output and provenance",
+        "Remaining work"
+      ]
+    },
+    {
+      "path": "docs/novelty_milestone.md",
+      "bytes": 1769,
+      "sha256": "18e449c38f588f1ed0fff4070b6e3dc841129ee4d6578ac85a4b1082b7469a78",
+      "matches_zip": true,
+      "headings": [
+        "Novelty milestone: evidence-gated capability trust"
+      ]
+    },
+    {
+      "path": "docs/novelty_protocol.md",
+      "bytes": 6769,
+      "sha256": "d8098e4379bfc2f40317cfc6f339fd3689fd6f6288b7cf9ae572a0afdc211375",
+      "matches_zip": true,
+      "headings": [
+        "Novelty evaluation protocol \u2014 draft v1",
+        "Scope and hypotheses",
+        "Fixed configuration for proposed larger run",
+        "Validation-only threshold workflow",
+        "Analysis plan",
+        "External data and release gates"
+      ]
+    },
+    {
+      "path": "docs/project_status.md",
+      "bytes": 5958,
+      "sha256": "f06b5a326ebe644f6cb987f2f8dcb5c58721ba890658884977f573bdb1db42cc",
+      "matches_zip": true,
+      "headings": [
+        "Project status \u2014 September 20, 2026",
+        "Completed implementation",
+        "Verified evidence",
+        "Remaining work, in order",
+        "Documentation map and maintenance",
+        "September 18 \u2014 Member 4 local gateway handoff"
+      ]
+    },
+    {
+      "path": "docs/research_contributions.md",
+      "bytes": 1981,
+      "sha256": "74e6d24f28e0cc6114b8a1df2239ff460b8bc6fc3ad3bb000d83ee0404222197",
+      "matches_zip": true,
+      "headings": [
+        "Proposed research contributions"
+      ]
+    },
+    {
+      "path": "docs/research_inventory.md",
+      "bytes": 6782,
+      "sha256": "98299c5b96f5164d05f7d4dc21e5aa35cddefdb236f863df795231ad182cb051",
+      "matches_zip": true,
+      "headings": [
+        "Master research inventory",
+        "Status vocabulary",
+        "A. System implementation milestones",
+        "B. Evaluation milestones",
+        "C. Baseline models",
+        "D. Ablations",
+        "E. Statistical analyses",
+        "F. Fusion/calibration studies",
+        "G. Sequence studies",
+        "H. Gateway performance",
+        "I. Figures and tables",
+        "Known limitations"
+      ]
+    },
+    {
+      "path": "docs/research_questions.md",
+      "bytes": 3551,
+      "sha256": "eae5c9f31590fc83b5115d4fbf6fe46f3b6bf6904c8b9d2f4b8f7f6363b0e196",
+      "matches_zip": true,
+      "headings": [
+        "Research questions and evidence-based answers",
+        "RQ1 \u2014 Can the gateway enforce runtime MCP security decisions?",
+        "RQ2 \u2014 Does Sentinel occupy a different operating point from anomaly baselines?",
+        "RQ3 \u2014 What do intent and causal components contribute?",
+        "RQ4 \u2014 Does quarantine resist adaptive baseline poisoning?",
+        "RQ5 \u2014 Where is Sentinel strongest and weakest?",
+        "RQ6 \u2014 Do temporal sequence models add meaningful advantage?",
+        "RQ7 \u2014 Can validation-only fusion fix the causal-floor calibration issue?"
+      ]
+    },
+    {
+      "path": "docs/runtime_continuation.md",
+      "bytes": 5660,
+      "sha256": "b9b8e997b2b69c4b6814317612454fb3bbf2c1b26169131461d57380e691d2d5",
+      "matches_zip": true,
+      "headings": [
+        "Runtime correctness and capability-gateway continuation",
+        "Implemented",
+        "Trusted integration boundary",
+        "Verification and evidence",
+        "Next milestone"
+      ]
+    },
+    {
+      "path": "docs/runtime_controls.md",
+      "bytes": 10171,
+      "sha256": "1dd5281e9f4e47778f9c0f29e79b83d135e6959ee716b35d1de7829f35330680",
+      "matches_zip": true,
+      "headings": [
+        "Runtime controls and reviewed adaptation",
+        "Retention and capacity",
+        "HTTP deadlines and connection limits",
+        "Reviewed promotion",
+        "Reviewed capability recovery",
+        "Review evidence lifecycle",
+        "Research compatibility and remaining gates",
+        "Development verification \u2014 2026-09-17"
+      ]
+    },
+    {
+      "path": "docs/runtime_hardening.md",
+      "bytes": 3726,
+      "sha256": "2720ea58f5c693b4794909aef3bc5fcef7920d7252aadc0f6ef06ba62226f770",
+      "matches_zip": true,
+      "headings": [
+        "Runtime boundary hardening",
+        "Implemented",
+        "Verification",
+        "Next execution steps"
+      ]
+    },
+    {
+      "path": "docs/statistical_analysis.md",
+      "bytes": 4559,
+      "sha256": "a7952469b200a0b86190a9ba6b18f69613cadb2e300c2a68993124dd7773c463",
+      "matches_zip": true,
+      "headings": [
+        "Confidence intervals, paired tests, ablations, and figures",
+        "Statistical design",
+        "Reproduction",
+        "Ablation interpretation",
+        "Weakness diagnostics",
+        "Outputs and limitations"
+      ]
+    },
+    {
+      "path": "docs/team_workplan.md",
+      "bytes": 6215,
+      "sha256": "607b7faf2dd673a80298eab85dde40c4c0035acbb3c45bfdf1e7e4f7f1749bf6",
+      "matches_zip": true,
+      "headings": [
+        "Team work plan and research freeze",
+        "Purpose",
+        "Team and current access",
+        "Frozen research scope",
+        "Work sequence",
+        "Required branch workflow",
+        "Experiment freeze criteria",
+        "Communication rule"
+      ]
+    },
+    {
+      "path": "docs/troubleshooting.md",
+      "bytes": 2219,
+      "sha256": "fb2a9dd95ee450cb921bace2f3e63b214f004c690481a7102f75270876b4807e",
+      "matches_zip": true,
+      "headings": [
+        "Troubleshooting",
+        "Python or activation problems",
+        "Missing NumPy or build dependency",
+        "Port already in use",
+        "Gateway cannot reach upstream",
+        "MCP client cannot connect",
+        "Malformed JSON-RPC",
+        "PowerShell JSON issues",
+        "Missing result directory",
+        "Withheld safe-looking response"
+      ]
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 401,
+      "sha256": "d78a2735f80d2083fe340db987092db4c23fb0d704016f055f14c6b54be91fe3",
+      "matches_zip": true
+    },
+    {
+      "path": "requirements-repro.txt",
+      "bytes": 138,
+      "sha256": "e1520530050f8b11eee7e960b904586dc9ddd32b5c3bbe28e8596f326418391d",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/aggregate/adaptive_curves.json",
+      "bytes": 2808648,
+      "sha256": "a14d381b7f0b544336844be4366555f1b15d00a6aeced763f01bf3abf149f177",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/aggregate/adaptive_statistics.json",
+      "bytes": 2288,
+      "sha256": "7488e5069a9f8122d1b6569f9866b568b1b74afcae6dd232556b2c77711e0322",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/aggregate/metrics.json",
+      "bytes": 8875,
+      "sha256": "24106e2818ebec96172df242edeb3639f8e86d77fd5751016ff184a63bc9dfab",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/aggregate/statistics.json",
+      "bytes": 28080,
+      "sha256": "615de61cde257d5da2fef1016ee77f2d39d8378a2ac83dc4cbc0a87302f3297f",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/full/per_seed/seed-1001.json",
+      "bytes": 1193339,
+      "sha256": "cd80ef3b093f7e0eff7ce31a3e90fd8b736cdd32dd150c7dea088f82152da992",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/full/per_seed/seed-123.json",
+      "bytes": 1201920,
+      "sha256": "90b42890fd2a5f3fcb857a15ca5bb02ed7974b0307cb22dc8783f9f1b98203bd",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/full/per_seed/seed-42.json",
+      "bytes": 1198872,
+      "sha256": "edc171d12e5d643fb20235c009b4c3bac33e37c8b7fc6fd8b7cb9820096c4350",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/full/per_seed/seed-456.json",
+      "bytes": 1192807,
+      "sha256": "0dd554dddbae90b914c1f6684414f1f05f05d0fce545d4d732a9a54af237fb24",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/full/per_seed/seed-789.json",
+      "bytes": 1191434,
+      "sha256": "72fc7356022ae22c712d2d60bf476b34874e02c2990e6e06e57bc6d8f69796a3",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/per_scenario.csv",
+      "bytes": 22670,
+      "sha256": "134f10d3f0c8d6371766ea4a9213578e03a4b03af5a35e676973083895fe8abf",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_attestation/per_seed/seed-1001.json",
+      "bytes": 1193378,
+      "sha256": "23885a00abd620ce505dbf5fe4bf732398553615d3c4d28f516bf4b06d1b8f69",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_attestation/per_seed/seed-123.json",
+      "bytes": 1201945,
+      "sha256": "56d6b92683193ecd7fcd89990ba1348884970b685f6df4029ba88df0f82e2429",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_attestation/per_seed/seed-42.json",
+      "bytes": 1198883,
+      "sha256": "7287dd540cb134a4d9263b907654a9d9fac7f15bbe07fc5fb7ec7b4f99e3563b",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_attestation/per_seed/seed-456.json",
+      "bytes": 1192798,
+      "sha256": "f4706292c32d0f2195826a15814223f9678010ecaaba1c737015bf51e0b0c62f",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_attestation/per_seed/seed-789.json",
+      "bytes": 1191830,
+      "sha256": "1e013d3447e7ad80429015feed70373ef9205044f1d7123a7ef1132b9a46ea6b",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_causal/per_seed/seed-1001.json",
+      "bytes": 1195119,
+      "sha256": "6a1f705d446d4676e317235acfd126c6e8a624c78d2439a0979c13f70b9ed9a7",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_causal/per_seed/seed-123.json",
+      "bytes": 1198262,
+      "sha256": "f9046d5c37c735facbc45add471159a6c3dbe97f3c2d2c95776bf2c1e29f0090",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_causal/per_seed/seed-42.json",
+      "bytes": 1200735,
+      "sha256": "cff76aff2fe4736b1badd3ea518d94303eab33cfb70120e7ba9d6bb7e70f3131",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_causal/per_seed/seed-456.json",
+      "bytes": 1198620,
+      "sha256": "60ec238a142a2e8d9e74f475f730bcf1f63009eecb323b6853c382b30fdf75e6",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_causal/per_seed/seed-789.json",
+      "bytes": 1187928,
+      "sha256": "476c957d70c5f1362025c4d41ab3b94cbef956ca83f07f74369dabbfed2cbf41",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_intent/per_seed/seed-1001.json",
+      "bytes": 1170735,
+      "sha256": "aabd04e915d7f81bd68441648d30c50f6cd60ab797ab2e3c097bf28128f07970",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_intent/per_seed/seed-123.json",
+      "bytes": 1179490,
+      "sha256": "2ee09d43d100394c8c7b5ca0a40bbfe7fb3cdb8598adbc12c169de33eb1dbd55",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_intent/per_seed/seed-42.json",
+      "bytes": 1174702,
+      "sha256": "4a25ffbd109eddf5a8d6c7efbb0ce86c6a7b6987ae0f34f1f5cd0fce1762d225",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_intent/per_seed/seed-456.json",
+      "bytes": 1172377,
+      "sha256": "f11997c534768b808a66e76036041e73f7886bdc775e426d2cf09927f6315438",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_intent/per_seed/seed-789.json",
+      "bytes": 1168269,
+      "sha256": "ce4fcbce71ea279a999abe8eee2a0c928a4d6ce3915297b83041491af673567d",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_quarantine/per_seed/seed-1001.json",
+      "bytes": 1193338,
+      "sha256": "e7dcbd1adf1ad6c413be2b88c76610eb1ed89cdb7f0eb373fa10c1cb5daeeda8",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_quarantine/per_seed/seed-123.json",
+      "bytes": 1201935,
+      "sha256": "f0a0a13e1341aea3537684c357eb724eb438400b4669862c22a8a9ffb8ebb8f5",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_quarantine/per_seed/seed-42.json",
+      "bytes": 1198903,
+      "sha256": "4d408bc1c675c4cc4be4c8880434a033928484d2c8eb80af9e1bdf40295155a9",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_quarantine/per_seed/seed-456.json",
+      "bytes": 1192822,
+      "sha256": "c8d5332c83ab176ed0e2b8225e8ce33f4e2c5b6d6fb6bdd6f824cb77331e6a71",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_quarantine/per_seed/seed-789.json",
+      "bytes": 1191449,
+      "sha256": "c78d09b19b9ca60406d32e5e19876bd065ae683b1a4ac579fac8aabad2d28d0e",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_uncertainty/per_seed/seed-1001.json",
+      "bytes": 1193355,
+      "sha256": "376a6fd8247ab2f6a2a0b1abaa517a965c118a97d7bd7db642b04e2e9ce11e23",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_uncertainty/per_seed/seed-123.json",
+      "bytes": 1201936,
+      "sha256": "c781ff539a88089ba22dddf063a8594c4e2733932b72c5adec0e5585c3e608e2",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_uncertainty/per_seed/seed-42.json",
+      "bytes": 1198888,
+      "sha256": "f083fbfc7bf7b0937a0c05a44d27e98d06f00b25017da89289541ae36b9ca19e",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_uncertainty/per_seed/seed-456.json",
+      "bytes": 1192823,
+      "sha256": "3c0bbd6813824031b8f73371bd5c1573ae7d75211b38406653374cddf335cfb8",
+      "matches_zip": true
+    },
+    {
+      "path": "results/ablations_publication/without_uncertainty/per_seed/seed-789.json",
+      "bytes": 1191466,
+      "sha256": "44110c4018f57197094c085f81c43f2eebbd5de968bf74942b67f34c994fd78d",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/aggregate/conference-table.md",
+      "bytes": 711,
+      "sha256": "9c61c68c1487238d0dae22abf977c317e01ad32081e96127093864e14a487b12",
+      "matches_zip": true,
+      "headings": []
+    },
+    {
+      "path": "results/baselines_multiseed/aggregate/metrics.json",
+      "bytes": 5957,
+      "sha256": "7ba48b68746858342dd2071e4a4d9d67a6e36c819b07f36ccdb34b06c4c5384c",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/dense_autoencoder/per_seed/seed-1001.json",
+      "bytes": 126589,
+      "sha256": "85ad32ef51053041c9417293f9908393c467cbc4ac925f9a7cb37f3337db8370",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/dense_autoencoder/per_seed/seed-123.json",
+      "bytes": 123634,
+      "sha256": "eeb5bd17f14cba8c8fc69e96f573adccd33fabd06c0a7cc3a07db69f063b366e",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/dense_autoencoder/per_seed/seed-42.json",
+      "bytes": 129140,
+      "sha256": "192deae603d6d7d0fd09a7aff7b752e240abc555e3bebda2f5f9210f35644925",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/dense_autoencoder/per_seed/seed-456.json",
+      "bytes": 127612,
+      "sha256": "4561e9ad65d39fcd9bc3874c56f3d760a5583c5aa19025098955a4475e9b8ce2",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/dense_autoencoder/per_seed/seed-789.json",
+      "bytes": 129115,
+      "sha256": "e35b117a0b50959b8e3de61ec4362c405da5101f85fed1e75d3d31895c8806c6",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/isolation_forest/per_seed/seed-1001.json",
+      "bytes": 140672,
+      "sha256": "d568b5e81f24fccd935e4ca3fbe9aa7d1bde0ab59633a2c48c154818faf91c64",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/isolation_forest/per_seed/seed-123.json",
+      "bytes": 138320,
+      "sha256": "a923feb77d3b8c2368126afb36d10a7eec8d1faaa01de1f7a1d8aea08df57a1f",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/isolation_forest/per_seed/seed-42.json",
+      "bytes": 138184,
+      "sha256": "3e853d86cb764c235fe9b7b34571764750c8c8c86199bac260c127a83e6030df",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/isolation_forest/per_seed/seed-456.json",
+      "bytes": 137615,
+      "sha256": "cd43f3b8cf37df2ee34566034c145ce6a59c8463d374947a3f243245d4ce7949",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/isolation_forest/per_seed/seed-789.json",
+      "bytes": 136749,
+      "sha256": "fc3a1e7dc03d185f744c7e08cd7e8ec1922eb75d9f183f37cdd751a95efeaf96",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/one_class_svm/per_seed/seed-1001.json",
+      "bytes": 145986,
+      "sha256": "5be7d6c7823305cbb0446be4f7563d026db8ebaac3e05435778f1ae27d074d94",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/one_class_svm/per_seed/seed-123.json",
+      "bytes": 153471,
+      "sha256": "335beb6e8fb9b294bbddd4c717a38f62498f52f7a0eb4f477bdd16fc9c116bfb",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/one_class_svm/per_seed/seed-42.json",
+      "bytes": 140672,
+      "sha256": "09da99eb12ce3a4b5bacfcf78b4de1addeb21c593dc50d2b8e05cb39cebfcc60",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/one_class_svm/per_seed/seed-456.json",
+      "bytes": 137555,
+      "sha256": "bd5fa2820f31f4ce077b91cc2688afb084c4ba144113e950ba6b62904c24681b",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/one_class_svm/per_seed/seed-789.json",
+      "bytes": 141341,
+      "sha256": "44b97984aa71a70a43b29659776519e327a9880df18cfd6dc992fdf502a433dd",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/per_seed.csv",
+      "bytes": 2753,
+      "sha256": "4465bcd978d039750b7a272c6f28ea0cee3bce5daeecaa222e07a18a76ea8c8f",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/sentinel/per_seed/seed-1001.json",
+      "bytes": 76163,
+      "sha256": "4b1fca0e2231bb6ba92b2dc2c5caa88aefeeab2183285979fda46f6262fbc533",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/sentinel/per_seed/seed-123.json",
+      "bytes": 79477,
+      "sha256": "34a620c9504aaa14f28c6e719f0e65033292724d267778f775b0c615bcedc741",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/sentinel/per_seed/seed-42.json",
+      "bytes": 79039,
+      "sha256": "ea943e8010d818430efcad25f0e4db0ebcd8743fe827f6ff9c5e9f0433dff9bf",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/sentinel/per_seed/seed-456.json",
+      "bytes": 83066,
+      "sha256": "dfe887384710f590d7433453b7bd28e31369f2d23fed93b5a256c5160419179b",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_multiseed/sentinel/per_seed/seed-789.json",
+      "bytes": 72799,
+      "sha256": "5881b958afb7200b088e698af07284d25e3a43b04334b868a49ae860e0f1fbb2",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/aggregate/conference-table.md",
+      "bytes": 819,
+      "sha256": "cf21cc4b8830b64215ccccc65c026c87e7c6fa476522b2db5ded9d89a01aac80",
+      "matches_zip": true,
+      "headings": []
+    },
+    {
+      "path": "results/baselines_publication/aggregate/metrics.json",
+      "bytes": 5984,
+      "sha256": "5dd12f9572f6b1e5d0bd0e12817b92e3dde20a8fdb71c6b717a519563f4f71cf",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/dense_autoencoder/per_seed/seed-1001.json",
+      "bytes": 571606,
+      "sha256": "26258b974df5041e61988df3d2abaa0e0e57c72cc44f98b30dd1a527171e5a0b",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/dense_autoencoder/per_seed/seed-123.json",
+      "bytes": 577623,
+      "sha256": "37ac7a63d51c0b701995d47c666aeb2e605065baafc4fe33ad140d63d6b45fb1",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/dense_autoencoder/per_seed/seed-42.json",
+      "bytes": 563593,
+      "sha256": "5cae259061f76cacaceb759dc43d0ffa49b20319b5b63523ce40c58f4d841746",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/dense_autoencoder/per_seed/seed-456.json",
+      "bytes": 562582,
+      "sha256": "0e6e3bfa328b80f55770ee56ae66a3beb9aeebce5a66cafb448782bdfce4f066",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/dense_autoencoder/per_seed/seed-789.json",
+      "bytes": 570357,
+      "sha256": "4770eb9563843a639ca87c763b26a82bd08da118d022b752cdd7a47934b9a39d",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/isolation_forest/per_seed/seed-1001.json",
+      "bytes": 563421,
+      "sha256": "9f4c1a120a33aab9222e1aa5cd10757f320737195304a7013ccfc44e63493636",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/isolation_forest/per_seed/seed-123.json",
+      "bytes": 559519,
+      "sha256": "d74fca6e536d0d31a462c148b8d74c26c3b7f19674ec649bc067635044dda6f7",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/isolation_forest/per_seed/seed-42.json",
+      "bytes": 574618,
+      "sha256": "cba35b59edcf7ebd7668eb321c0aba51a0ce96984384fb64180efdd0142a6434",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/isolation_forest/per_seed/seed-456.json",
+      "bytes": 579995,
+      "sha256": "554bb73e51f294e8342a05109c5269b98a465935bae739349a764094848df558",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/isolation_forest/per_seed/seed-789.json",
+      "bytes": 562280,
+      "sha256": "6c8f5e284cdfa2806b815c53fc8e3f044fe8f8eeba1643fd359f8fb488ccc092",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/one_class_svm/per_seed/seed-1001.json",
+      "bytes": 622823,
+      "sha256": "055782778ab263588e32761f4c7f30aa1eba74823ced7d431bc008148fd1ca5b",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/one_class_svm/per_seed/seed-123.json",
+      "bytes": 662684,
+      "sha256": "f984f7e2093213220be64586264929a98bd3d022eba58519f98eeb845e361e16",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/one_class_svm/per_seed/seed-42.json",
+      "bytes": 632150,
+      "sha256": "79f5c780604329c057a40262c384884e748a4f9870bdde8f3bbc720febea702d",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/one_class_svm/per_seed/seed-456.json",
+      "bytes": 574195,
+      "sha256": "473326dfcdebe147c79b7a6f5b987d51d648712822df9ace76d37a1a35b120b4",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/one_class_svm/per_seed/seed-789.json",
+      "bytes": 571607,
+      "sha256": "3a39818c7c617f65bf7ee3b892bd8efb4034ec8e1d3bc5abc4fc4003d086bdbf",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/per_scenario/metrics.csv",
+      "bytes": 15302,
+      "sha256": "cf5e0c687c915157e90e2b10877f2e8620954497ebea053ef7149fd0ea4e6285",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/per_seed.csv",
+      "bytes": 2686,
+      "sha256": "4a0e8ba49063a4828b1bb7b21fac8f99ff5a7b4592c5c3e1509012784f8fd19e",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/sentinel/per_seed/seed-1001.json",
+      "bytes": 287840,
+      "sha256": "a3de9d83c4a371f470af3344ae005420812fa3b256a4b4e4b035fe4f951a6f87",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/sentinel/per_seed/seed-123.json",
+      "bytes": 296022,
+      "sha256": "0e7d2930e7ffa16fd2e95b133abac1e62b7ff3bef120f359d2beac71bfaeeab6",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/sentinel/per_seed/seed-42.json",
+      "bytes": 292760,
+      "sha256": "b7734a3b0e24b565c506e8e9cfc5994906bce782def47c28a0c671448d62717c",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/sentinel/per_seed/seed-456.json",
+      "bytes": 288809,
+      "sha256": "b767f21fa33d6862ae562e750c34f1eb7a434dfe7669befb755d0a9f8b7bdd8b",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_publication/sentinel/per_seed/seed-789.json",
+      "bytes": 286218,
+      "sha256": "6e7b1352095c6d3e51a58a1a4b9ce917607722ee0647fd5923a6c407732b3632",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/aggregate/metrics.json",
+      "bytes": 3118,
+      "sha256": "f0af887b02f9e092d766cb662f04474d526e646bc196dd87999648496807e496",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/lstm/per_seed/seed-1001.json",
+      "bytes": 1463053,
+      "sha256": "8103110c620c7a22b332736a70e0519aeffe111359ce1859bfe5db3de1f9d343",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/lstm/per_seed/seed-123.json",
+      "bytes": 1466556,
+      "sha256": "c3f8862b63b0bd680eab5b645d0f9f0e8a96e74584ac6c095da123c4381beb10",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/lstm/per_seed/seed-42.json",
+      "bytes": 1466349,
+      "sha256": "8e2e0e2fca5325817e086050cb50622d58d65935b350d3ca67b5554495c7a41e",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/lstm/per_seed/seed-456.json",
+      "bytes": 1464371,
+      "sha256": "2ee48800741fc021b67bf68daffb143f867d6142ec84f6c068765f6dc814b36d",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/lstm/per_seed/seed-789.json",
+      "bytes": 1461075,
+      "sha256": "90d78b8e0725780f00f6581e86a243bede372f5bb3c4045d78d4de0744099a19",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/per_scenario/metrics.csv",
+      "bytes": 7168,
+      "sha256": "d4334ad645d408bc21a709c23c7b792613c2be4ca5cfb17e51f9774af140478b",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/per_seed.csv",
+      "bytes": 1481,
+      "sha256": "f72276d7008f8513b5b7b82152195b62a483e98037d92a373581895536656d99",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/transformer/per_seed/seed-1001.json",
+      "bytes": 1460349,
+      "sha256": "271249b5dc81af1187c5df193f39d2b4a50eef3ec71a8c50eb92c0ac72e91a35",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/transformer/per_seed/seed-123.json",
+      "bytes": 1462543,
+      "sha256": "781473a095e7fb622d315645e48f1e52849eabf7b91194e143c055355a2b904b",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/transformer/per_seed/seed-42.json",
+      "bytes": 1478049,
+      "sha256": "fc4f18200e4c5ff28d9f84936b6417c67abd87eb720e6e951333f7dcd4c5f713",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/transformer/per_seed/seed-456.json",
+      "bytes": 1481077,
+      "sha256": "58a5b258a3d002e067f1c1f93a8ff1640108b621fb26165d61fb33c7e823e8f1",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_sequence/transformer/per_seed/seed-789.json",
+      "bytes": 1477039,
+      "sha256": "757323a0690607f05d0b21f9ad4f05731d8ee4b36a125772901ee08f6ab30b01",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_smoke/aggregate/metrics.json",
+      "bytes": 5515,
+      "sha256": "839c7c91847c220eb0583f2cee754193bba694aeae906edeff690671c7996704",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_smoke/dense_autoencoder/per_seed/seed-42.json",
+      "bytes": 57931,
+      "sha256": "6aa0d433bd3f869576366ad39060c6524edd560c50a6e474da460ea687e4e311",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_smoke/isolation_forest/per_seed/seed-42.json",
+      "bytes": 64873,
+      "sha256": "af595ede4eb408b40a298487535aece85def7499d8d19785f3138b9ad09cff28",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_smoke/one_class_svm/per_seed/seed-42.json",
+      "bytes": 62966,
+      "sha256": "4fb28b6e15ed73ae8d091463b93c6603957c2f17a80a4b1f58863de0c34d8f68",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_smoke/per_seed.csv",
+      "bytes": 646,
+      "sha256": "8d627e4ab4cdafd44fcc192fb210826c3665a42f5a19a60f69f630e520cfba1e",
+      "matches_zip": true
+    },
+    {
+      "path": "results/baselines_smoke/sentinel/per_seed/seed-42.json",
+      "bytes": 42721,
+      "sha256": "cf22b4e3db091c65d74d7e79f0010e7d4c3320607b13323f207380740a82bf29",
+      "matches_zip": true
+    },
+    {
+      "path": "results/corrections/auroc-v1.json",
+      "bytes": 4985,
+      "sha256": "4a5a4b9e4635f9dbee83a58a0b67b5238007d46113b7df21edaad55fcc62e61a",
+      "matches_zip": true
+    },
+    {
+      "path": "results/figures/ablation_f1.svg",
+      "bytes": 2903,
+      "sha256": "f39af5d1ddc9aefb9ac699c699b028558041a7ad976d7c78d66ea2263bd12580",
+      "matches_zip": true
+    },
+    {
+      "path": "results/figures/detection_delay.svg",
+      "bytes": 1712,
+      "sha256": "35812e3872ca3ada497d589c17a862e5e87f88eb97bbb5bd1eae791069c35c18",
+      "matches_zip": true
+    },
+    {
+      "path": "results/figures/drift_adaptation.svg",
+      "bytes": 20375,
+      "sha256": "37807f9dad338f339b6fdf3c7d97abde5f0c9e0111737bece3076d41ccae084e",
+      "matches_zip": true
+    },
+    {
+      "path": "results/figures/f1_comparison.svg",
+      "bytes": 1936,
+      "sha256": "5359f3f9c5bc6bc60bd5979cee8e3bb069320f488871837448499ccc2899e483",
+      "matches_zip": true
+    },
+    {
+      "path": "results/figures/false_positive_rate.svg",
+      "bytes": 1980,
+      "sha256": "bc17ae4da686f18970bd2f3b2adf5befe9445772869d3f558d1ad19991be5494",
+      "matches_zip": true
+    },
+    {
+      "path": "results/figures/gateway_latency.svg",
+      "bytes": 1760,
+      "sha256": "d1a62ba4bf892b4e68f5201fdf9b90c16418777967c90b0fa12659774e77564c",
+      "matches_zip": true
+    },
+    {
+      "path": "results/figures/gateway_performance.json",
+      "bytes": 277,
+      "sha256": "364cf62013347487f03e9df8c66f5cb36ecc08e7edeeddea9b49d03396dcdef5",
+      "matches_zip": true
+    },
+    {
+      "path": "results/figures/poisoning_resistance.svg",
+      "bytes": 19970,
+      "sha256": "19d2c15a90f80a2f7e6723094e20f820ac765ef4333014c11f85445545ff856b",
+      "matches_zip": true
+    },
+    {
+      "path": "results/figures/precision_recall.svg",
+      "bytes": 28557,
+      "sha256": "0e566dd77aa9c109dcc0616c7f7e05607184984a0678a0f73b8a997dca372048",
+      "matches_zip": true
+    },
+    {
+      "path": "results/figures/roc.svg",
+      "bytes": 27269,
+      "sha256": "fd40f71025c9400caf41b17c96ea6042566188a78dcaa37c7876878b0d76f686",
+      "matches_zip": true
+    },
+    {
+      "path": "results/final/FINAL_RESEARCH_SYNTHESIS.md",
+      "bytes": 7456,
+      "sha256": "988e1070f678d60998dd29da0bc8c6ad600e1dbb0dd480be28508e7575175fe6",
+      "matches_zip": true,
+      "headings": [
+        "MCP Runtime Sentinel \u2014 final research synthesis",
+        "1. Problem",
+        "2. Final architecture",
+        "3. Gateway evidence",
+        "4. Evaluated scenarios",
+        "5. Classical model comparison",
+        "6. Sequence comparison",
+        "7. Ablation evidence",
+        "8. Poisoning and drift",
+        "9. Calibration study",
+        "10. Strongest scenarios",
+        "11. Weakest scenarios",
+        "12. Key trade-off",
+        "13. Legitimate claims",
+        "14. Claims not supported",
+        "15. Additional validation required",
+        "Evidence-package index"
+      ]
+    },
+    {
+      "path": "results/final/calibration_finding.md",
+      "bytes": 1449,
+      "sha256": "b1e5a30475a1d4f0c5ba1a41f6698a32ce4685e2d4db9285b23519d5c275e112",
+      "matches_zip": true,
+      "headings": [
+        "Calibration and fusion finding"
+      ]
+    },
+    {
+      "path": "results/final/demo_verification.md",
+      "bytes": 4459,
+      "sha256": "881f3b3bb115ea627912221af82924a87428e463f4bdb4d3c433d89e54984347",
+      "matches_zip": true,
+      "headings": [
+        "Milestone 9 demo and reproducibility verification",
+        "Smoke metrics (not publication results)",
+        "Startup commands verified"
+      ]
+    },
+    {
+      "path": "results/final/gateway_performance.md",
+      "bytes": 1111,
+      "sha256": "a412bfd477ca9991240a0e6390f22b43fd0730da26d599b9b80633497a4cf66f",
+      "matches_zip": true,
+      "headings": [
+        "Gateway performance evidence",
+        "Latest retained measurement",
+        "Historical figure-set measurement"
+      ]
+    },
+    {
+      "path": "results/final/master_ablation.md",
+      "bytes": 1563,
+      "sha256": "1eb5dcac5626712afb14bbce9bd2d609d97571b01f0ce94a233a2cfc61734669",
+      "matches_zip": true,
+      "headings": [
+        "Master Sentinel ablation evidence",
+        "Frozen held-out TEST",
+        "Adaptive poisoning and drift"
+      ]
+    },
+    {
+      "path": "results/final/master_model_comparison.md",
+      "bytes": 1735,
+      "sha256": "7ff00ba322ac4ac48059b7266702b2e871347cfd61e83927363518128ca46bae",
+      "matches_zip": true,
+      "headings": [
+        "Master model comparison"
+      ]
+    },
+    {
+      "path": "results/final/master_per_attack.md",
+      "bytes": 1843,
+      "sha256": "8f9ca4bc4e1a173fca93d62b66c03eaf86acd1e74271c83014b51eca4bf31f4e",
+      "matches_zip": true,
+      "headings": [
+        "Master per-attack recall"
+      ]
+    },
+    {
+      "path": "results/final/security_tradeoff.md",
+      "bytes": 1005,
+      "sha256": "a23f079abe4bc2453899e202b99fae317f40a267e1a71c8fb62af148466423d9",
+      "matches_zip": true,
+      "headings": [
+        "Security operating-point trade-off"
+      ]
+    },
+    {
+      "path": "results/final/sequence_finding.md",
+      "bytes": 1190,
+      "sha256": "1ee0572db4f69116449243f2ead614bbf53ae46969df5331d05baf7225799151",
+      "matches_zip": true,
+      "headings": [
+        "Temporal sequence-model finding"
+      ]
+    },
+    {
+      "path": "results/final/statistical_evidence.md",
+      "bytes": 1366,
+      "sha256": "58a986905ec1ee620952ad5b54475dffc6def23bdd5503c07665d59cac475efb",
+      "matches_zip": true,
+      "headings": [
+        "Statistical evidence"
+      ]
+    },
+    {
+      "path": "results/fusion_study/REPORT.md",
+      "bytes": 6852,
+      "sha256": "3f967798ec53a9dc07d32977a9ccceb5747ebc99abf281f08f976b5164300b53",
+      "matches_zip": true,
+      "headings": [
+        "Milestone 6B \u2014 Validation-only risk-fusion study",
+        "Decision",
+        "Methods",
+        "Control: current production fusion",
+        "Candidate 1: additive causal fusion",
+        "Candidate 2: monotonic midrank calibration",
+        "Separation and tie handling",
+        "Five-seed aggregate metrics",
+        "Per-attack mean recall",
+        "Real HTTP gateway benchmark",
+        "Ablation compatibility and verification",
+        "Limitations"
+      ]
+    },
+    {
+      "path": "results/fusion_study/overall.csv",
+      "bytes": 2386,
+      "sha256": "203f0a35cc9333de965a50dccaf1e6eb440fa31335bf2d40158bb4816b009b89",
+      "matches_zip": true
+    },
+    {
+      "path": "results/fusion_study/per_attack.csv",
+      "bytes": 8577,
+      "sha256": "cffde2f428b95ec99a13b3c9d4b18b17fb86c1eff54e1f0c497a2d7c9efbc9a6",
+      "matches_zip": true
+    },
+    {
+      "path": "results/fusion_study/results.json",
+      "bytes": 9540585,
+      "sha256": "4db0b57063a265e62277d40eaf87540ebb7e1be688eedcc7543a24a7e1fbab10",
+      "matches_zip": true
+    },
+    {
+      "path": "results/reproduction_smoke_run1/aggregate/metrics.json",
+      "bytes": 2725,
+      "sha256": "288727f2a81a4da12da9ae670d3746595cbaede1738f860e199591e6535fd8bf",
+      "matches_zip": true
+    },
+    {
+      "path": "results/reproduction_smoke_run1/dense_autoencoder/per_seed/seed-42.json",
+      "bytes": 67239,
+      "sha256": "6b2fbfb6f2d8b39b26c628b51e641aa8d5f6bbfab3d44d3232907b755532663c",
+      "matches_zip": true
+    },
+    {
+      "path": "results/reproduction_smoke_run1/per_scenario/metrics.csv",
+      "bytes": 1492,
+      "sha256": "d6f3aa6576c18671efd05465a8ec5de9e8206ee8c7583a11197c05b95d062bcc",
+      "matches_zip": true
+    },
+    {
+      "path": "results/reproduction_smoke_run1/per_seed.csv",
+      "bytes": 334,
+      "sha256": "2d7886011ea181682416a79b84db007f01ec2c20813a6daad85b7d90e8afd2eb",
+      "matches_zip": true
+    },
+    {
+      "path": "results/reproduction_smoke_run1/report.md",
+      "bytes": 472,
+      "sha256": "c3b87b4624e6e7ea6b26171e6304ea2df1f09dc21d2e1d2a0871f029cab28b0b",
+      "matches_zip": true,
+      "headings": []
+    },
+    {
+      "path": "results/reproduction_smoke_run1/sentinel/per_seed/seed-42.json",
+      "bytes": 56882,
+      "sha256": "52db55681b26adc1ca84be62d9f1edc2c626e0b428f7083f7e6bb16daa61e661",
+      "matches_zip": true
+    },
+    {
+      "path": "results/reproduction_smoke_run2/aggregate/metrics.json",
+      "bytes": 2719,
+      "sha256": "8a91d11b76885479a11f1bc1dc68eb6ecb1e8b86277db41b8aeb057dc38bceda",
+      "matches_zip": true
+    },
+    {
+      "path": "results/reproduction_smoke_run2/dense_autoencoder/per_seed/seed-42.json",
+      "bytes": 67158,
+      "sha256": "9dd4cee54161f21b06205b42afa10592e33d52d90c11a01e2a15a81b4e6e9334",
+      "matches_zip": true
+    },
+    {
+      "path": "results/reproduction_smoke_run2/per_scenario/metrics.csv",
+      "bytes": 1492,
+      "sha256": "d6f3aa6576c18671efd05465a8ec5de9e8206ee8c7583a11197c05b95d062bcc",
+      "matches_zip": true
+    },
+    {
+      "path": "results/reproduction_smoke_run2/per_seed.csv",
+      "bytes": 332,
+      "sha256": "46b21b0b5a96b0c2c3e2fbcb2c77283ed6ef30cc3200fdb010d229568256c4a7",
+      "matches_zip": true
+    },
+    {
+      "path": "results/reproduction_smoke_run2/sentinel/per_seed/seed-42.json",
+      "bytes": 56801,
+      "sha256": "fb04113499f3c8f2fa925e260367c4952908f8f555339551dbb0ed7e62c1421e",
+      "matches_zip": true
+    },
+    {
+      "path": "results/research_milestone/cross_server/cross_server-s42-8f035e51.json",
+      "bytes": 12177,
+      "sha256": "819bb49613fe6393d230c0a4374f3d73e91f058ec01ee1c1a9cbbd24e9d877a3",
+      "matches_zip": true
+    },
+    {
+      "path": "results/research_milestone/summary.json",
+      "bytes": 195,
+      "sha256": "e44a99c798703f1a694395fc0a876e75b02e86820f41b278b6fb7aeb146006dd",
+      "matches_zip": true
+    },
+    {
+      "path": "results/research_milestone/summary.txt",
+      "bytes": 61,
+      "sha256": "c5056b674cfea07925f0ba30a3516d66e43d2f57457d0b05c3b706b076145b5f",
+      "matches_zip": true
+    },
+    {
+      "path": "results/sequence_publication/REPORT.md",
+      "bytes": 9384,
+      "sha256": "06958ea149a2a86ce3a77928c8b0e7d1ea36b71445466a3bd72afe6124318173",
+      "matches_zip": true,
+      "headings": [
+        "Milestone 7 \u2014 Sequence baseline execution report",
+        "Research answer",
+        "Files",
+        "Input representation",
+        "LSTM architecture",
+        "Transformer architecture",
+        "Training and calibration",
+        "Overall five-seed comparison",
+        "Relevant per-scenario mean recall",
+        "Session-local analysis",
+        "Runtime and resources",
+        "Verification and limitations"
+      ]
+    },
+    {
+      "path": "results/sequence_publication/comparison.md",
+      "bytes": 877,
+      "sha256": "45b2d86e06ea0c20490c056035a5141f75880ac2f952fe20d17207b8e408ae0a",
+      "matches_zip": true,
+      "headings": []
+    },
+    {
+      "path": "results/sequence_publication/per_scenario.csv",
+      "bytes": 18947,
+      "sha256": "55965d23802de53748d0d5269a734c0fdeb46274c2b9f8687c223b6c0c81a554",
+      "matches_zip": true
+    },
+    {
+      "path": "results/sequence_publication/sequence_analysis.json",
+      "bytes": 92271,
+      "sha256": "ed7ea303010727969f9f76234dee0970da282970641a30dd13155c5e27753083",
+      "matches_zip": true
+    },
+    {
+      "path": "results/sequence_smoke/aggregate/metrics.json",
+      "bytes": 2769,
+      "sha256": "58ef41e8fa999c14971db9cc4601a71eeb45eb74b998e0a7f66032bdc53101d9",
+      "matches_zip": true
+    },
+    {
+      "path": "results/sequence_smoke/lstm/per_seed/seed-42.json",
+      "bytes": 69008,
+      "sha256": "b6eb3a3dba711b88ef247c22fbd2b380a404e492147e98e80449c95568bfe44f",
+      "matches_zip": true
+    },
+    {
+      "path": "results/sequence_smoke/per_scenario/metrics.csv",
+      "bytes": 1428,
+      "sha256": "61fced1c1e65048c4a7d281c73510f7d59624adea900d7cbdb8a69927c5d73f2",
+      "matches_zip": true
+    },
+    {
+      "path": "results/sequence_smoke/per_seed.csv",
+      "bytes": 370,
+      "sha256": "0f637dcd3e12ddd9fe45145f1affdc176c8702fc885cf1879e307482c3e22193",
+      "matches_zip": true
+    },
+    {
+      "path": "results/sequence_smoke/transformer/per_seed/seed-42.json",
+      "bytes": 69516,
+      "sha256": "d632c3e5a16600459d6e9d0c6a730d718ecf30a5eaafffde67dd41a45c642e61",
+      "matches_zip": true
+    },
+    {
+      "path": "results/statistical_analysis/baseline_statistics.json",
+      "bytes": 18120,
+      "sha256": "8d9b2cbe02dffc331c5907c20c9ed4d6c804de68277c44b3598376595999a568",
+      "matches_zip": true
+    },
+    {
+      "path": "results/statistical_analysis/diagnostics.json",
+      "bytes": 18222,
+      "sha256": "7b7cb88041a5c73b7c9d5c4362f044c3b8ef6ea0055f73278833164d160a9470",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tables/ablation_matrix.md",
+      "bytes": 705,
+      "sha256": "0b176a3b255d287ea4de63add432cf3d1198ef51a95a63cffeb7e6da1d99249d",
+      "matches_zip": true,
+      "headings": []
+    },
+    {
+      "path": "results/tables/adaptive_analysis.md",
+      "bytes": 403,
+      "sha256": "2ea3836fd062ef523c837a21ee510deb717c639950ed60f5ed3d273f0ff8a7b8",
+      "matches_zip": true,
+      "headings": []
+    },
+    {
+      "path": "results/tables/baseline_comparison.md",
+      "bytes": 492,
+      "sha256": "bca691e3411b198cfa3d7410189b14d564e5f62ce95f3dffb9b506650f0fc7f1",
+      "matches_zip": true,
+      "headings": []
+    },
+    {
+      "path": "results/tables/per_attack_recall.md",
+      "bytes": 987,
+      "sha256": "bed1d6ba98a20cc7d17939f45888922ef496617b03e92596cab381b679a5e106",
+      "matches_zip": true,
+      "headings": []
+    },
+    {
+      "path": "results/tradeoff_diagnostics/DIAGNOSIS.md",
+      "bytes": 7069,
+      "sha256": "0f943c8f0c8387412cbcfa26a34ee65b55773422b5c4d43f8d82ae32dfa31105",
+      "matches_zip": true,
+      "headings": [
+        "Milestone 6A: Sentinel trust/threshold diagnosis",
+        "Scope and guardrails",
+        "Primary finding",
+        "False negatives and component incompatibilities",
+        "Offline alternatives (diagnostic only)",
+        "Trajectory findings",
+        "Sequence-model diagnosis",
+        "Limitations and candidate hypotheses",
+        "Artifacts"
+      ]
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/capability_drift-trajectory.csv",
+      "bytes": 19541,
+      "sha256": "c87e7de096714c592f1bdc0bbf29a74bc6b8a9ac5a6a598b28126cc1ac5a6ae3",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/gradual_poisoning-trajectory.csv",
+      "bytes": 64390,
+      "sha256": "f31774fe4e589e1df8bc1a04b03d3ca62eae28ea27d3648b6d3c408837f10bc9",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/low_and_slow-trajectory.csv",
+      "bytes": 62390,
+      "sha256": "7939690bdb491a155085be9dd6a4fcd38e265619bb0e9f09dd720f8ac874d000",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/seed-1001-full-events.csv",
+      "bytes": 1125879,
+      "sha256": "6642bdcbfcb593c1858ac55eda7fdbca2cda3dd73338d6d60367b45ddd1523c6",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/seed-1001-without_causal-events.csv",
+      "bytes": 1182882,
+      "sha256": "4870995fd77f8a8e0c993f298cc45f621736a2f10b1b1af416fdf7f1e6169dd3",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/seed-123-full-events.csv",
+      "bytes": 1128020,
+      "sha256": "eeb6e5119ea81beea7a810157dcdef98d6588ccd3ae7c6f8c4d75b8d749eef3e",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/seed-123-without_causal-events.csv",
+      "bytes": 1183378,
+      "sha256": "04615b4ea629e5bc303b47bd4a8a273238f9fd0a8ea6803ce4c61d74d925d914",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/seed-42-full-events.csv",
+      "bytes": 1127976,
+      "sha256": "b0019279fcbae7e4d79c7435f812539c98368f89473bd022bd521f5cc57de189",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/seed-42-without_causal-events.csv",
+      "bytes": 1182513,
+      "sha256": "45ef2190dcc51f676594ed19c00261fc76ab1092f32c3ee84e6c1e8bde6db03d",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/seed-456-full-events.csv",
+      "bytes": 1125105,
+      "sha256": "6f2cf285c08aa787fe91a01f7734272c9b91ee7c1b1186e6577b1baa5bf7f1bf",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/seed-456-without_causal-events.csv",
+      "bytes": 1186348,
+      "sha256": "e9a2b2e713d7820ae3e8846310542ef765aa50340b1d2a149ecd74c806c74b88",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/seed-789-full-events.csv",
+      "bytes": 1125354,
+      "sha256": "59cb5e7a369162cc28835feb22cd1922dc8ddaa8a07021f99229523cfcfac4e1",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/data/seed-789-without_causal-events.csv",
+      "bytes": 1181881,
+      "sha256": "2a7fe9a1e46cc5124f53d5abed72d7ff5091570b4370de5bfdbfa7ce5975a354",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/figures/capability_drift_trajectory.svg",
+      "bytes": 5692,
+      "sha256": "340d55d26bb72392819f0a1ece7cf30bd97ece9b248c737e7cf400eedd0f8412",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/figures/causal_vs_noncausal_recall.svg",
+      "bytes": 1285,
+      "sha256": "fdce5e1bee24f2820377a2f1792b5a68575c49071837e73bfa52f69f3918e6f8",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/figures/false_negative_components.svg",
+      "bytes": 3147,
+      "sha256": "abbe18abfe51076c6bcba431886e2dd012c8681f448610b34065b28ac24635aa",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/figures/gradual_poisoning_trajectory.svg",
+      "bytes": 11334,
+      "sha256": "02a2f5158bacf9fa609d88f93117d25a86195391114d50cfbbedde4e771a7b36",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/figures/low_and_slow_trajectory.svg",
+      "bytes": 11329,
+      "sha256": "433316950dd4d07656f62fdcc0b83687b5d622ad07c17dd5856f9ca661da0ada",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/figures/thresholds.svg",
+      "bytes": 2897,
+      "sha256": "404c7ef932ffd8344ccb3be293a6c0c7d1c610ae699814eccf10dca069d6531f",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/summary.json",
+      "bytes": 835320,
+      "sha256": "4f02d887c5dcffcda19db23f549b59451e5e583f6bbc7b8d0a25717baa6703b0",
+      "matches_zip": true
+    },
+    {
+      "path": "results/tradeoff_diagnostics/tables/full-vs-causal.csv",
+      "bytes": 820,
+      "sha256": "4c9b51475d81a85e96a7a153f815430340fb55169ccb43ba0aaa3f6b82547404",
+      "matches_zip": true
+    },
+    {
+      "path": "scripts/demo.ps1",
+      "bytes": 4832,
+      "sha256": "f409f6af13fdcc56ee7c819db2f290140c6d578a0fed1d43270f0c5b69f60442",
+      "matches_zip": true
+    },
+    {
+      "path": "sentinel/__init__.py",
+      "bytes": 228,
+      "sha256": "aa3ca70c56d35d1811965f4804f1aab28dcf2cdccb45da12a1e6cf37c85710ab",
+      "matches_zip": true,
+      "definitions": []
+    },
+    {
+      "path": "sentinel/ablation.py",
+      "bytes": 11212,
+      "sha256": "e05865c5c3aedee53b9b45777bf53789e3957af749595acd6743d855b247dba1",
+      "matches_zip": true,
+      "definitions": [
+        "AblationConfig",
+        "_statistics",
+        "_adaptive_curve",
+        "run_ablation_matrix",
+        "analyze_adaptive_curves",
+        "analyze_existing_baselines"
+      ]
+    },
+    {
+      "path": "sentinel/approvals.py",
+      "bytes": 1756,
+      "sha256": "39b319cca256ab004fef402621a15286c836eb3f4fd08d22dce899f03cae9160",
+      "matches_zip": true,
+      "definitions": [
+        "ReviewApproval",
+        "ReviewApprovals"
+      ]
+    },
+    {
+      "path": "sentinel/attestation.py",
+      "bytes": 4162,
+      "sha256": "40c7da3ddcbb346954baef2d2b635b6c24d1e54f6baf60d800f8dd2d4fbcda64",
+      "matches_zip": true,
+      "definitions": [
+        "AttestationChallenge",
+        "AttestationManager"
+      ]
+    },
+    {
+      "path": "sentinel/baselines.py",
+      "bytes": 1543,
+      "sha256": "25c15fb573e537e8013038bff009dc87163541302a423f31b6f4f4e2372ec1ca",
+      "matches_zip": true,
+      "definitions": [
+        "BaselineDecision",
+        "Baseline",
+        "SentinelBaseline",
+        "RuleBaseline"
+      ]
+    },
+    {
+      "path": "sentinel/benchmark.py",
+      "bytes": 1837,
+      "sha256": "01f08fd3e7aa77377f43d0630eb274ce9c0b5a91f4fef4081f17ae62048b91f0",
+      "matches_zip": true,
+      "definitions": [
+        "run_benchmark",
+        "print_benchmark"
+      ]
+    },
+    {
+      "path": "sentinel/causal.py",
+      "bytes": 4602,
+      "sha256": "f0176a120561c51f371e1d246ac28b83101bf6e7b03a6ccd88c9994f0dcebee2",
+      "matches_zip": true,
+      "definitions": [
+        "_tokens",
+        "CausalNode",
+        "CausalEdge",
+        "CausalEvidence",
+        "TemporalCausalGraph"
+      ]
+    },
+    {
+      "path": "sentinel/cli.py",
+      "bytes": 14264,
+      "sha256": "c8d981161ccaed49619bf4e8263d822cac21c176edfb05bebd7f12ab4345fece",
+      "matches_zip": true,
+      "definitions": [
+        "run_demo",
+        "main"
+      ]
+    },
+    {
+      "path": "sentinel/compare.py",
+      "bytes": 12701,
+      "sha256": "d86777f55b48ba5663eb22e071b003e347cf3f74eb2ee1cc226101f2ff53fe2d",
+      "matches_zip": true,
+      "definitions": [
+        "CompareConfig",
+        "calibrate_threshold",
+        "percentile_scores",
+        "_sentinel_scores",
+        "_baseline_scores",
+        "_metrics",
+        "evaluate_model",
+        "_aggregate",
+        "aggregate_results",
+        "run_comparison",
+        "generate_report"
+      ]
+    },
+    {
+      "path": "sentinel/comparison_data.py",
+      "bytes": 3554,
+      "sha256": "42d558d1f3fc1d20586013c344a4cf47aa1f0e64ba60011b2f0e6fe67c370e19",
+      "matches_zip": true,
+      "definitions": [
+        "DatasetRow",
+        "ComparisonDataset",
+        "_row",
+        "_normal_rows",
+        "build_comparison_dataset"
+      ]
+    },
+    {
+      "path": "sentinel/correct_metrics.py",
+      "bytes": 2263,
+      "sha256": "0fde8a4db5674ae4743cbfa6d464784232da2a39c0da8b5917a5172cb348111e",
+      "matches_zip": true,
+      "definitions": [
+        "correction_report",
+        "main"
+      ]
+    },
+    {
+      "path": "sentinel/detectors.py",
+      "bytes": 3112,
+      "sha256": "ce83fad49c7dedfb8444a811e462777ebb25a4292e027bbc3fa41c60b268683a",
+      "matches_zip": true,
+      "definitions": [
+        "OnlineStandardizer",
+        "TinyAutoencoder",
+        "SequenceModel"
+      ]
+    },
+    {
+      "path": "sentinel/diagnostics.py",
+      "bytes": 5142,
+      "sha256": "af67827ac9e9e94987366f0f7ce5196d8d46b07d78f69f143df6f2500e03552d",
+      "matches_zip": true,
+      "definitions": [
+        "isolation_forest_diagnostic",
+        "sentinel_weakness_diagnostic",
+        "write_diagnostics"
+      ]
+    },
+    {
+      "path": "sentinel/engine.py",
+      "bytes": 12653,
+      "sha256": "6ceb47cb717f3c8d96b2b0031f821ecddc932c5c2aac24c0df75fa9268ae6473",
+      "matches_zip": true,
+      "definitions": [
+        "ServerProfile",
+        "EngineConfig",
+        "SentinelEngine"
+      ]
+    },
+    {
+      "path": "sentinel/experiment.py",
+      "bytes": 12470,
+      "sha256": "52d688ad89a44206a97127deaedf2d0d2ac7393dad4facd8e3aa025afa08b854",
+      "matches_zip": true,
+      "definitions": [
+        "ExperimentConfig",
+        "LiveExperiment",
+        "_profile_totals",
+        "run_one",
+        "run_experiment"
+      ]
+    },
+    {
+      "path": "sentinel/features.py",
+      "bytes": 2171,
+      "sha256": "b737852d290c8318a6b56bae333781e8263f8b0c2ba5e349a32148f95feb5618",
+      "matches_zip": true,
+      "definitions": [
+        "_tokens",
+        "intent_mismatch",
+        "response_shape",
+        "extract_features"
+      ]
+    },
+    {
+      "path": "sentinel/final_verification.py",
+      "bytes": 4841,
+      "sha256": "479a5d087cf42b7f069e175f0985248b91e3edf038274f8cbaf7a076fbe072c6",
+      "matches_zip": true,
+      "definitions": [
+        "_digest",
+        "verify_research_package",
+        "main"
+      ]
+    },
+    {
+      "path": "sentinel/fusion_study.py",
+      "bytes": 9324,
+      "sha256": "a8d1bde9403ac3d86665b622ad4eea5472dab6bd3d0312103a149f0426d004ba",
+      "matches_zip": true,
+      "definitions": [
+        "FusionStudyConfig",
+        "MidrankECDF",
+        "candidate_scores",
+        "_evaluate",
+        "_component_distributions",
+        "evaluate_seed",
+        "_mean",
+        "run_fusion_study"
+      ]
+    },
+    {
+      "path": "sentinel/gateway.py",
+      "bytes": 26936,
+      "sha256": "a21b83ba3064955c1012b3a6a6f7151175ba0221f85761ee153797a255908941",
+      "matches_zip": true,
+      "definitions": [
+        "GatewayConfig",
+        "GatewayAudit",
+        "SentinelGateway",
+        "make_gateway_handler",
+        "create_gateway_server",
+        "serve_gateway"
+      ]
+    },
+    {
+      "path": "sentinel/gateway_benchmark.py",
+      "bytes": 2964,
+      "sha256": "45f80a177177e19e84b3da810716721e6bf00714c9c596590b969ffde554597a",
+      "matches_zip": true,
+      "definitions": [
+        "_rpc",
+        "run_gateway_benchmark",
+        "print_gateway_benchmark"
+      ]
+    },
+    {
+      "path": "sentinel/http_limits.py",
+      "bytes": 3747,
+      "sha256": "f4e83b84324cddcf425f94c91f2d5decc5b282e03e290b2b738782e9e3f01f27",
+      "matches_zip": true,
+      "definitions": [
+        "validate_timeout",
+        "remaining",
+        "budget",
+        "request_budget",
+        "interrupt_socket",
+        "socket_deadline",
+        "timed_lock",
+        "BoundedHTTPServer"
+      ]
+    },
+    {
+      "path": "sentinel/jsonrpc.py",
+      "bytes": 2781,
+      "sha256": "1b737271f89420d787fcd39f742c85e8eca721164dce7e55252a5526d03d0a6a",
+      "matches_zip": true,
+      "definitions": [
+        "JsonRpcError",
+        "JsonRpcRequest",
+        "parse_request",
+        "validate_response",
+        "fingerprint"
+      ]
+    },
+    {
+      "path": "sentinel/metrics.py",
+      "bytes": 4810,
+      "sha256": "1978e4b37d9094b2a24aae51b27651149b55cfc3aae6de81b2cb96e2af2bae01",
+      "matches_zip": true,
+      "definitions": [
+        "Observation",
+        "_auc",
+        "score_curves",
+        "_average_precision",
+        "calculate_metrics"
+      ]
+    },
+    {
+      "path": "sentinel/ml_baselines.py",
+      "bytes": 7180,
+      "sha256": "07215fc2857264b4d36aabe0fe19214c8b732b65a7e321364c30390622316a58",
+      "matches_zip": true,
+      "definitions": [
+        "OfflineDetector",
+        "StandardScaler",
+        "IsolationNode",
+        "_c_factor",
+        "IsolationForestDetector",
+        "OneClassSVMDetector",
+        "DenseAutoencoderDetector"
+      ]
+    },
+    {
+      "path": "sentinel/ml_features.py",
+      "bytes": 4325,
+      "sha256": "85bb992edbb6624574e662c56cc59cd93d8aeb0482e9833e7ea9d9bf4f829af5",
+      "matches_zip": true,
+      "definitions": [
+        "simulated_response",
+        "_hash_bucket",
+        "FeatureState",
+        "_tokens",
+        "common_feature_vector",
+        "feature_matrix"
+      ]
+    },
+    {
+      "path": "sentinel/mock_server.py",
+      "bytes": 5424,
+      "sha256": "1322ffe2c82dc6847233705799813c223bcb137f69a57da315ed05243e62d545",
+      "matches_zip": true,
+      "definitions": [
+        "MockMcpState",
+        "tools",
+        "create_mock_server",
+        "serve_mock"
+      ]
+    },
+    {
+      "path": "sentinel/models.py",
+      "bytes": 2756,
+      "sha256": "8477dd24c839bb0c454462ebbbd9c6682ef5713dcc3f8502504543d0246af6b6",
+      "matches_zip": true,
+      "definitions": [
+        "Action",
+        "Interaction",
+        "Verdict"
+      ]
+    },
+    {
+      "path": "sentinel/novelty.py",
+      "bytes": 17585,
+      "sha256": "9768a6659541ff997293daff6fadb13ea2a0acf40d0e0aa26e2057f964a18adb",
+      "matches_zip": true,
+      "definitions": [
+        "_hash",
+        "_terms",
+        "ProvenanceClaim",
+        "IntentProvenanceLedger",
+        "CapabilityState",
+        "CapabilityTrustController",
+        "Candidate",
+        "DualMemoryAdapter",
+        "NoveltyVerdict",
+        "NoveltyConfig",
+        "NoveltySentinelEngine"
+      ]
+    },
+    {
+      "path": "sentinel/novelty_experiment.py",
+      "bytes": 17798,
+      "sha256": "a28c1ff6705a5100b05ca97ad926a4c07103deaf1457df88cab7b0c788de9213",
+      "matches_zip": true,
+      "definitions": [
+        "ValidationCalibration",
+        "NoveltyStudyConfig",
+        "NoveltyLiveExperiment",
+        "_revision",
+        "_workload_digest",
+        "summarize",
+        "run_novelty_study"
+      ]
+    },
+    {
+      "path": "sentinel/novelty_scenarios.py",
+      "bytes": 4525,
+      "sha256": "35efd6a4256a20cdcf01322add74728e15f1d3328051160e4e1bdae60bf28b95",
+      "matches_zip": true,
+      "definitions": [
+        "NoveltyCase",
+        "NoveltyScenario",
+        "build_novelty_scenarios"
+      ]
+    },
+    {
+      "path": "sentinel/plots.py",
+      "bytes": 6837,
+      "sha256": "2b8a22922cc06d9447e68cc3a016f8e7de0540fee54384d0405ed4f9310d1de1",
+      "matches_zip": true,
+      "definitions": [
+        "_svg",
+        "_axes",
+        "line_chart",
+        "bar_chart",
+        "_mean_curve",
+        "generate_figures"
+      ]
+    },
+    {
+      "path": "sentinel/provenance.py",
+      "bytes": 11396,
+      "sha256": "f582873196ae8c1eb24f20995cae0eb066b437880c7f6dca9b161d09920dd4c6",
+      "matches_zip": true,
+      "definitions": [
+        "ScenarioClock",
+        "ProvenanceStep",
+        "ProvenanceClaim",
+        "ProvenanceResult",
+        "_finite",
+        "_digest",
+        "ProvenanceLedger"
+      ]
+    },
+    {
+      "path": "sentinel/research_tables.py",
+      "bytes": 4243,
+      "sha256": "74e02607044a263032c8c8cadd318539bd58e781b083128f950f6126137c5bf6",
+      "matches_zip": true,
+      "definitions": [
+        "generate_research_tables"
+      ]
+    },
+    {
+      "path": "sentinel/retention.py",
+      "bytes": 737,
+      "sha256": "bd13639b8009617e93122873254a48885001b80aa31ae09bd95d11aa3ebb9b1b",
+      "matches_zip": true,
+      "definitions": [
+        "StateCapacityError",
+        "RetentionConfig"
+      ]
+    },
+    {
+      "path": "sentinel/scenarios.py",
+      "bytes": 8432,
+      "sha256": "4b8af0559b5a3dd844f881bd4bc6dbf527c36f08bbf5ba5d84ae593406010dc1",
+      "matches_zip": true,
+      "definitions": [
+        "Scenario",
+        "run_provenance_scenario",
+        "_case",
+        "build_scenarios"
+      ]
+    },
+    {
+      "path": "sentinel/sequence_analysis.py",
+      "bytes": 6308,
+      "sha256": "f1e3dcb30273271b87ad6d2398989c1d94d9db64cb89b965bfe69d1151a892f9",
+      "matches_zip": true,
+      "definitions": [
+        "_prepare",
+        "_cases",
+        "auxiliary_sequence_evaluation",
+        "generate_sequence_report"
+      ]
+    },
+    {
+      "path": "sentinel/sequence_baselines.py",
+      "bytes": 7931,
+      "sha256": "31e06cecac14b7b89228be19d70f7a0fe713b9f5ff6118e0e2860f5180c5eb00",
+      "matches_zip": true,
+      "definitions": [
+        "_PredictionHead",
+        "LSTMAnomalyDetector",
+        "TransformerAnomalyDetector"
+      ]
+    },
+    {
+      "path": "sentinel/sequence_features.py",
+      "bytes": 2192,
+      "sha256": "1f695aee3224ff6a2e35b9959dc0c16a167189a6779da13ec48b82df1ab42512",
+      "matches_zip": true,
+      "definitions": [
+        "SequencePreprocessor"
+      ]
+    },
+    {
+      "path": "sentinel/service.py",
+      "bytes": 2737,
+      "sha256": "23b798b1e7c18187721a959f58fc87b4511c9c46fd1013fd0b8d9e31e2a05f3c",
+      "matches_zip": true,
+      "definitions": [
+        "make_handler",
+        "create_service_server",
+        "serve"
+      ]
+    },
+    {
+      "path": "sentinel/simulator.py",
+      "bytes": 2210,
+      "sha256": "bc51e0be4db5a383244ab758e962003e94b8cf9d7cd52a3f53bdd4da05c08f8e",
+      "matches_zip": true,
+      "definitions": [
+        "normal_events",
+        "attack_events",
+        "cross_server_attack"
+      ]
+    },
+    {
+      "path": "sentinel/statistics.py",
+      "bytes": 2827,
+      "sha256": "c4ac898d3f9742b8e1797c661183404b2dab420ea1fb44963660535fd92a715a",
+      "matches_zip": true,
+      "definitions": [
+        "ConfidenceInterval",
+        "bootstrap_mean_ci",
+        "paired_bootstrap_difference",
+        "exact_paired_sign_flip",
+        "holm_adjust"
+      ]
+    },
+    {
+      "path": "sentinel/tradeoff_analysis.py",
+      "bytes": 15133,
+      "sha256": "d50a9333e935c7b2962d2db8280a36fb505515b45eb603c4b03766938cedebc3",
+      "matches_zip": true,
+      "definitions": [
+        "TradeoffConfig",
+        "_quantiles",
+        "_contributions",
+        "_record",
+        "_replay",
+        "_outcome",
+        "_component_summary",
+        "_metrics",
+        "_percentile_map",
+        "_alternatives",
+        "_distributions",
+        "_scenario_comparison",
+        "_adaptive_trajectory",
+        "sequence_locality_probe",
+        "_write_csv",
+        "_figures",
+        "run_tradeoff_analysis"
+      ]
+    },
+    {
+      "path": "sentinel/validation.py",
+      "bytes": 2790,
+      "sha256": "85aa8ed94d08ee05adad53613a6572041dd99d835f9ad574aed7168425e49d3e",
+      "matches_zip": true,
+      "definitions": [
+        "validate_json",
+        "load_json",
+        "read_body"
+      ]
+    },
+    {
+      "path": "sentinel/workload.py",
+      "bytes": 2280,
+      "sha256": "367991bb7d9421b33823669542848631b41396a799258a2f00a5f5ff6f1c2a97",
+      "matches_zip": true,
+      "definitions": [
+        "WorkloadCase",
+        "normal_workload",
+        "gradual_parameter_cases"
+      ]
+    },
+    {
+      "path": "tests/test_capability_recovery.py",
+      "bytes": 6706,
+      "sha256": "1065da20a5b7711de453751cb6b9481d9d14450638180e16e87d75ddda046a3b",
+      "matches_zip": true,
+      "definitions": [
+        "CapabilityRecoveryTests"
+      ]
+    },
+    {
+      "path": "tests/test_engine.py",
+      "bytes": 3749,
+      "sha256": "67f8e9397bbd6d63550c10959c6f4e73280b5ef3f903a8536693a5dae18a1194",
+      "matches_zip": true,
+      "definitions": [
+        "SentinelEngineTests"
+      ]
+    },
+    {
+      "path": "tests/test_final_verification.py",
+      "bytes": 386,
+      "sha256": "ccb71c26c6c1d49ffa948926efe5eecc7bafed3079cb1ba881b4203d1cbf03ca",
+      "matches_zip": true,
+      "definitions": [
+        "FinalVerificationTests"
+      ]
+    },
+    {
+      "path": "tests/test_fusion_study.py",
+      "bytes": 1634,
+      "sha256": "0ce89c98c17aeda36cd8372674dd1ac3e85d240c89e5e5d76f61e26926453f5d",
+      "matches_zip": true,
+      "definitions": [
+        "records",
+        "FusionCalibrationTests"
+      ]
+    },
+    {
+      "path": "tests/test_gateway_completion.py",
+      "bytes": 5294,
+      "sha256": "092bf2a7de0d8e28f7fa6a9746153f135ce7943c1b4471a4b7d1c73c698a9c47",
+      "matches_zip": true,
+      "definitions": [
+        "GatewayCompletionTests"
+      ]
+    },
+    {
+      "path": "tests/test_gateway_errors.py",
+      "bytes": 2566,
+      "sha256": "a8c3a6004232a6677d5c72b19be6e0948d988aad1b96b756cc91cda969871520",
+      "matches_zip": true,
+      "definitions": [
+        "call_payload",
+        "GatewayErrorTests"
+      ]
+    },
+    {
+      "path": "tests/test_gateway_integration.py",
+      "bytes": 6956,
+      "sha256": "79b358c1383c119fb326b80efbd92974d0b66834969db7dbf4926020fdb240aa",
+      "matches_zip": true,
+      "definitions": [
+        "GatewayIntegrationTests"
+      ]
+    },
+    {
+      "path": "tests/test_http_hardening.py",
+      "bytes": 7854,
+      "sha256": "b59acf024be0bb9455d4fc3aa8eb4cb4a680553a225e2997945e535039e4134b",
+      "matches_zip": true,
+      "definitions": [
+        "AttestationHardeningTests",
+        "BoundaryHardeningTests"
+      ]
+    },
+    {
+      "path": "tests/test_http_limits.py",
+      "bytes": 5590,
+      "sha256": "eb6850a53afa927b18600ef833b3250ea274eb300cec8716796dc8102d5c5286",
+      "matches_zip": true,
+      "definitions": [
+        "running",
+        "HttpLimitTests"
+      ]
+    },
+    {
+      "path": "tests/test_learning_guards.py",
+      "bytes": 3701,
+      "sha256": "e12e46b19a0db199af80a46e41972441d963f0580d0cca101e256dd4a1739088",
+      "matches_zip": true,
+      "definitions": [
+        "event",
+        "LearningGuardTests"
+      ]
+    },
+    {
+      "path": "tests/test_ml_comparison.py",
+      "bytes": 4237,
+      "sha256": "6fd68c8183263f1b196b8e6605c34c3ee8bc988b40805a9885ff765da2300555",
+      "matches_zip": true,
+      "definitions": [
+        "BaselineModelTests",
+        "ComparisonFrameworkTests"
+      ]
+    },
+    {
+      "path": "tests/test_novelty_engine.py",
+      "bytes": 2490,
+      "sha256": "57ca6f84b4fda91989819293e30a9d2179a3053fa5b52e95b2a4eed413caa6e8",
+      "matches_zip": true,
+      "definitions": [
+        "make",
+        "NoveltyTests"
+      ]
+    },
+    {
+      "path": "tests/test_novelty_experiment.py",
+      "bytes": 7381,
+      "sha256": "1d8c1a977792a43544f2d235150a6827c49a7e5164bcdd9ed9bc974543506325",
+      "matches_zip": true,
+      "definitions": [
+        "NoveltyScenarioTests",
+        "NoveltyStudyTests"
+      ]
+    },
+    {
+      "path": "tests/test_promotion_approval.py",
+      "bytes": 4883,
+      "sha256": "b39ea00b212977623ca71aa3742eed361276039352708b2367199a6acd641b13",
+      "matches_zip": true,
+      "definitions": [
+        "PromotionApprovalTests"
+      ]
+    },
+    {
+      "path": "tests/test_provenance.py",
+      "bytes": 20747,
+      "sha256": "dd784aec83ecb687b8cf0197f7c4f5ed98c477abed50fa81d445b60051323795",
+      "matches_zip": true,
+      "definitions": [
+        "ProvenanceTests",
+        "ProvenanceIntegrityTests",
+        "ProvenanceExperimentTests"
+      ]
+    },
+    {
+      "path": "tests/test_research_framework.py",
+      "bytes": 3906,
+      "sha256": "6696bd939338fd71889c25786a4d234a14084c067d6d4b482fe34b45393c3b06",
+      "matches_zip": true,
+      "definitions": [
+        "WorkloadTests",
+        "MetricTests",
+        "ExperimentTests"
+      ]
+    },
+    {
+      "path": "tests/test_retention.py",
+      "bytes": 4764,
+      "sha256": "cc5b8df1e700f421eaf8d498ed400e0ffec5ccdcece7983d6255ccbb22c784e2",
+      "matches_zip": true,
+      "definitions": [
+        "event",
+        "RetentionTests"
+      ]
+    },
+    {
+      "path": "tests/test_runtime_regressions.py",
+      "bytes": 11192,
+      "sha256": "4110427ef68e8252a38d7208927f83dc0185a3a5f351cae937b8b5b4439e872d",
+      "matches_zip": true,
+      "definitions": [
+        "event",
+        "RuntimeRegressionTests",
+        "GatewayPreflightTests",
+        "LiveNoveltyTests"
+      ]
+    },
+    {
+      "path": "tests/test_sequence_baselines.py",
+      "bytes": 2949,
+      "sha256": "4023da74fa775292edc9f71bec475dd15e3a923634e395e3ee30ae2886d37c16",
+      "matches_zip": true,
+      "definitions": [
+        "SequenceFeatureTests",
+        "SequenceModelTests"
+      ]
+    },
+    {
+      "path": "tests/test_statistics_ablation.py",
+      "bytes": 2771,
+      "sha256": "129bec1b7163ab3e006c4117d4dfc2d1ab76bc70a8ebb74de3ace91c2f8a1cdb",
+      "matches_zip": true,
+      "definitions": [
+        "StatisticalTests",
+        "AblationTests"
+      ]
+    },
+    {
+      "path": "tests/test_tradeoff_analysis.py",
+      "bytes": 1459,
+      "sha256": "c4e14a89cad5ceca5bc9d4847de5c4a57dd912a6379c61fefdc175cbbf5b367b",
+      "matches_zip": true,
+      "definitions": [
+        "TradeoffAnalysisTests"
+      ]
+    },
+    {
+      "path": "tests/test_validation_calibration.py",
+      "bytes": 4943,
+      "sha256": "1e5155fed42224d05c9fb11f803bc35b134afcabb9968c7d0c34b5ce9a1e8ae0",
+      "matches_zip": true,
+      "definitions": [
+        "observation",
+        "CalibrationTests"
+      ]
+    }
+  ]
+}

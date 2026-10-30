@@ -1,0 +1,109 @@
+"""Optional JSON-only pre-execution tool policy."""
+
+from __future__ import annotations
+
+import json
+import re
+import threading
+import time
+from pathlib import Path
+from typing import Any
+
+
+class PreExecutionPolicy:
+    def __init__(self, path: str | Path):
+        try:
+            raw = json.loads(Path(path).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError(f"cannot read policy file: {exc}") from exc
+        if not isinstance(raw, dict) or set(raw) != {"tools"} or not isinstance(raw["tools"], dict):
+            raise ValueError('policy must be a JSON object with a "tools" object')
+        self.rules: dict[str, dict[str, Any]] = {}
+        for tool, rule in raw["tools"].items():
+            if not isinstance(tool, str) or not tool or not isinstance(rule, dict):
+                raise ValueError("policy tool rules must map names to objects")
+            if set(rule) - {
+                "max_argument_bytes",
+                "forbidden_patterns",
+                "forbidden_paths",
+                "rate_limit",
+                "rate_burst",
+                "approval_required",
+            }:
+                raise ValueError(f"unknown policy field for {tool}")
+            maximum = rule.get("max_argument_bytes", 1_048_576)
+            if type(maximum) is not int or not 1 <= maximum <= 1_048_576:
+                raise ValueError(f"invalid max_argument_bytes for {tool}")
+            patterns = rule.get("forbidden_patterns", [])
+            paths = rule.get("forbidden_paths", [])
+            if not isinstance(patterns, list) or any(not isinstance(p, str) for p in patterns):
+                raise ValueError(f"invalid forbidden_patterns for {tool}")
+            if not isinstance(paths, list) or any(not isinstance(p, str) or not p for p in paths):
+                raise ValueError(f"invalid forbidden_paths for {tool}")
+            try:
+                compiled = [re.compile(pattern) for pattern in patterns]
+            except re.error as exc:
+                raise ValueError(f"invalid forbidden pattern for {tool}: {exc}") from exc
+            rate, burst = rule.get("rate_limit", 0.0), rule.get("rate_burst", 0)
+            if type(rate) not in (int, float) or rate < 0 or type(burst) is not int or burst < 0:
+                raise ValueError(f"invalid tool rate limit for {tool}")
+            if rate and burst < 1:
+                raise ValueError(f"rate_burst is required for {tool}")
+            approval = rule.get("approval_required", False)
+            if type(approval) is not bool:
+                raise ValueError(f"approval_required must be boolean for {tool}")
+            self.rules[tool] = {
+                "max_argument_bytes": maximum,
+                "patterns": compiled,
+                "paths": set(paths),
+                "rate_limit": float(rate),
+                "rate_burst": burst,
+                "approval_required": approval,
+            }
+        self._lock = threading.Lock()
+        self._buckets: dict[str, tuple[float, float]] = {}
+
+    def _consume_rate(self, tool: str, client_id: str, rule: dict[str, Any]) -> bool:
+        if not rule["rate_limit"]:
+            return True
+        now = time.monotonic()
+        key = f"{client_id}:{tool}"
+        with self._lock:
+            tokens, updated = self._buckets.get(key, (float(rule["rate_burst"]), now))
+            tokens = min(float(rule["rate_burst"]), tokens + (now - updated) * rule["rate_limit"])
+            if tokens < 1:
+                self._buckets[key] = (tokens, now)
+                return False
+            self._buckets[key] = (tokens - 1, now)
+            return True
+
+    def evaluate(
+        self, tool: str, arguments: dict[str, Any], client_id: str
+    ) -> tuple[list[str], bool]:
+        rule = self.rules.get(tool)
+        if rule is None:
+            return [], False
+        serialized = json.dumps(arguments, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+        reasons: list[str] = []
+        if len(serialized.encode("utf-8")) > rule["max_argument_bytes"]:
+            reasons.append("policy argument size limit")
+        if any(pattern.search(serialized) for pattern in rule["patterns"]):
+            reasons.append("policy forbidden argument pattern")
+        paths: set[str] = set()
+
+        def visit(value: Any, prefix: str = "") -> None:
+            if isinstance(value, dict):
+                for key, child in value.items():
+                    current = f"{prefix}.{key}" if prefix else str(key)
+                    paths.add(current)
+                    visit(child, current)
+            elif isinstance(value, list):
+                for index, child in enumerate(value):
+                    visit(child, f"{prefix}[{index}]")
+
+        visit(arguments)
+        if paths & rule["paths"]:
+            reasons.append("policy forbidden argument path")
+        if not self._consume_rate(tool, client_id, rule):
+            reasons.append("policy per-tool rate limit")
+        return reasons, bool(rule["approval_required"])

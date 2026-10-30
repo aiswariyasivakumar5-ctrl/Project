@@ -1,0 +1,22 @@
+% Table 1: Main Baseline Model Comparison on 20 Seeds (Springer LNCS Format)
+\begin{table}[t]
+\centering
+\caption{Baseline model comparison on 20 seeds (mean $\pm$ std). Exact paired Wilcoxon signed-rank test against Sentinel with Holm adjustment.}
+\label{tab:baseline_comparison}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Model Architecture} & \textbf{$F_1$ Score} & \textbf{Precision} & \textbf{Recall} & \textbf{FPR} & \textbf{$p_{\text{adj}}$} & \textbf{Effect $r$} \\
+\midrule
+\textbf{Sentinel (Ours)}    & \textbf{\SentinelFOne} $\pm$ \SentinelFOneStd & \textbf{\SentinelPrecision} & \SentinelRecall & \textbf{\SentinelFPR} & -- & -- \\
+Dense Autoencoder           & \DenseAEFOne\ $\pm$ \DenseAEFOneStd & \DenseAEPrecision & \DenseAERecall & \DenseAEFPR & $0.000010^*$ & $-1.0000$ \\
+Transformer (Seq.)          & \TransformerFOne\ $\pm$ \TransformerFOneStd & \TransformerPrecision & \TransformerRecall & \TransformerFPR & $0.000010^*$ & $-1.0000$ \\
+LSTM (Seq.)                 & \LSTMFOne\ $\pm$ \LSTMFOneStd & \LSTMPrecision & \LSTMRecall & \LSTMFPR & $0.000010^*$ & $-1.0000$ \\
+One-Class SVM               & \OneClassSVMFOne\ $\pm$ \OneClassSVMFOneStd & \OneClassSVMPrecision & \OneClassSVMRecall & \OneClassSVMFPR & 0.927279 & $+0.0286$ \\
+Isolation Forest            & \IsolationForestFOne\ $\pm$ \IsolationForestFOneStd & \IsolationForestPrecision & \IsolationForestRecall & 0.0073 & $0.000010^*$ & $+1.0000$ \\
+\bottomrule
+\multicolumn{7}{l}{\scriptsize $^*$Statistically significant difference at $\alpha = 0.05$ after Holm step-down correction.} \\
+\multicolumn{7}{l}{\scriptsize Evaluated on synthetic mock MCP workloads; train=5,000, val=1,000, test=\TestEventsPerSeed\ events/seed.}
+\end{tabular}
+\end{table}
