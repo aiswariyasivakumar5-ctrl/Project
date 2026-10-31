@@ -64,7 +64,7 @@ def _finite(value: Any) -> bool:
 def _digest(value: Any) -> str:
     # Do not coerce unsupported Python objects into strings that can collide
     # with actual JSON arguments.
-    def check(item):
+    def check(item: Any) -> None:
         if item is None or type(item) in (str, bool, int):
             return
         if type(item) is float and math.isfinite(item):
@@ -110,11 +110,11 @@ class ProvenanceLedger:
         self._evidence: dict[str, tuple[str, str | None]] = {}
         self._lock = threading.RLock()
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, Any]:
         # Experiment validation checkpoints deepcopy engines.
         return {key: value for key, value in self.__dict__.items() if key != "_lock"}
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: dict[str, Any]) -> None:
         self.__dict__.update(state)
         self._lock = threading.RLock()
 

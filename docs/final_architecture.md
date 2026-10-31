@@ -46,11 +46,11 @@ MCP Client
 
 Preflight can prevent known destructive intent mismatches before the server executes. Most behavioral/response evidence exists only after the upstream call; post-response enforcement can withhold output but cannot undo an upstream side effect.
 
-The gateway supports bounded single-message HTTP JSON-RPC for its documented MCP methods. It validates IDs, response shape, sizes, timeouts, and supported methods. Monitoring exceptions fail closed by default.
+The gateway supports bounded HTTP JSON-RPC and Streamable HTTP initialize/session mapping for its documented MCP methods. It parses bounded upstream SSE JSON-RPC responses, validates IDs and response shape, enforces sizes and timeouts, and rejects unsupported methods. Monitoring exceptions fail closed by default.
 
 ## State and evidence
 
-Profiles, causal history, trust, quarantine, challenges, and audit records are in memory. Traces contain content-derived identifiers and risk evidence. Audit payloads use fingerprints, but records are neither signed nor durable. The local audit endpoint is unauthenticated and intended for loopback research use.
+Profiles, causal history, trust, quarantine, challenges, and audit records are in memory. Traces contain content-derived identifiers and risk evidence. Audit payloads use fingerprints and a hash chain, but records are not signed or durable. Audit and operator routes require a separate operator Bearer credential; liveness/readiness endpoints are public.
 
 ## Attestation boundary
 

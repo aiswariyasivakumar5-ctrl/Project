@@ -15,12 +15,12 @@ import os
 import time
 from dataclasses import asdict
 
-from sentinel.novelty_experiment import (
+from sentinel_research.novelty_experiment import (
     NoveltyStudyConfig,
     run_novelty_study,
     summarize,
 )
-from sentinel.novelty_report import generate
+from sentinel_research.novelty_report import generate
 
 SEEDS = tuple(range(30001, 30021))
 OUTPUT_DIR = "results/novelty/publication_scale_v3"

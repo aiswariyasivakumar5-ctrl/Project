@@ -31,7 +31,7 @@ only; a regression test flips them while checking identical choices and learning
 
 ```powershell
 python -m unittest discover -s tests -p 'test_verification_budget*.py' -v
-python -m sentinel.verification_budget_study --output results/adaptation/verification-budget-new
+python -m sentinel_research.verification_budget_study --output results/adaptation/verification-budget-new
 ```
 
 The output directory must not exist. The runner records the protocol text/hash,

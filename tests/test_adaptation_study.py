@@ -1,5 +1,5 @@
 import unittest
-from sentinel.adaptation_study import build_streams, summarize_events
+from sentinel_research.adaptation_study import build_streams, summarize_events
 
 
 class AdaptationStudyTests(unittest.TestCase):

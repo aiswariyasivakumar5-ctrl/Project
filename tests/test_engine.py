@@ -2,7 +2,7 @@ import hashlib
 import unittest
 
 from sentinel import Action, Interaction, SentinelEngine
-from sentinel.simulator import cross_server_attack, normal_events
+from sentinel_research.simulator import cross_server_attack, normal_events
 
 
 class SentinelEngineTests(unittest.TestCase):

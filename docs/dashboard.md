@@ -3,13 +3,13 @@
 Run from the project directory using the installed Python environment:
 
 ```powershell
-.\.venv-repro\Scripts\python.exe -m sentinel.cli dashboard
+.\.venv-repro\Scripts\python.exe -m sentinel_research.cli dashboard
 ```
 
 Alternatively, after installing the project into your own environment:
 
 ```powershell
-python -m sentinel.cli dashboard --port 8765
+python -m sentinel_research.cli dashboard --port 8765
 ```
 
 Open **http://127.0.0.1:8765**. Keep the terminal running; Ctrl+C stops the

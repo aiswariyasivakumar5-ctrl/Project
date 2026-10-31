@@ -3,7 +3,7 @@ import unittest
 
 from sentinel.models import Interaction
 from sentinel.novelty import NoveltyConfig
-from sentinel.verified_learning import VerifiedLearningEngine, verify_calculation
+from sentinel_research.verified_learning import VerifiedLearningEngine, verify_calculation
 
 
 class VerifiedLearningTests(unittest.TestCase):

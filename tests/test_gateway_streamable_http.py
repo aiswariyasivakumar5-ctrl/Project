@@ -5,7 +5,7 @@ import urllib.error
 import urllib.request
 
 from sentinel.gateway import GatewayConfig, create_gateway_server
-from sentinel.mock_server import create_mock_server
+from sentinel_research.mock_server import create_mock_server
 
 
 class StreamableHttpGatewayTests(unittest.TestCase):
@@ -104,6 +104,8 @@ class StreamableHttpGatewayTests(unittest.TestCase):
         self.assertEqual(json.loads(body)["error"]["code"], -32600)
 
     def test_gated_resource_method_is_unavailable_by_default(self):
+        self.assertEqual(self.upstream_state.upstream_sessions, set())
+        self.assertEqual(self.upstream_state.request_count, 0)
         _, _, headers = self.rpc(
             "initialize",
             1,
@@ -113,9 +115,11 @@ class StreamableHttpGatewayTests(unittest.TestCase):
                 "clientInfo": {"name": "test", "version": "1"},
             },
         )
-        # initialize legitimately creates an upstream session. The gated
-        # resources/list request must not create another session or reach the
-        # upstream after this point.
+        # initialize legitimately reaches upstream and creates a session.
+        # Record that baseline so the gated resources/list request must add
+        # neither a session nor an upstream request of its own.
+        self.assertEqual(len(self.upstream_state.upstream_sessions), 1)
+        self.assertEqual(self.upstream_state.request_count, 1)
         sessions_after_initialize = set(self.upstream_state.upstream_sessions)
         requests_after_initialize = self.upstream_state.request_count
         session = headers.get("Mcp-Session-Id")

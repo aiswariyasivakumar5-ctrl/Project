@@ -3,14 +3,14 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from sentinel.ablation import ABLATIONS, AblationConfig, run_ablation_matrix
-from sentinel.statistics import (
+from sentinel_research.ablation import ABLATIONS, AblationConfig, run_ablation_matrix
+from sentinel_research.statistics import (
     bootstrap_mean_ci,
     exact_paired_sign_flip,
     holm_adjust,
     wilcoxon_signed_rank,
 )
-from sentinel.plots import bar_chart, line_chart
+from sentinel_research.plots import bar_chart, line_chart
 
 
 class StatisticalTests(unittest.TestCase):

@@ -7,6 +7,7 @@ from collections import defaultdict, deque
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from functools import partial
+from typing import Any
 
 import numpy as np
 
@@ -15,7 +16,7 @@ from .causal import TemporalCausalGraph
 from .detectors import OnlineStandardizer, SequenceModel, TinyAutoencoder
 from .features import extract_features, intent_mismatch
 from .models import Action, Interaction, Verdict
-from .provenance import ProvenanceLedger
+from .provenance import ProvenanceClaim, ProvenanceLedger
 from .retention import RetentionConfig, StateCapacityError
 
 
@@ -70,8 +71,10 @@ class SentinelEngine:
         self.identities: dict[str, set[str]] = {}
         self.sessions: set[str] = set()
         self.sequence = SequenceModel(self.retention.transitions_per_session)
-        self.audit_log = deque(maxlen=self.retention.audit_records)
-        self.quarantine = defaultdict(partial(deque, maxlen=self.retention.quarantine_per_server))
+        self.audit_log: deque[Verdict] = deque(maxlen=self.retention.audit_records)
+        self.quarantine: dict[str, deque[Interaction]] = defaultdict(
+            partial(deque, maxlen=self.retention.quarantine_per_server)
+        )
         self.causal_graph = TemporalCausalGraph(
             max_nodes=self.retention.causal_nodes,
             causal_requires_response_origin=self.config.causal_requires_response_origin,
@@ -82,10 +85,10 @@ class SentinelEngine:
         )
         self.lock = threading.RLock()
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, Any]:
         return {key: value for key, value in self.__dict__.items() if key != "lock"}
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: dict[str, Any]) -> None:
         self.__dict__.update(state)
         self.lock = threading.RLock()
 
@@ -102,7 +105,9 @@ class SentinelEngine:
             self.identities.setdefault(server_id, set()).add(tool_name)
             self.sessions.add(session_id)
 
-    def issue_provenance(self, origin_trace_id: str, target: Interaction, *, ttl: float = 300):
+    def issue_provenance(
+        self, origin_trace_id: str, target: Interaction, *, ttl: float = 300
+    ) -> ProvenanceClaim:
         """Trusted application authorizes a target using an accepted intent event."""
         if not any(
             v.trace_id == origin_trace_id

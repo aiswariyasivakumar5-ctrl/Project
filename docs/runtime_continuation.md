@@ -28,7 +28,7 @@ Local implementation branch: `fix/runtime-correctness-and-novelty`, based on
 - A shared engine lock protects gateway/evaluation-service model updates. This is
   local synchronization, not distributed coordination or a full concurrency proof.
 - ROC computation includes the empty-selection endpoint even when scores tie at 1.
-  `python -m sentinel.correct_metrics --output <new-file.json>` recomputes retained
+  `python -m sentinel_research.correct_metrics --output <new-file.json>` recomputes retained
   percentile-score AUROC without changing thresholds or overwriting existing files.
 - CI configuration runs the suite on Windows/Linux with Python 3.11/3.14. The local
   audited NumPy version is pinned in `requirements-repro.txt` for Python 3.14.5.

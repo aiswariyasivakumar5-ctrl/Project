@@ -1,7 +1,7 @@
 import copy
 import unittest
 from sentinel.engine import SentinelEngine
-from sentinel.verification_budget_study import workload, run_cell, analyze, feedback_function
+from sentinel_research.verification_budget_study import workload, run_cell, analyze, feedback_function
 
 
 class BudgetStudyTests(unittest.TestCase):

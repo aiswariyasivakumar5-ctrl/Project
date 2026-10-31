@@ -1,20 +1,24 @@
 name: Tests and production checks
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
 
 jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
-      - run: python -m pip install -e '.[dev]' build
+      - run: python -m pip install -e '.[dev]' -e 'research[dev]' build
       - run: python -m pip check
       - run: ruff check sentinel
-      - run: mypy sentinel/gateway.py sentinel/cli.py sentinel/http_limits.py sentinel/audit_log.py sentinel/policy.py
+      - run: mypy
+      - run: python scripts/check_doc_numbers.py
       - run: coverage run -m pytest
-      - run: coverage report --include='sentinel/gateway.py,sentinel/http_limits.py,sentinel/audit_log.py,sentinel/policy.py' --fail-under=85
+      - run: coverage report --include='sentinel/*.py' --fail-under=85
       - run: pip-audit
       - run: python -m build
       - run: docker build -t mcp-runtime-sentinel:ci .
@@ -26,11 +30,11 @@ jobs:
         python: ['3.11', '3.14']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: ${{ matrix.python }}
-      - run: python -m pip install -e .
+      - run: python -m pip install -e . -e 'research[dev]'
       - run: python -m pip check
       - run: python -m unittest discover -s tests -v
 
@@ -39,10 +43,11 @@ jobs:
     env:
       MCP_SENTINEL_CLIENT_TOKEN: test-client-token-that-is-long-enough-for-ci
       MCP_SENTINEL_OPERATOR_TOKEN: test-operator-token-that-is-different-and-long
+      MCP_SENTINEL_OPERATOR_ID: ci-operator
       MCP_SENTINEL_STATE_KEY: test-state-integrity-key-for-ci-build
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
       - run: mkdir -p certs && openssl req -x509 -newkey rsa:2048 -nodes -keyout certs/server.key -out certs/server.crt -days 1 -subj '/CN=localhost' -addext 'subjectAltName=DNS:localhost,IP:127.0.0.1'
@@ -53,3 +58,45 @@ jobs:
       - run: docker compose -f docker-compose.example.yml exec -T gateway python -m sentinel.cli verify-audit /data/audit.jsonl
       - if: always()
         run: docker compose -f docker-compose.example.yml down -v
+
+  gateway-security-mutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e '.[dev]' -e 'research[dev]'
+      - name: Mutate runtime security controls
+        run: |
+          mutmut run --max-children 4 'sentinel.audit_log*'
+          mutmut run --max-children 4 'sentinel.http_limits*'
+          mutmut run --max-children 4 'sentinel.policy*'
+          mutmut run --max-children 4 'sentinel.baseline*'
+          mutmut run --max-children 4 'sentinel.provenance*'
+          mutmut run --max-children 4 'sentinel.gateway*authenticate*'
+          mutmut run --max-children 4 'sentinel.gateway*trusted_host_origin*'
+          mutmut run --max-children 4 'sentinel.gateway*do_POST*'
+          mutmut run --max-children 4 'sentinel.gateway*_drain_body*'
+          mutmut run --max-children 4 'sentinel.gateway*SentinelGateway*_state_mac*'
+          mutmut run --max-children 4 'sentinel.gateway*SentinelGateway*_validate_state*'
+          mutmut run --max-children 4 'sentinel.gateway*SentinelGateway*save_state*'
+          mutmut export-cicd-stats > mutants/mutmut-cicd-stats.json
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: gateway-security-mutmut-results
+          path: mutants/
+          if-no-files-found: warn
+
+  package-isolation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - run: python -m pip install build numpy
+      - run: python -m build --wheel
+      - run: python scripts/check_runtime_wheel.py

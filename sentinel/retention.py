@@ -19,7 +19,7 @@ class RetentionConfig:
     transitions_per_session: int = 1024
     memory_entries: int = 4096
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         for item in fields(self):
             value = getattr(self, item.name)
             if type(value) is not int or value < 1:

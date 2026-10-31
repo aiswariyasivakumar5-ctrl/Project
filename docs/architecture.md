@@ -59,12 +59,18 @@ research quarantine still retains raw suspicious `Interaction` objects in memory
   through the Python API for availability experiments.
 - Client disconnects do not crash the server.
 - Trace and payload fingerprints use SHA-256 but are not signed or durable.
-- The audit endpoint has no authentication and the default listener is loopback;
-  do not expose this research server to an untrusted network.
+- MCP POST requests require the configured client Bearer credential. Audit,
+  metrics, pending-action, and operator-control routes require the separate
+  operator Bearer credential. Liveness is public; readiness is public but
+  reveals only readiness state. Configure Host/Origin allowlists and TLS before
+  exposing the listener beyond a trusted local network.
 - Server identity is configuration-based. TLS certificate pinning, workload identity,
   durable replay caches, persistent state, authorization, and distributed locking remain future work.
-- HTTP single-message JSON-RPC is implemented; batch, SSE/Streamable HTTP sessions,
-  stdio, resources, prompts, sampling, and cancellation are not.
+- HTTP JSON-RPC and Streamable HTTP initialize/session mapping are implemented.
+  The gateway also consumes bounded upstream `text/event-stream` JSON-RPC
+  responses. Batch JSON-RPC, stdio, resources, prompts, sampling, cancellation,
+  and downstream SSE subscriptions are not supported; resource methods are
+  rejected by default.
 - Post-response blocking cannot roll back upstream side effects. Production use needs
   stronger preflight policy, sandboxing, or transactional tool execution.
 
@@ -152,8 +158,8 @@ Run from the project root using Python 3.11+ and NumPy:
 python -m unittest discover -s tests -v
 python -m unittest discover -s tests -p test_provenance.py -v
 python -m unittest tests.test_gateway_integration tests.test_gateway_errors tests.test_research_framework -v
-python -m sentinel.cli experiment --scenario delayed_causal_misuse --output artifacts/provenance-delayed
-python -m sentinel.cli experiment --scenario provenance_replay --output artifacts/provenance-replay
+python -m sentinel_research.cli experiment --scenario delayed_causal_misuse --output artifacts/provenance-delayed
+python -m sentinel_research.cli experiment --scenario provenance_replay --output artifacts/provenance-replay
 ```
 
 Tests cover exact context bindings, stale/future/non-finite time, sticky rollback,

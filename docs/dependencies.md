@@ -6,6 +6,10 @@
 - Required package: NumPy 1.24 or newer; verified with NumPy 2.3.5.
 - Packaging/build: pip and setuptools 68 or newer.
 
+The runtime project depends on NumPy. Research code is installed separately
+from `research/`; its `dev` extra provides test tools, while `paper` adds
+Matplotlib for the optional paper-rendering script.
+
 Python standard-library modules provide HTTP servers/clients, JSON-RPC handling, threading, hashing, CLI parsing, CSV/JSON storage, and tests. There is no runtime dependency on Flask, FastAPI, requests, scikit-learn, SciPy, PyTorch, or TensorFlow.
 
 ## Capability matrix
@@ -49,5 +53,5 @@ python -m pip --version
 python -c "import numpy, sentinel; print(numpy.__version__)"
 python -m unittest discover -s tests -v
 python -m compileall -q sentinel tests
-python -m sentinel.final_verification
+python -m sentinel_research.final_verification
 ```

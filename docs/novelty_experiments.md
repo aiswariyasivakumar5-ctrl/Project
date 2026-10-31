@@ -10,7 +10,7 @@ and an approved release commit are still required before final research runs.
 From the repository with its virtual environment active:
 
 ```powershell
-python -m sentinel.cli novelty-study --seeds 42,123 `
+python -m sentinel_research.cli novelty-study --seeds 42,123 `
   --training-events 40 --validation-events 8 --test-events 6 `
   --output results/novelty/my-new-smoke
 ```

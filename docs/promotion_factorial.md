@@ -28,7 +28,7 @@ pattern. Varying numeric inputs changes several feature distributions together;
 this is not an isolated intervention on a single scaler dimension.
 
 ```powershell
-python -m sentinel.promotion_factorial --output results/adaptation/new-factorial
+python -m sentinel_research.promotion_factorial --output results/adaptation/new-factorial
 ```
 
 Artifacts: `results/adaptation/promotion-factorial-20261006`. The root protocol is

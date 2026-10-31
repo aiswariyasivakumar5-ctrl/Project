@@ -77,7 +77,7 @@ python -m venv .venv
 source .venv/bin/activate
 
 # 3. Install audited dependencies and editable package
-python -m pip install -r requirements-repro.txt -e .
+python -m pip install -r requirements-repro.txt -e . -e 'research[dev]'
 ```
 
 ---
@@ -92,7 +92,7 @@ The reproduction suite is orchestrated via `scripts/reproduce_all.py` across two
    - Re-computes SHA-256 digests across all 480 gzip shards across 20 evaluation seeds (20001–20020) and 22 scenarios.
    - Verifies 0 bitwise discrepancies.
 2. **Legacy Research Package Check**:
-   - Executes `sentinel.final_verification.verify_research_package()`.
+   - Executes `sentinel_research.final_verification.verify_research_package()`.
    - Validates 43 retained historical baseline files across 6 baseline models and 5 legacy seeds (42, 123, 456, 789, 1001).
 3. **20-Seed Evaluation Artifacts Check**:
    - Verifies 120 baseline per-seed files (`results/baselines_20seed/`).
@@ -105,10 +105,10 @@ All paper outputs are derived strictly from raw evaluation logs without re-fitti
 
 | Stage Component | Output Directory / Files | Derivation Script | Execution Time |
 |---|---|---|---|
-| **Publication Tables** | `results/tables_20seed/` (12 files: MD, CSV, JSON) | `sentinel.research_tables` | ~2.1 s |
-| **Vector Figures** | `results/figures_20seed/` (9 SVG charts) | `sentinel.plots` | ~0.3 s |
-| **Novelty Matrix Report** | `results/novelty/publication_scale_report/REPORT.md` (330 cells) | `sentinel.novelty_report` | ~16.1 s |
-| **Poisoning Statistics** | `results/adaptation/matched_poisoning_20seed/tables_20seed.md` (700 cells) | `sentinel.matched_poisoning_stats` | ~0.6 s |
+| **Publication Tables** | `results/tables_20seed/` (12 files: MD, CSV, JSON) | `sentinel_research.research_tables` | ~2.1 s |
+| **Vector Figures** | `results/figures_20seed/` (9 SVG charts) | `sentinel_research.plots` | ~0.3 s |
+| **Novelty Matrix Report** | `results/novelty/publication_scale_report/REPORT.md` (330 cells) | `sentinel_research.novelty_report` | ~16.1 s |
+| **Poisoning Statistics** | `results/adaptation/matched_poisoning_20seed/tables_20seed.md` (700 cells) | `sentinel_research.matched_poisoning_stats` | ~0.6 s |
 | **Total** | | | **~19.6 s** |
 
 ---

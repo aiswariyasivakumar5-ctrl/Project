@@ -1,17 +1,17 @@
-import hashlib
-import unittest
 import copy
+import hashlib
 import tempfile
+import unittest
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
 from sentinel import Action, Interaction, SentinelEngine
-from sentinel.scenarios import run_provenance_scenario
 from sentinel.engine import EngineConfig
-from sentinel.experiment import ExperimentConfig, run_experiment
+from sentinel_research.experiment import ExperimentConfig, run_experiment
 from sentinel.provenance import ProvenanceLedger, ScenarioClock
+from sentinel_research.scenarios import run_provenance_scenario
 
 
 class ProvenanceTests(unittest.TestCase):
@@ -40,6 +40,12 @@ class ProvenanceTests(unittest.TestCase):
     def test_stale_and_exact_expiration_boundary(self):
         self.now = 110
         self.assertEqual(self.valid().reason, "stale provenance")
+
+        one_second = self.ledger.issue(
+            "event-short", "Read record 1", "s1", "srv", "safe_read", {"record_id": "1"}, ttl=1
+        )
+        self.assertTrue(self.valid(one_second, now=110.5, consume=False).valid)
+        self.assertEqual(self.valid(one_second, now=111).reason, "stale provenance")
 
     def test_future_created_claim_and_clock_rollback(self):
         future = self.ledger.issue("future", "Read record 1", "s1", "srv", "safe_read",
@@ -318,7 +324,7 @@ class ProvenanceIntegrityTests(unittest.TestCase):
 class ProvenanceExperimentTests(unittest.TestCase):
     def run_registered(self, name):
         with tempfile.TemporaryDirectory() as output, patch(
-                "sentinel.scenarios.run_provenance_scenario",
+                "sentinel_research.scenarios.run_provenance_scenario",
                 side_effect=AssertionError("experiment must not use helper")):
             result = run_experiment(ExperimentConfig(
                 scenario=name, training_events=20, validation_events=4, output=output))[0]

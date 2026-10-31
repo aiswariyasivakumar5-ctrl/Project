@@ -33,7 +33,10 @@
 - Audit and control endpoints require Bearer token authentication and fail closed by default; unauthenticated network exposure is prevented, but TLS termination and network access control remain external operational requirements.
 - State persistence is process-local and file-based (`save_state`/`load_state`); distributed clustering, cross-process replication, and durable transaction logs are not implemented.
 - No TLS pinning, workload identity, distributed locking, or signed audit chain is implemented. An in-process single-use provenance ledger now rejects replay before gateway dispatch; it is not durable across restarts. Optional required-provenance mode depends on a trusted application issuer.
-- Supported MCP transport/protocol scope excludes batch JSON-RPC, SSE/Streamable HTTP sessions, stdio, resources, prompts, sampling, and cancellation.
+- Supported MCP scope includes HTTP JSON-RPC, Streamable HTTP initialize/session
+  mapping, and bounded upstream SSE JSON-RPC response parsing. Batch JSON-RPC,
+  stdio, downstream SSE subscriptions, resources, prompts, sampling, and
+  cancellation are unsupported; resource methods are rejected by default.
 - Performance benchmarks are sequential local-host measurements, not concurrency or capacity studies.
 
 ## Attestation

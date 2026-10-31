@@ -3,9 +3,9 @@ import threading
 import unittest
 
 from sentinel.engine import SentinelEngine
-from sentinel.learning_admission import LearningAdmission, POLICIES
+from sentinel_research.learning_admission import LearningAdmission, POLICIES
 from sentinel.models import Interaction
-from sentinel.verified_learning import verify_calculation
+from sentinel_research.verified_learning import verify_calculation
 
 
 def event():
@@ -215,7 +215,7 @@ class LearningAdmissionTests(unittest.TestCase):
         self.assertEqual(gate.snapshot()[0].profiles['srv'].trusted_count, 2)
 
     def test_matched_demo_and_strong_baseline(self):
-        from sentinel.learning_admission_demo import run_matrix
+        from sentinel_research.learning_admission_demo import run_matrix
         rows = run_matrix()
         self.assertEqual(len(rows), 40)
         for policy in ('combined', 'transactional'):

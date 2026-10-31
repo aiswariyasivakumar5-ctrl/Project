@@ -10,7 +10,7 @@ thresholds and historical results are unchanged.
 From the repository root in PowerShell:
 
 ```powershell
-.\.venv-repro\Scripts\python.exe -m sentinel.learning_admission_demo
+.\.venv-repro\Scripts\python.exe -m sentinel_research.learning_admission_demo
 .\.venv-repro\Scripts\python.exe -m unittest discover -s tests -p test_learning_admission.py -v
 ```
 
@@ -98,7 +98,7 @@ ticket expiry timestamps, and atomic pointer swap under lock). Consequently:
 ## Tests and limitations
 
 Verification on 2026-10-16: full suite **261/261 passed** in 85.214 seconds;
-focused admission suite **18/18 passed**. `python -m sentinel.final_verification`
+focused admission suite **18/18 passed**. `python -m sentinel_research.final_verification`
 passed for 43 retained files; `python -m pip check` found no broken requirements.
 These local checks do not establish remote CI success or real-world effectiveness.
 

@@ -15,7 +15,7 @@ from scripts.reproduce_all import (
     verify_20seed_artifacts,
     regenerate_all_outputs,
 )
-from sentinel.final_verification import verify_research_package
+from sentinel_research.final_verification import verify_research_package
 
 
 class TestReproducibilityPackage(unittest.TestCase):

@@ -8,14 +8,14 @@ from pathlib import Path
 from unittest.mock import patch
 
 from sentinel.engine import SentinelEngine
-from sentinel.experiment import ExperimentConfig
+from sentinel_research.experiment import ExperimentConfig
 from sentinel.gateway import GatewayConfig, SentinelGateway
 from sentinel.models import Interaction
 from sentinel.novelty import CapabilityState, NoveltyConfig, NoveltySentinelEngine
-from sentinel.novelty_experiment import (NoveltyLiveExperiment, NoveltyStudyConfig,
+from sentinel_research.novelty_experiment import (NoveltyLiveExperiment, NoveltyStudyConfig,
                                          VARIANTS, run_novelty_study, summarize)
-from sentinel.novelty_scenarios import build_novelty_scenarios
-from sentinel.workload import normal_workload
+from sentinel_research.novelty_scenarios import build_novelty_scenarios
+from sentinel_research.workload import normal_workload
 
 
 class NoveltyScenarioTests(unittest.TestCase):
@@ -115,7 +115,7 @@ class NoveltyStudyTests(unittest.TestCase):
                  patch.object(NoveltyLiveExperiment, '__enter__', lambda live: live), \
                  patch.object(NoveltyLiveExperiment, '__exit__', return_value=None), \
                  patch.object(NoveltyLiveExperiment, 'run_phase', fail_phase), \
-                 patch('sentinel.experiment.LiveExperiment._rpc', side_effect=TimeoutError('fixture timeout')) as rpc:
+                 patch('sentinel_research.experiment.LiveExperiment._rpc', side_effect=TimeoutError('fixture timeout')) as rpc:
                 with self.assertRaisesRegex(TimeoutError, 'fixture timeout'):
                     run_novelty_study(config)
             self.assertEqual(rpc.call_count, 1)

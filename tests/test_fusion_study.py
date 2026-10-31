@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from sentinel.fusion_study import MidrankECDF, candidate_scores
+from sentinel_research.fusion_study import MidrankECDF, candidate_scores
 
 
 def records(scores):

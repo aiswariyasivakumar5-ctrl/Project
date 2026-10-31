@@ -11,7 +11,7 @@ reported below remain unchanged and are not superseded as observations.
 
 ## Construction and reproducibility
 
-`sentinel.promotion_control` reuses `NoveltyLiveExperiment`, the real local HTTP
+`sentinel_research.promotion_control` reuses `NoveltyLiveExperiment`, the real local HTTP
 mock/gateway path, existing policy variants, and `LearningAttribution`. Each policy
 starts a fresh experiment with the same 100 integer-addition enrollment calls,
 then receives six calls using equivalent floating-point arguments. Both argument
@@ -27,8 +27,8 @@ Protocol files retain source/workload hashes; event files retain verdicts,
 attestation, memory dispositions, and actual learning-source attribution.
 
 ```powershell
-python -m sentinel.promotion_control --output results/adaptation/new-control
-python -m sentinel.promotion_control --output results/adaptation/new-explicit-control --explicit-intent
+python -m sentinel_research.promotion_control --output results/adaptation/new-control
+python -m sentinel_research.promotion_control --output results/adaptation/new-explicit-control --explicit-intent
 ```
 
 ## Retained outcomes

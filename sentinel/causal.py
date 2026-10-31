@@ -7,8 +7,11 @@ import re
 import secrets
 import time
 from collections import defaultdict, deque
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
-from typing import Any
+from typing import Any, TypedDict
+
+from .models import Interaction
 
 TOKEN = re.compile(r"[a-zA-Z0-9_@.-]{4,}")
 INSTRUCTION = re.compile(
@@ -58,6 +61,16 @@ class CausalEvidence:
     edges: list[CausalEdge]
 
 
+class ReadPermission(TypedDict):
+    source_server: str
+    source_tool: str
+    destination_server: str
+    destination_tool: str
+    session_id: str
+    arguments: str
+    expires: float
+
+
 class TemporalCausalGraph:
     """Bounded provenance graph that detects cross-call and cross-server influence."""
 
@@ -78,20 +91,20 @@ class TemporalCausalGraph:
             lambda: deque(maxlen=history_size)
         )
         self.sequence = 0
-        self.read_permissions = {}
-        self.permission_clock = time.monotonic
+        self.read_permissions: dict[str, ReadPermission] = {}
+        self.permission_clock: Callable[[], float] = time.monotonic
 
     def authorize_read(
         self,
         *,
-        source_server,
-        source_tool,
-        destination_server,
-        destination_tool,
-        session_id,
-        arguments,
-        ttl=60,
-    ):
+        source_server: str,
+        source_tool: str,
+        destination_server: str,
+        destination_tool: str,
+        session_id: str,
+        arguments: dict[str, Any],
+        ttl: int | float = 60,
+    ) -> str:
         """Trusted application API. Never derive grants from request metadata."""
         if any(
             not isinstance(v, str) or not v or len(v) > 256
@@ -126,10 +139,10 @@ class TemporalCausalGraph:
         )
         return key
 
-    def revoke_read(self, permission_id):
+    def revoke_read(self, permission_id: str) -> None:
         self.read_permissions.pop(permission_id, None)
 
-    def _read_permission(self, prior, event):
+    def _read_permission(self, prior: CausalNode, event: Interaction) -> str | None:
         if event.side_effect:
             return None
         now = self.permission_clock()

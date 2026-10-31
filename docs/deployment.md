@@ -28,7 +28,7 @@ payloads after runtime operation.
 
 ```sh
 umask 077
-python -m sentinel.cli baseline \
+python -m sentinel_research.cli baseline \
   --upstream https://mcp-upstream.example/api \
   --server-id inventory-prod \
   --state-file /var/lib/mcp-sentinel/state.json
@@ -39,7 +39,7 @@ environment variable name; set its secret value in the service environment:
 
 ```sh
 export MCP_UPSTREAM_TOKEN="..."
-python -m sentinel.cli baseline --upstream https://mcp-upstream.example/api \
+python -m sentinel_research.cli baseline --upstream https://mcp-upstream.example/api \
   --server-id inventory-prod --state-file /var/lib/mcp-sentinel/state.json \
   --upstream-header Authorization=MCP_UPSTREAM_TOKEN
 ```
@@ -51,7 +51,7 @@ Provision a TLS certificate whose names match the endpoint clients use. Set
 Use `--allowed-origin` only for browser clients that need it.
 
 ```sh
-python -m sentinel.cli gateway \
+python -m sentinel_research.cli gateway \
   --upstream https://mcp-upstream.example/api \
   --server-id inventory-prod \
   --host 0.0.0.0 --port 8788 \
@@ -92,7 +92,9 @@ The repository includes a non-root multi-stage [`Dockerfile`](../Dockerfile) and
 expects a `certs/server.crt` and `certs/server.key` mounted read-only, uses a
 named data volume, enrolls the bundled mock upstream, and binds the published
 port to loopback. Replace the mock upstream, credentials, TLS assets, and sample
-tool allowlist before deployment.
+tool allowlist before deployment. The gateway healthcheck trusts the mounted
+server certificate and verifies TLS; the one-shot enrollment service disables
+the inherited gateway healthcheck, and the mock upstream uses its own TCP probe.
 
 Liveness is `GET /livez`. Readiness is `GET /readyz` and requires a loaded trained
 baseline plus a reachable upstream endpoint. Authenticated operators can read
@@ -105,7 +107,7 @@ operator bearer credential.
   configuration using access-controlled encrypted backups. The optional state
   HMAC detects tampering but does not encrypt state.
 - Preserve audit JSONL files and their `.1` rotation segment. Verify each
-  retained segment with `python -m sentinel.cli verify-audit PATH` before and
+  retained segment with `python -m sentinel_research.cli verify-audit PATH` before and
   after transfer. Rotation discards older segments; ship them to durable storage
   before that happens if retention is required.
   Active and rotated audit log files are created with restricted file mode `0600` (`-rw-------`).
@@ -121,31 +123,58 @@ operator bearer credential.
   the deployment secret manager and restart unless using the reloadable client
   credentials file.
 
-## 5. Optional pre-execution policy
+## 5. Required pre-execution tool policy
 
-Pass `--policy-file /etc/mcp-sentinel/policy.json` to add JSON rules before
-dispatch. Example:
+The serving command refuses to start without `--policy-file`. Every allowlisted
+tool must have an operator-assigned risk class and JSON Schema. Unclassified
+tools are denied. Object schemas reject unknown fields by default; set explicit
+properties and argument size/depth bounds:
 
 ```json
 {
   "tools": {
     "lookup_item": {
+      "risk_class": "read",
+      "input_schema": {
+        "type": "object",
+        "properties": {"record_id": {"type": "string"}},
+        "required": ["record_id"]
+      },
       "max_argument_bytes": 4096,
+      "max_argument_depth": 16,
       "forbidden_patterns": ["(?i)include_secret"],
       "forbidden_paths": ["admin_override"],
       "rate_limit": 5,
-      "rate_burst": 10,
-      "approval_required": false
+      "rate_burst": 10
     }
   }
 }
 ```
 
-Set `approval_required` to `true` to hold the client request until an operator
-approves it through `/v1/pending/{id}/approve`; the upstream call then runs. A
-denial or timeout returns an isolate response without dispatch. This differs
-from detector confirmation, which may hold a result after the upstream call has
-already happened.
+`read` tools are allowed by default and detector decisions may withhold their
+responses after upstream execution. `write` tools require operator approval by
+default. `destructive` tools are denied unless the policy explicitly sets
+`approval_required: true`; that approval is requested before dispatch. For
+`write`, an explicit `approval_required: false` allows dispatch without human
+approval. Intent metadata never changes these policy outcomes.
+
+The detector is advisory only for `write` and `destructive` tools. Its role,
+execution stage, and whether a response was withheld are in response headers and
+audit records. Detector analysis happens after upstream execution; withholding
+the response does not prevent the upstream action.
+
+Online learning is frozen unless the gateway is started with
+`--enable-learning`. Enrollment creates an unapproved baseline. Approve it with
+an operator identity and durable audit sink before serving:
+
+```sh
+python -m sentinel.cli baseline approve --state-file state.json --actor change-123 --audit-log audit.jsonl
+python -m sentinel.cli baseline export --state-file state.json --output approved-baseline.json --actor change-123 --audit-log audit.jsonl
+python -m sentinel.cli baseline rollback --state-file state.json --version-file approved-baseline.json --actor incident-456 --audit-log audit.jsonl
+```
+
+Each online model update records actor, time, version, and diff summary, and
+marks the changed state unapproved for the next startup.
 
 ## 6. Making a release archive
 

@@ -5,10 +5,10 @@ import json
 import unittest
 from unittest.mock import patch
 
-from sentinel.degradation_study import fixtures, response, probe_profiles, model_digest, run_study
+from sentinel_research.degradation_study import fixtures, response, probe_profiles, model_digest, run_study
 from sentinel.features import extract_features
-from sentinel.experiment import ExperimentConfig
-from sentinel.novelty_experiment import NoveltyLiveExperiment
+from sentinel_research.experiment import ExperimentConfig
+from sentinel_research.novelty_experiment import NoveltyLiveExperiment
 
 
 class DegradationStudyTests(unittest.TestCase):
@@ -41,7 +41,7 @@ class DegradationStudyTests(unittest.TestCase):
     def test_failed_run_retains_status_and_never_overwrites(self):
         with tempfile.TemporaryDirectory() as root:
             output = Path(root) / 'study'
-            with patch('sentinel.degradation_study.NoveltyLiveExperiment.__enter__', side_effect=TimeoutError('fixture')):
+            with patch('sentinel_research.degradation_study.NoveltyLiveExperiment.__enter__', side_effect=TimeoutError('fixture')):
                 with self.assertRaises(TimeoutError):
                     run_study(output, (31001,))
             self.assertEqual(json.loads((output / 'execution.json').read_text())['status'], 'failed')

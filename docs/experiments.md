@@ -54,7 +54,7 @@ and cases. Labels do not override detector decisions, so misses remain visible.
 Run one scenario:
 
 ```powershell
-python -m sentinel.cli experiment --seed 42 --scenario cross_server `
+python -m sentinel_research.cli experiment --seed 42 --scenario cross_server `
   --training-events 100 --validation-events 40 --test-events 40 `
   --output results/cross_server
 ```
@@ -62,28 +62,28 @@ python -m sentinel.cli experiment --seed 42 --scenario cross_server `
 Run all scenarios:
 
 ```powershell
-python -m sentinel.cli experiment --seed 42 --scenario all --output results/all
+python -m sentinel_research.cli experiment --seed 42 --scenario all --output results/all
 ```
 
 Compare the lightweight rules baseline:
 
 ```powershell
-python -m sentinel.cli experiment --seed 42 --scenario all --baseline rules --output results/rules
+python -m sentinel_research.cli experiment --seed 42 --scenario all --baseline rules --output results/rules
 ```
 
 Real ablations are selected without source edits:
 
 ```powershell
-python -m sentinel.cli experiment --scenario cross_server --without-causal --output results/ablations/no-causal
-python -m sentinel.cli experiment --scenario intent_mismatch --without-intent --output results/ablations/no-intent
-python -m sentinel.cli experiment --scenario capability_drift --without-attestation --output results/ablations/no-attestation
-python -m sentinel.cli experiment --scenario gradual_poisoning --without-quarantine --output results/ablations/no-quarantine
+python -m sentinel_research.cli experiment --scenario cross_server --without-causal --output results/ablations/no-causal
+python -m sentinel_research.cli experiment --scenario intent_mismatch --without-intent --output results/ablations/no-intent
+python -m sentinel_research.cli experiment --scenario capability_drift --without-attestation --output results/ablations/no-attestation
+python -m sentinel_research.cli experiment --scenario gradual_poisoning --without-quarantine --output results/ablations/no-quarantine
 ```
 
 Performance is kept separate:
 
 ```powershell
-python -m sentinel.cli gateway-benchmark --requests 100
+python -m sentinel_research.cli gateway-benchmark --requests 100
 ```
 
 ## Metrics and outputs

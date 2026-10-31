@@ -17,7 +17,7 @@ from sentinel.gateway import GatewayConfig, SentinelGateway, make_gateway_handle
 from sentinel.jsonrpc import JsonRpcError, parse_request, validate_response
 from sentinel.models import Interaction
 from sentinel.service import make_handler
-from sentinel.validation import load_json, read_body
+from sentinel.validation import load_json, read_body, validate_json
 
 
 class AttestationHardeningTests(unittest.TestCase):
@@ -72,6 +72,11 @@ class AttestationHardeningTests(unittest.TestCase):
 
 
 class BoundaryHardeningTests(unittest.TestCase):
+    def test_json_depth_limit_accepts_boundary_and_rejects_one_level_over(self):
+        validate_json([[0]], max_depth=2)
+        with self.assertRaisesRegex(ValueError, "exceeds limits"):
+            validate_json([[[0]]], max_depth=2)
+
     def test_ambiguous_and_nonfinite_json_rejected(self):
         for body in (
             b'{"a":1,"a":2}',

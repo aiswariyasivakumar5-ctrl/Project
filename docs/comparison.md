@@ -61,7 +61,7 @@ curves and risk-distribution output; decisions still use the raw validation thre
 Publication-size five-seed comparison:
 
 ```powershell
-python -m sentinel.cli compare --seeds 42,123,456,789,1001 `
+python -m sentinel_research.cli compare --seeds 42,123,456,789,1001 `
   --train-size 5000 --validation-size 1000 --test-size 3000 `
   --output results/baselines
 ```
@@ -69,21 +69,21 @@ python -m sentinel.cli compare --seeds 42,123,456,789,1001 `
 Small smoke run:
 
 ```powershell
-python -m sentinel.cli compare --seeds 42 --train-size 200 `
+python -m sentinel_research.cli compare --seeds 42 --train-size 200 `
   --validation-size 80 --test-size 240 --output results/baselines_smoke
 ```
 
 Generate the Markdown table:
 
 ```powershell
-python -m sentinel.cli report --results results/baselines
+python -m sentinel_research.cli report --results results/baselines
 ```
 
 Offline inference timing belongs to this comparison. Real transport and gateway
 overhead remain separately measured with:
 
 ```powershell
-python -m sentinel.cli gateway-benchmark --requests 100
+python -m sentinel_research.cli gateway-benchmark --requests 100
 ```
 
 ## Stored results

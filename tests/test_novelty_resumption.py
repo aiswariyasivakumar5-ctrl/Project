@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from sentinel.novelty_experiment import NoveltyStudyConfig, run_novelty_study
+from sentinel_research.novelty_experiment import NoveltyStudyConfig, run_novelty_study
 
 
 class NoveltyResumptionTests(unittest.TestCase):

@@ -8,8 +8,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from sentinel.novelty_experiment import NoveltyStudyConfig, run_novelty_study
-from sentinel.novelty_report import generate as generate_novelty_report
+from sentinel_research.novelty_experiment import NoveltyStudyConfig, run_novelty_study
+from sentinel_research.novelty_report import generate as generate_novelty_report
 
 
 def main() -> None:

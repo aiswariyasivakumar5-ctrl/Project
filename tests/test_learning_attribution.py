@@ -3,8 +3,8 @@ from dataclasses import replace
 from sentinel.engine import SentinelEngine
 from sentinel.models import Interaction
 from sentinel.novelty import DualMemoryAdapter
-from sentinel.workload import WorkloadCase
-from sentinel.learning_attribution import LearningAttribution, contamination
+from sentinel_research.workload import WorkloadCase
+from sentinel_research.learning_attribution import LearningAttribution, contamination
 
 
 class AttributionTests(unittest.TestCase):

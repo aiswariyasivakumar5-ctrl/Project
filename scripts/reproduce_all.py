@@ -28,11 +28,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from sentinel.final_verification import verify_research_package
-from sentinel.matched_poisoning_stats import analyze_matched_poisoning, render_markdown_table
-from sentinel.novelty_report import generate as generate_novelty_report
-from sentinel.plots import generate_figures
-from sentinel.research_tables import generate_research_tables
+from sentinel_research.final_verification import verify_research_package
+from sentinel_research.matched_poisoning_stats import analyze_matched_poisoning, render_markdown_table
+from sentinel_research.novelty_report import generate as generate_novelty_report
+from sentinel_research.plots import generate_figures
+from sentinel_research.research_tables import generate_research_tables
 
 
 def verify_dataset_manifest(dataset_dir: str | Path = "datasets/synthetic-expanded-v1") -> dict[str, Any]:

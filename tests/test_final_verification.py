@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from sentinel.final_verification import verify_research_package
+from sentinel_research.final_verification import verify_research_package
 
 
 class FinalVerificationTests(unittest.TestCase):

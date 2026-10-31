@@ -50,3 +50,32 @@ interaction.
   not independently controlled.
 - The gateway's nonce/digest echo is behavioral evidence, not cryptographic
   server identity or hardware-backed attestation.
+
+## Phase 1 enforcement limits
+
+- Detector analysis for every tool happens after upstream execution. `read`
+  responses may be withheld after the call, but this does not undo or prevent
+  any upstream side effect. The detector is advisory only for `write` and
+  `destructive` risk classes.
+- A policy `write` call can execute after an operator approves it. A
+  `destructive` call remains denied unless the operator policy explicitly
+  requires approval; after approval, its upstream action executes.
+- Explicit `--enable-learning` permits online changes to the in-memory model.
+  Every observed model update is audited and marks the persisted baseline
+  unapproved; the process may continue using the changed model until restarted.
+  Operators must review and approve the new baseline before the next start.
+- Per-tool schemas are operator supplied. Schema validation bounds and rejects
+  malformed/unknown arguments; it does not make an allowed upstream operation
+  safe or constrain what the upstream server does with valid arguments.
+
+## Phase 0 package boundary status
+
+The Python distributions are separated: the runtime wheel contains the 20-module runtime package and the research distribution contains research workflows and dashboard assets. The built runtime wheel passed `scripts/check_runtime_wheel.py`; no `sentinel_research` files or imports were found in it. Package separation and archive hygiene are complete locally.
+
+The Phase 0 full-suite rerun is **NOT VERIFIED HERE**: loopback-dependent tests were blocked by Windows socket permission errors (`WinError 10013`). Docker build is **NOT VERIFIED HERE** because access to the Docker Buildx lock was denied. Run `python -m pytest -q` on a host that permits loopback sockets and `docker build -t mcp-runtime-sentinel:phase0 .` on a Docker-enabled host before treating those gates as passed.
+
+## Phase 1 local verification update (2026-10-30)
+
+The requested full suite was run in WSL/Linux after Phase 1 changes: `399 passed, 8 skipped, 110 subtests passed` (exit 0), compared with the 391/8 preflight baseline. Runtime statement/branch coverage was 87%, above the 85% gate. Ruff, strict mypy over the full runtime package, and pip-audit passed. The older Windows socket-blocked result above remains the Phase 0 Windows attempt; it is superseded for Linux test status by this WSL run.
+
+Local Docker was not run. Docker smoke is reported as verified in CI by the operator; this local verification does not independently confirm that CI run. The targeted local policy mutmut run was interrupted before completion. The workflow contains the Linux security mutation job; updated mutation results remain pending a hosted workflow run. Do not treat mutation coverage as verified until that job completes.

@@ -9,10 +9,10 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from sentinel.novelty_experiment import NoveltyLiveExperiment, ExperimentConfig, VARIANTS
-from sentinel.workload import normal_workload
-from sentinel.novelty_scenarios import build_novelty_scenarios
-from sentinel.metrics import calculate_metrics
+from sentinel_research.novelty_experiment import NoveltyLiveExperiment, ExperimentConfig, VARIANTS
+from sentinel_research.workload import normal_workload
+from sentinel_research.novelty_scenarios import build_novelty_scenarios
+from sentinel_research.metrics import calculate_metrics
 
 
 def run_diagnosis(seed: int = 42, training_events: int = 200, validation_events: int = 80):

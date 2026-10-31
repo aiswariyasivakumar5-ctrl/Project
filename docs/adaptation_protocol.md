@@ -33,7 +33,7 @@ All stream observations are ADAPTIVE diagnostics, separate from frozen TEST.
 Run with:
 
 ```powershell
-python -m sentinel.adaptation_study --output results/adaptation/new-diagnostic --seeds 20001 --events 30 --training 100
+python -m sentinel_research.adaptation_study --output results/adaptation/new-diagnostic --seeds 20001 --events 30 --training 100
 ```
 
 New output directories are required. Protocol/source hashes, matched workload hashes,

@@ -45,8 +45,8 @@ flushed after every call; failures retain status and do not produce a complete
 summary. Existing output directories and rendered reports cannot be overwritten.
 
 ```powershell
-python -m sentinel.matched_poisoning --output results/adaptation/new-matched-study
-python -m sentinel.matched_poisoning_report --output results/adaptation/new-matched-study
+python -m sentinel_research.matched_poisoning --output results/adaptation/new-matched-study
+python -m sentinel_research.matched_poisoning_report --output results/adaptation/new-matched-study
 ```
 
 ## Findings

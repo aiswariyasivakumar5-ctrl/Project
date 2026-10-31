@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from sentinel.matched_poisoning import build_matched, learning_delays, review_index, run_study
+from sentinel_research.matched_poisoning import build_matched, learning_delays, review_index, run_study
 from sentinel.features import extract_features
 
 
@@ -58,7 +58,7 @@ class MatchedPoisoningTests(unittest.TestCase):
     def test_failure_retained_and_output_cannot_be_overwritten(self):
         with tempfile.TemporaryDirectory() as root:
             output = Path(root) / 'run'
-            with patch('sentinel.matched_poisoning.NoveltyLiveExperiment.__enter__', side_effect=TimeoutError('fixture')):
+            with patch('sentinel_research.matched_poisoning.NoveltyLiveExperiment.__enter__', side_effect=TimeoutError('fixture')):
                 with self.assertRaises(TimeoutError):
                     run_study(output, (31001,))
             state = json.loads((output / 'execution.json').read_text())

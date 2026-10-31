@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 from sentinel.gateway import GatewayConfig, SentinelGateway, create_gateway_server
 from sentinel.jsonrpc import JsonRpcError
-from sentinel.mock_server import create_mock_server
+from sentinel_research.mock_server import create_mock_server
 from sentinel.novelty import CapabilityState, NoveltyConfig
 
 
@@ -156,7 +156,7 @@ class GatewayCompletionTests(unittest.TestCase):
         )
 
     def test_cli_component_switches_and_provenance_are_independent(self):
-        from sentinel.cli import main
+        from sentinel_research.cli import main
 
         args = [
             "mcp-sentinel",
@@ -176,7 +176,7 @@ class GatewayCompletionTests(unittest.TestCase):
             "--client-auth-token",
             self.CLIENT_TOKEN,
         ]
-        with patch("sys.argv", args), patch("sentinel.cli.serve_gateway") as serve:
+        with patch("sys.argv", args), patch("sentinel_research.cli.serve_gateway") as serve:
             main()
         config = serve.call_args.args[0]
         self.assertEqual(config.novelty_config, NoveltyConfig(False, False, False, False))

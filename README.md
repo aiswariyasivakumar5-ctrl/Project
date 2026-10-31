@@ -1,13 +1,11 @@
 # MCP Runtime Sentinel
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
-[![NumPy Only](https://img.shields.io/badge/dependencies-NumPy%20only-green.svg)](https://numpy.org/)
+[![Runtime dependencies](https://img.shields.io/badge/runtime-NumPy%20%2B%20jsonschema-green.svg)](pyproject.toml)
 [![Reproducibility](https://img.shields.io/badge/reproducibility-verified%2020--seed-blueviolet.svg)](docs/reproducibility.md)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-> **Research Manuscript Companion Repository**  
-> Prepared under double-blind review guidelines.  
-> Headline metrics and figures are regenerated from retained evaluation artifacts via `python scripts/reproduce_all.py`; large raw novelty traces are separately inventoried for archival.
+> A self-hosted MCP HTTP gateway with a separately packaged research toolkit. The runtime wheel contains gateway code only; publication studies and synthetic evaluation workflows live under `research/`.
 
 ---
 
@@ -15,7 +13,7 @@
 
 The **Model Context Protocol (MCP)** enables Large Language Models (LLMs) to query external tools, local files, databases, and APIs. However, MCP clients currently execute tool responses with implicit trust, making them vulnerable to tool poisoning, prompt injection, capability laundering, and unauthorized resource access.
 
-**MCP Runtime Sentinel** is an intent-conditioned runtime enforcement gateway and anomaly detector designed to sit as a transparent reverse proxy between the host LLM application and untrusted upstream MCP servers.
+**MCP Runtime Sentinel** is a self-hosted gateway between MCP clients and upstream servers. Its operator allowlist and configured pre-execution policy determine whether a tool request is dispatched. The learned detector is a secondary signal; its response withholding happens after upstream execution and is not validated on real customer traffic.
 
 ```
 +----------------+      JSON-RPC      +----------------------------+      JSON-RPC      +------------------+
@@ -39,13 +37,14 @@ The **Model Context Protocol (MCP)** enables Large Language Models (LLMs) to que
 - **Atomic State Persistence**: Preserves server profiles, capability trust matrices, pending actions, and behavioral statistics across gateway reboots.
 - **Operator-Defined Tool Allowlist**: Tool calls are denied before dispatch unless the operator explicitly enables the exact upstream tool name with `--allow-tool`.
 
-The serving CLI refuses to start without separate client and operator credentials, an enrolled baseline, and an explicit tool allowlist. Enroll against the upstream first, then set high-entropy secrets in `MCP_SENTINEL_CLIENT_TOKEN` and `MCP_SENTINEL_OPERATOR_TOKEN`:
+The serving CLI refuses to start without separate client and operator credentials, an operator-approved baseline, a per-tool risk/schema policy, and an explicit tool allowlist. Online learning is disabled unless `--enable-learning` is passed.
 
 ```bash
 export MCP_SENTINEL_CLIENT_TOKEN='replace-with-a-random-secret-of-at-least-32-characters'
 export MCP_SENTINEL_OPERATOR_TOKEN='use-a-different-random-secret-of-at-least-32-characters'
-python -m sentinel.cli baseline --upstream http://127.0.0.1:8790 --server-id local-mcp --state-file sentinel-state.json
-python -m sentinel.cli gateway --upstream http://127.0.0.1:8790 --server-id local-mcp --state-file sentinel-state.json \
+python -m sentinel.cli baseline --upstream http://127.0.0.1:8790 --server-id local-mcp --state-file sentinel-state.json --policy-file examples/production-policy.json
+python -m sentinel.cli baseline approve --state-file sentinel-state.json --actor operator-id --audit-log audit.jsonl
+python -m sentinel.cli gateway --upstream http://127.0.0.1:8790 --server-id local-mcp --state-file sentinel-state.json --policy-file examples/production-policy.json --audit-log audit.jsonl \
   --allow-tool safe_read --allow-tool calculate
 ```
 
@@ -53,7 +52,9 @@ Treat each allowlisted tool as permission for the upstream server to execute it.
 
 ---
 
-## 2. Headline Findings (20 Seeds, 95% Confidence Intervals)
+## 2. Synthetic Research Findings (20 Seeds, 95% Confidence Intervals)
+
+The numbers below describe the retained synthetic evaluation only. They do not measure production attack detection or customer traffic behavior.
 
 All numbers are derived across **20 independent evaluation seeds** (20001–20020) on 5,000 train, 1,000 validation, and **3,250 test synthetic events per seed** (1,750 benign and 1,500 attack events):
 
@@ -88,16 +89,21 @@ export MCP_SENTINEL_CLIENT_TOKEN="$(openssl rand -hex 32)"
 export MCP_SENTINEL_OPERATOR_TOKEN="$(openssl rand -hex 32)"
 export MCP_SENTINEL_STATE_KEY="$(openssl rand -hex 32)"
 python -m sentinel.cli baseline --upstream https://mcp-upstream.example/api \
-  --server-id inventory-prod --state-file /var/lib/mcp-sentinel/state.json
+  --server-id inventory-prod --state-file /var/lib/mcp-sentinel/state.json \
+  --policy-file /etc/mcp-sentinel/policy.json
+python -m sentinel.cli baseline approve --state-file /var/lib/mcp-sentinel/state.json \
+  --actor deployment-change-id --audit-log /var/log/mcp-sentinel/audit.jsonl
 python -m sentinel.cli gateway --upstream https://mcp-upstream.example/api \
   --server-id inventory-prod --host 0.0.0.0 --port 8788 \
   --state-file /var/lib/mcp-sentinel/state.json \
+  --policy-file /etc/mcp-sentinel/policy.json \
   --tls-cert /etc/mcp-sentinel/server.crt --tls-key /etc/mcp-sentinel/server.key \
   --allowed-host sentinel.example:8788 --allow-tool lookup_item
 ```
 
-Treat every allowlisted tool as permission for the upstream server to execute
-it. Detector-based response withholding occurs after execution. Review
+Treat every allowlisted tool according to its configured risk class. Detector
+response withholding occurs after execution and does not prevent upstream
+actions. Review
 [`docs/deployment.md`](docs/deployment.md),
 [`docs/threat_model_production.md`](docs/threat_model_production.md), and
 [`docs/production_gaps.md`](docs/production_gaps.md) before deployment.
@@ -106,7 +112,7 @@ it. Detector-based response withholding occurs after execution. Review
 
 ### Requirements
 - Python >= 3.11 (audited on CPython 3.14.3 AMD64).
-- `numpy==2.5.2` (only external dependency).
+- Runtime dependencies: NumPy and `jsonschema`; the optional research distribution adds its own dependencies.
 
 ### Setup
 ```bash
@@ -122,7 +128,7 @@ python -m venv .venv
 source .venv/bin/activate
 
 # 3. Install dependencies
-python -m pip install -r requirements-repro.txt -e .
+python -m pip install -r requirements-repro.txt -e . -e research
 ```
 
 ### Reproduce All Tables & Figures (Recommended Order)
@@ -152,7 +158,7 @@ make all
 .\scripts\reproduce_all.ps1
 ```
 
-This verifies all 480 dataset shards by SHA-256 and regenerates all 12 publication tables, 9 figures, the 330-cell novelty matrix report, and 700-cell matched poisoning statistics strictly from verified raw outputs.
+This verifies all 480 dataset shards by SHA-256 and regenerates all 12 publication tables, 9 figures, the 1,320-phase novelty v3 report, and 700-cell matched poisoning statistics strictly from verified raw outputs.
 
 To run integrity verification only (verifies dataset shards, and evaluation artifacts if present):
 ```bash
@@ -196,15 +202,22 @@ In accordance with strict open-science practices, all negative and null results 
 
 ## 7. Testing
 
-Run the comprehensive unit and integration test suite:
+Install both development packages from the repository root, then run either test runner:
 
 ```bash
+python -m pip install -e '.[dev]' -e 'research[dev]'
+python -m pytest
 python -m unittest discover -s tests
 ```
 
-The suite includes gateway/runtime tests and research-artifact checks. Research-artifact
-checks require the separately generated `results/` directory; when it is absent, those
-checks are skipped and the runtime tests still run.
+The main `mcp-runtime-sentinel` wheel contains only runtime code. Reproduction,
+dashboard, synthetic mock-server, plotting and study modules are in the separate
+`mcp-runtime-sentinel-research` package under `research/`. The runtime CLI provides
+gateway, baseline enrollment, API serving, and audit verification commands; install
+the research package to use its separate research CLI. Research-artifact tests that
+need generated `results/` remain skipped when those artifacts are absent.
+See [docs/package_layout.md](docs/package_layout.md) for the package boundary and
+the optional `research[paper]` dependency used by paper rendering.
 
 ---
 

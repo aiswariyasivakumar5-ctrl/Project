@@ -1,3 +1,5 @@
+import hashlib
+import json
 import os
 import tempfile
 import unittest
@@ -25,6 +27,17 @@ class AuditLogTests(unittest.TestCase):
                 sink.append({"payload": "x" * 2048})
             with self.assertRaises(ValueError):
                 sink.append({"not_json": float("nan")})
+
+    def test_empty_log_is_genesis_but_nonempty_partial_record_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "audit.jsonl"
+            path.write_bytes(b"")
+            sink = AuditLog(path)
+            self.assertEqual(sink._previous_hash, "0" * 64)
+
+            path.write_bytes(b"{")
+            with self.assertRaisesRegex(ValueError, "invalid hash chain"):
+                AuditLog(path)
 
     def test_verifier_rejects_non_object_and_broken_chain(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -60,6 +73,32 @@ class AuditLogTests(unittest.TestCase):
             valid, reason = verify_audit_log(path)
             self.assertFalse(valid)
             self.assertIn("hash", reason)
+
+    def test_verifier_canonicalizes_keys_and_rejects_missing_hash_and_nan(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "audit.jsonl"
+            sink = AuditLog(path)
+            sink.append({"alpha": 1, "label": "café 🛰", "omega": 2})
+            item = json.loads(path.read_text(encoding="utf-8"))
+            reordered = dict(reversed(list(item.items())))
+            path.write_text(
+                json.dumps(reordered, ensure_ascii=False) + "\n", encoding="utf-8"
+            )
+            self.assertTrue(verify_audit_log(path)[0])
+
+            path.write_text('{"previous_hash":"' + "0" * 64 + '"}\n', encoding="utf-8")
+            valid, _ = verify_audit_log(path)
+            self.assertFalse(valid)
+
+            unsigned = {"payload": float("nan"), "previous_hash": "0" * 64}
+            canonical = json.dumps(
+                unsigned, sort_keys=True, separators=(",", ":"), allow_nan=True
+            )
+            digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+            nonstandard = dict(unsigned, record_hash=digest)
+            path.write_text(json.dumps(nonstandard, allow_nan=True) + "\n", encoding="utf-8")
+            valid, _ = verify_audit_log(path)
+            self.assertFalse(valid)
 
     def test_size_rotation_keeps_verifiable_active_segments(self):
         with tempfile.TemporaryDirectory() as directory:

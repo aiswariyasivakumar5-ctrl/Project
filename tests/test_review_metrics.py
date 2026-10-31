@@ -1,5 +1,5 @@
 import unittest
-from sentinel.adaptation_study import recovery_metrics
+from sentinel_research.adaptation_study import recovery_metrics
 
 
 class RecoveryMetricsTests(unittest.TestCase):

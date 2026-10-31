@@ -24,7 +24,11 @@ Start the mock server first and verify the gateway `--upstream` URL and port. `I
 
 ## MCP client cannot connect
 
-Use HTTP POST with `Content-Type: application/json`. The prototype supports single JSON-RPC messages, not stdio, batch, SSE, or Streamable HTTP session negotiation.
+Use HTTP POST with `Content-Type: application/json` and the configured client
+Bearer credential. The gateway supports Streamable HTTP initialization and
+session mapping, including bounded parsing of upstream SSE JSON-RPC responses.
+It does not support stdio, batch JSON-RPC, downstream SSE subscriptions,
+resources, prompts, sampling, or cancellation.
 
 ## Malformed JSON-RPC
 

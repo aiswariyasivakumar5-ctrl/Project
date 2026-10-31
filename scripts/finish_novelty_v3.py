@@ -6,8 +6,8 @@ if WORKSPACE_ROOT not in sys.path:
     sys.path.insert(0, WORKSPACE_ROOT)
 
 import json
-from sentinel.novelty_experiment import summarize
-from sentinel.novelty_report import generate
+from sentinel_research.novelty_experiment import summarize
+from sentinel_research.novelty_report import generate
 
 root = Path("results/novelty/publication_scale_v3")
 files = [p for p in sorted(root.glob("*/*/seed-*.json")) if "calibration" not in p.parts]

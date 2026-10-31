@@ -5,11 +5,11 @@ import unittest
 from pathlib import Path
 from xml.etree import ElementTree
 
-from sentinel.novelty_experiment import VARIANTS
-from sentinel.novelty_scenarios import build_novelty_scenarios
-from sentinel.novelty_report import analyze, value, provenance_outcomes
-from sentinel.novelty_report import generate as generate_report
-from sentinel.novelty_figures import generate as generate_figures
+from sentinel_research.novelty_experiment import VARIANTS
+from sentinel_research.novelty_scenarios import build_novelty_scenarios
+from sentinel_research.novelty_report import analyze, value, provenance_outcomes
+from sentinel_research.novelty_report import generate as generate_report
+from sentinel_research.novelty_figures import generate as generate_figures
 
 
 class NoveltyReportTests(unittest.TestCase):

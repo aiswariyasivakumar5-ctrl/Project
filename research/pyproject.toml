@@ -1,0 +1,57 @@
+[project]
+name = "mcp-runtime-sentinel-research"
+version = "0.2.0"
+description = "Research and publication workflows for MCP Runtime Sentinel"
+requires-python = ">=3.11"
+dependencies = ["mcp-runtime-sentinel==0.2.0", "numpy>=1.24,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "coverage>=7.6,<8", "ruff>=0.8,<1"]
+paper = ["matplotlib>=3.8"]
+
+[project.scripts]
+mcp-sentinel-research = "sentinel_research.cli:main"
+mcp-sentinel-mock = "sentinel_research.mock_server:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sentinel_research"]
+
+[tool.setuptools.package-data]
+sentinel_research = ["dashboard_assets/*.html", "dashboard_assets/*.css", "dashboard_assets/*.js"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+"sentinel_research/ablation.py" = ["E501"]
+"sentinel_research/adaptation_study.py" = ["E501"]
+"sentinel_research/compare.py" = ["E501"]
+"sentinel_research/degradation_report.py" = ["E501"]
+"sentinel_research/degradation_study.py" = ["E501"]
+"sentinel_research/diagnostics.py" = ["E501"]
+"sentinel_research/final_verification.py" = ["E501"]
+"sentinel_research/fusion_study.py" = ["E501"]
+"sentinel_research/matched_poisoning.py" = ["E501"]
+"sentinel_research/matched_poisoning_report.py" = ["E501"]
+"sentinel_research/matched_poisoning_stats.py" = ["E501"]
+"sentinel_research/novelty_experiment.py" = ["E501"]
+"sentinel_research/novelty_figures.py" = ["E501"]
+"sentinel_research/novelty_report.py" = ["E501"]
+"sentinel_research/novelty_scenarios.py" = ["E501"]
+"sentinel_research/plots.py" = ["E501"]
+"sentinel_research/promotion_factorial.py" = ["E501"]
+"sentinel_research/research_tables.py" = ["E501"]
+"sentinel_research/sequence_analysis.py" = ["E501"]
+"sentinel_research/sequence_baselines.py" = ["E501"]
+"sentinel_research/sequence_features.py" = ["E501"]
+"sentinel_research/tradeoff_analysis.py" = ["E501"]
+"sentinel_research/verification_budget_study.py" = ["E501"]

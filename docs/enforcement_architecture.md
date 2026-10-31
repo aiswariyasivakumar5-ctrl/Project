@@ -107,14 +107,14 @@ Every `tools/call` is checked against the operator-configured `allowed_tools` li
 The serving CLI refuses to start without a client Bearer credential, a distinct operator credential (both at least 32 characters), and a trained baseline state file. Configure the credentials through `MCP_SENTINEL_CLIENT_TOKEN` and `MCP_SENTINEL_OPERATOR_TOKEN`; callers must send the client token on every MCP HTTP POST. The operator token protects audit and approval routes. These are shared service credentials, not per-user OAuth or role-based authorization. Deployments needing user-level decisions must validate identity at a trusted gateway and pass verified identity into an embedding integration. Put remote deployments behind TLS and configure `--allowed-host` and `--allowed-origin`; do not expose the plain HTTP listener directly to an untrusted network.
 
 To protect operational telemetry and control APIs:
-- **Bearer Token Authentication**: The gateway enforces HTTP Bearer token authentication via constant-time HMAC comparison (`hmac.compare_digest`) on:
+- **Bearer Token Authentication**: The gateway enforces HTTP Bearer token authentication via constant-time credential comparison (`hmac.compare_digest`) on:
   - Audit log endpoint: `GET /v1/audit`
   - Pending actions queue: `GET /v1/pending`, `GET /v1/pending/{id}`
   - Operator approval/denial: `POST /v1/pending/{id}/approve`, `POST /v1/pending/{id}/deny`
 - **Fail-Closed by Default**:
   - If a request is received without a valid `Authorization: Bearer <token>` header, the gateway returns **HTTP 401 Unauthorized**.
   - If the gateway is instantiated without a configured `auth_token` (`auth_token=None`), all audit and control endpoints fail closed by default (HTTP 401), preventing accidental exposure of sensitive telemetry or approval routes.
-- **Public Endpoints**: Only the basic liveness check (`GET /health`) remains unauthenticated.
+- **Public Endpoints**: `GET /livez`, its compatibility alias `GET /health`, and `GET /readyz` are unauthenticated; Host/Origin validation still applies. `/metrics` and every audit/control route require the operator credential.
 
 ---
 
@@ -134,7 +134,8 @@ Sentinel provides explicit atomic file-based persistence for runtime state acros
 | **JSON-RPC Request/Response** | **Supported** | `tools/call`, `tools/list`, `initialize` over HTTP POST. |
 | **JSON-RPC Notifications** | **Supported** | `notifications/initialized` over HTTP POST. |
 | **Batch JSON-RPC Requests** | **Unsupported** | Sentinel enforces strict single-request framing; batch arrays (`[{...}, {...}]`) are rejected (`fail-closed`). |
-| **Server-Sent Events (SSE)** | **Unsupported** | SSE streaming transport is not implemented; requests must use standard HTTP POST. |
+| **Streamable HTTP sessions** | **Supported** | `initialize` maps downstream and upstream session IDs; subsequent HTTP POST requests reuse the mapped upstream session. |
+| **Upstream SSE responses** | **Supported** | Bounded `text/event-stream` JSON-RPC responses are parsed for the matching request ID. Downstream SSE subscriptions are not implemented. |
 | **stdio Transport** | **Unsupported** | Process-pipe stdio transport is not implemented; gateway operates exclusively via HTTP. |
 | **MCP Resources** | **Unsupported** | `resources/list`, `resources/read`, and `resources/subscribe` are rejected with JSON-RPC error `-32601`. |
 | **MCP Prompts** | **Unsupported** | `prompts/list` and `prompts/get` are rejected with `-32601`. |

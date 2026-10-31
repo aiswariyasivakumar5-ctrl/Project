@@ -48,6 +48,13 @@ class PolicyCoverageTests(unittest.TestCase):
                     {
                         "tools": {
                             "batch_op": {
+                                "risk_class": "read",
+                                "input_schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "records": {"type": "array"}
+                                    },
+                                },
                                 "forbidden_paths": ["records[0].secret"],
                             }
                         }
@@ -207,7 +214,20 @@ class GatewayCoverageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             pol_file = Path(td) / "policy.json"
             pol_file.write_text(
-                json.dumps({"tools": {"safe_read": {"approval_required": True}}}),
+                json.dumps(
+                    {
+                        "tools": {
+                            "safe_read": {
+                                "risk_class": "read",
+                                "input_schema": {
+                                    "type": "object",
+                                    "additionalProperties": True,
+                                },
+                                "approval_required": True,
+                            }
+                        }
+                    }
+                ),
                 encoding="utf-8",
             )
             gw = SentinelGateway(
@@ -447,16 +467,32 @@ class GatewayCoverageTests(unittest.TestCase):
             )
 
         # 4. State file does not exist
-        with self.assertRaises(FileNotFoundError):
-            serve_gateway(
-                GatewayConfig(
-                    "http://127.0.0.1:8765",
-                    "srv",
-                    client_auth_token="long-client-token-that-is-32-chars-ok",
-                    auth_token="long-operator-token-that-is-32-chars-ok",
+        with tempfile.TemporaryDirectory() as td:
+            policy = Path(td) / "policy.json"
+            policy.write_text(
+                json.dumps(
+                    {
+                        "tools": {
+                            "safe_read": {
+                                "risk_class": "read",
+                                "input_schema": {"type": "object", "additionalProperties": True},
+                            }
+                        }
+                    }
                 ),
-                state_file="definitely_nonexistent_state_file.json",
+                encoding="utf-8",
             )
+            with self.assertRaises(FileNotFoundError):
+                serve_gateway(
+                    GatewayConfig(
+                        "http://127.0.0.1:8765",
+                        "srv",
+                        client_auth_token="long-client-token-that-is-32-chars-ok",
+                        auth_token="long-operator-token-that-is-32-chars-ok",
+                        policy_file=str(policy),
+                    ),
+                    state_file="definitely_nonexistent_state_file.json",
+                )
 
 
     def test_additional_gateway_branches(self):
@@ -488,7 +524,23 @@ class GatewayCoverageTests(unittest.TestCase):
         # 4. _await_preexecution_approval timeout
         with tempfile.TemporaryDirectory() as td:
             pol = Path(td) / "pol.json"
-            pol.write_text(json.dumps({"tools": {"safe_read": {"approval_required": True}}}), encoding="utf-8")
+            pol.write_text(
+                json.dumps(
+                    {
+                        "tools": {
+                            "safe_read": {
+                                "risk_class": "read",
+                                "input_schema": {
+                                    "type": "object",
+                                    "additionalProperties": True,
+                                },
+                                "approval_required": True,
+                            }
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
             cfg_timeout = GatewayConfig(
                 "http://127.0.0.1:8765", "srv",
                 policy_file=str(pol),
@@ -538,9 +590,28 @@ class GatewayCoverageTests(unittest.TestCase):
 
         gw8.in_process_forwarder = lambda p: (200, json.dumps({"jsonrpc": "2.0", "id": p["id"], "result": "not-a-dict"}).encode(), "application/json")
         gw8.config.allowed_tools = ("safe_read",)
-        with self.assertRaises(JsonRpcError) as exc:
-            gw8.handle(json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "safe_read", "arguments": {}}}).encode(), {})
-        self.assertEqual(exc.exception.code, -32053)
+        with tempfile.TemporaryDirectory() as policy_dir:
+            policy_path = Path(policy_dir) / "policy.json"
+            policy_path.write_text(
+                json.dumps(
+                    {
+                        "tools": {
+                            "safe_read": {
+                                "risk_class": "read",
+                                "input_schema": {
+                                    "type": "object",
+                                    "additionalProperties": True,
+                                },
+                            }
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            gw8.policy = PreExecutionPolicy(policy_path)
+            with self.assertRaises(JsonRpcError) as exc:
+                gw8.handle(json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "safe_read", "arguments": {}}}).encode(), {})
+            self.assertEqual(exc.exception.code, -32053)
 
         # 9. operator and client credentials must be different
         with self.assertRaises(ValueError):

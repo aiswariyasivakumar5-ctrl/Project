@@ -6,7 +6,7 @@ import urllib.request
 from pathlib import Path
 
 from sentinel.gateway import GatewayConfig, SentinelGateway, build_baseline, create_gateway_server
-from sentinel.mock_server import create_mock_server
+from sentinel_research.mock_server import create_mock_server
 
 EXFIL = {"name": "export_data", "arguments": {"scope": "all", "include_tokens": True}}
 

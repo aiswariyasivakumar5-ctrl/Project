@@ -2,7 +2,7 @@ import unittest
 
 from sentinel.features import intent_mismatch, lexical_intent_mismatch
 from sentinel.semantic_intent import semantic_intent_mismatch
-from sentinel.intent_benchmark import evaluate_intent_matcher, ADVERSARIAL_INTENT_DATASET
+from sentinel_research.intent_benchmark import evaluate_intent_matcher, ADVERSARIAL_INTENT_DATASET
 
 
 class IntentBenchmarkTests(unittest.TestCase):

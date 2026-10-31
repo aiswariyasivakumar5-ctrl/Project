@@ -10,7 +10,7 @@ API, which executes real HTTP MCP calls and renders actual gateway evidence.
 | API to gateway/mock | Passed | Live tests exercise all five scenarios; mock deletion was not forwarded. |
 | Response rendering | Passed | Six allow rows, then one isolate row with forwarded=false and error -32041 appeared. |
 | Reset | Passed | Browser showed zero calls and restored enrolled capability trust; tests compare learning-state hashes. |
-| Packaging | Passed | Offline wheel build contains the dashboard module and HTML, CSS and JavaScript assets. |
+| Packaging | Passed historically | The dashboard module and HTML, CSS and JavaScript assets are now shipped by the separate research wheel; the runtime wheel intentionally excludes them. Re-run package isolation checks for the current layout. |
 
 Full suite: **184 tests passed in 91.357 seconds**, including seven new dashboard
 tests. Dependency consistency passed; retained-research verification passed for

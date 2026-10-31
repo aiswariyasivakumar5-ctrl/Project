@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import unittest
 
-from sentinel.novelty_experiment import _workload_digest
-from sentinel.novelty_scenarios import build_novelty_scenarios
+from sentinel_research.novelty_experiment import _workload_digest
+from sentinel_research.novelty_scenarios import build_novelty_scenarios
 
 
 class NoveltyRandomizationTests(unittest.TestCase):

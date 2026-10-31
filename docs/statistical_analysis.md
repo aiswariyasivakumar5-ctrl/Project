@@ -55,7 +55,7 @@ When baselines are evaluated under operating thresholds constrained to match low
 Run all six Sentinel configurations at publication scale:
 
 ```powershell
-python -m sentinel.cli ablate --seeds 42,123,456,789,1001 `
+python -m sentinel_research.cli ablate --seeds 42,123,456,789,1001 `
   --train-size 5000 --validation-size 1000 --test-size 3000 `
   --output results/ablations_publication --bootstrap-resamples 20000
 ```
@@ -63,16 +63,16 @@ python -m sentinel.cli ablate --seeds 42,123,456,789,1001 `
 Analyze the approved baseline files without modifying them:
 
 ```powershell
-python -m sentinel.cli analyze --baselines results/baselines_publication `
+python -m sentinel_research.cli analyze --baselines results/baselines_publication `
   --output results/statistical_analysis --bootstrap-resamples 20000
 ```
 
 Generate SVG figures and Markdown tables:
 
 ```powershell
-python -m sentinel.cli figures --baselines results/baselines_publication `
+python -m sentinel_research.cli figures --baselines results/baselines_publication `
   --ablations results/ablations_publication --output results/figures
-python -m sentinel.cli research-tables --baselines results/baselines_publication `
+python -m sentinel_research.cli research-tables --baselines results/baselines_publication `
   --ablations results/ablations_publication --statistics results/statistical_analysis `
   --output results/tables
 ```

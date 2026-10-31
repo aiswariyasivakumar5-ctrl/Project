@@ -65,7 +65,7 @@ External validity evaluates the degree to which findings generalize to real-worl
 
 ### 3.2 Protocol Surface Scope Limitations
 - **Threat**: The Model Context Protocol specification includes diverse transport and session features beyond single-request HTTP JSON-RPC.
-- **Boundary**: Sentinel explicitly excludes stdio transport, Server-Sent Events (SSE) streaming, cancellation primitives, LLM sampling endpoints, and prompt templates. Applying Sentinel to unsupported transports requires protocol bridging.
+- **Boundary**: Sentinel supports Streamable HTTP initialize/session mapping and bounded parsing of upstream SSE JSON-RPC responses. It excludes stdio, downstream SSE subscriptions, cancellation primitives, LLM sampling endpoints, and prompt templates. Applying Sentinel to unsupported transports requires protocol bridging.
 
 ---
 

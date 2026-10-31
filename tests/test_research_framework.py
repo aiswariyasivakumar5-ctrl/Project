@@ -3,10 +3,10 @@ import unittest
 from pathlib import Path
 
 from sentinel.engine import EngineConfig, SentinelEngine
-from sentinel.experiment import ExperimentConfig, run_experiment
-from sentinel.metrics import Observation, calculate_metrics
-from sentinel.scenarios import build_scenarios
-from sentinel.workload import normal_workload
+from sentinel_research.experiment import ExperimentConfig, run_experiment
+from sentinel_research.metrics import Observation, calculate_metrics
+from sentinel_research.scenarios import build_scenarios
+from sentinel_research.workload import normal_workload
 
 
 class WorkloadTests(unittest.TestCase):

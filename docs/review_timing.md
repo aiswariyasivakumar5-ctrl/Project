@@ -15,7 +15,7 @@ read permissions. Each policy/stream restores the enrollment checkpoint. Source
 hashes, schedule, event-level grants and learning attribution are retained.
 
 ```powershell
-python -m sentinel.adaptation_study --output results/adaptation/new-review-study --events 30 --training 100 --authorize-reads --review-study
+python -m sentinel_research.adaptation_study --output results/adaptation/new-review-study --events 30 --training 100 --authorize-reads --review-study
 ```
 
 ## Measures

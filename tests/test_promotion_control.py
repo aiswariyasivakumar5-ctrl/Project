@@ -6,11 +6,11 @@ import unittest
 from unittest.mock import patch
 
 from sentinel.novelty import DualMemoryAdapter
-from sentinel.experiment import ExperimentConfig
-from sentinel.learning_attribution import LearningAttribution
-from sentinel.novelty_experiment import NoveltyLiveExperiment
-from sentinel.promotion_control import fixtures, run_control
-from sentinel.promotion_factorial import run_factorial
+from sentinel_research.experiment import ExperimentConfig
+from sentinel_research.learning_attribution import LearningAttribution
+from sentinel_research.novelty_experiment import NoveltyLiveExperiment
+from sentinel_research.promotion_control import fixtures, run_control
+from sentinel_research.promotion_factorial import run_factorial
 
 
 class PromotionControlTests(unittest.TestCase):
@@ -55,7 +55,7 @@ class PromotionControlTests(unittest.TestCase):
 
     def test_factorial_runs_every_fixed_condition(self):
         with tempfile.TemporaryDirectory() as root:
-            with patch('sentinel.promotion_factorial.run_control', return_value=[{'policy': 'fixture'}]) as run:
+            with patch('sentinel_research.promotion_factorial.run_control', return_value=[{'policy': 'fixture'}]) as run:
                 rows = run_factorial(Path(root) / 'run')
             self.assertEqual([(c.args[2], c.args[1]) for c in run.call_args_list],
                              [(False, False), (False, True), (True, False), (True, True)])
@@ -90,7 +90,7 @@ class PromotionControlTests(unittest.TestCase):
     def test_transport_failure_is_retained_not_reported_as_success(self):
         with tempfile.TemporaryDirectory() as root:
             output = Path(root) / 'run'
-            with patch('sentinel.promotion_control.NoveltyLiveExperiment.__enter__',
+            with patch('sentinel_research.promotion_control.NoveltyLiveExperiment.__enter__',
                        side_effect=TimeoutError('fixture transport failure')):
                 with self.assertRaises(TimeoutError):
                     run_control(output)

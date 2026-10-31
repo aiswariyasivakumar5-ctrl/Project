@@ -31,8 +31,8 @@ probes provide coarse recall resolution; two benign probes provide very limited
 false-positive coverage.
 
 ```powershell
-python -m sentinel.degradation_study --output results/adaptation/new-degradation
-python -m sentinel.degradation_report --output results/adaptation/new-degradation
+python -m sentinel_research.degradation_study --output results/adaptation/new-degradation
+python -m sentinel_research.degradation_report --output results/adaptation/new-degradation
 ```
 
 The report rejects incomplete matrices, event-attribution mismatches, inconsistent

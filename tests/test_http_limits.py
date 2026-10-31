@@ -5,8 +5,8 @@ import threading
 import time
 import unittest
 from contextlib import contextmanager
-from unittest.mock import Mock, patch
 from http.server import BaseHTTPRequestHandler
+from unittest.mock import Mock, patch
 
 from sentinel import http_limits
 from sentinel.gateway import GatewayConfig, SentinelGateway
@@ -122,15 +122,18 @@ class HttpLimitTests(unittest.TestCase):
         self.assertTrue(server._slots.acquire(blocking=False))
         self.assertFalse(server.drain(0.001))
         server._slots.release()
-        self.assertTrue(server.drain(0.01))
 
         server._slots = threading.BoundedSemaphore(1)
         request = Mock()
         with patch.object(http_limits.ThreadingHTTPServer, "process_request"):
             server.process_request(request, ("127.0.0.1", 1))
         self.assertFalse(server._slots.acquire(blocking=False))
-        with patch.object(http_limits.ThreadingHTTPServer, "process_request_thread"):
+        with (
+            patch.object(http_limits, "socket_deadline"),
+            patch.object(http_limits.ThreadingHTTPServer, "process_request_thread"),
+        ):
             server.process_request_thread(request, ("127.0.0.1", 1))
+        request.settimeout.assert_called_once_with(server.request_timeout)
         self.assertTrue(server._slots.acquire(blocking=False))
         server._slots.release()
 
@@ -150,6 +153,30 @@ class HttpLimitTests(unittest.TestCase):
         overloaded.sendall.assert_called_once()
         shutdown.assert_called_once_with(overloaded)
         server._slots.release()
+
+    def test_drain_uses_the_exact_shutdown_deadline(self):
+        server = BoundedHTTPServer.__new__(BoundedHTTPServer)
+        server.max_connections = 1
+        acquire_timeouts = []
+
+        class UnavailableSlot:
+            def acquire(self, timeout):
+                acquire_timeouts.append(timeout)
+                return False
+
+            def release(self):
+                raise AssertionError("a failed acquisition must not be released")
+
+        server._slots = UnavailableSlot()
+        with patch.object(http_limits.time, "monotonic", side_effect=[10.0, 10.0]):
+            self.assertFalse(server.drain(0.001))
+        self.assertEqual(len(acquire_timeouts), 1)
+        self.assertAlmostEqual(acquire_timeouts[0], 0.001)
+
+        acquire_timeouts.clear()
+        with patch.object(http_limits.time, "monotonic", side_effect=[10.0, 10.001]):
+            self.assertFalse(server.drain(0.001))
+        self.assertEqual(acquire_timeouts, [])
 
     def test_server_handler_completion_releases_slot_and_error_handling_filters_timeouts(self):
         server = BoundedHTTPServer.__new__(BoundedHTTPServer)

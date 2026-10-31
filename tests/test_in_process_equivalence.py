@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import unittest
 
-from sentinel.experiment import ExperimentConfig, LiveExperiment
-from sentinel.novelty_experiment import NoveltyLiveExperiment
-from sentinel.novelty_scenarios import build_novelty_scenarios
-from sentinel.workload import normal_workload
+from sentinel_research.experiment import ExperimentConfig, LiveExperiment
+from sentinel_research.novelty_experiment import NoveltyLiveExperiment
+from sentinel_research.novelty_scenarios import build_novelty_scenarios
+from sentinel_research.workload import normal_workload
 
 
 class TestPipelineEquivalence(unittest.TestCase):

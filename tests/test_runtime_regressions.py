@@ -8,8 +8,8 @@ from dataclasses import replace
 from sentinel.engine import SentinelEngine
 from sentinel.gateway import GatewayConfig, SentinelGateway, create_gateway_server
 from sentinel.jsonrpc import JsonRpcError
-from sentinel.metrics import Observation, calculate_metrics
-from sentinel.mock_server import create_mock_server
+from sentinel_research.metrics import Observation, calculate_metrics
+from sentinel_research.mock_server import create_mock_server
 from sentinel.models import Action, Interaction
 from sentinel.novelty import NoveltyConfig, NoveltySentinelEngine
 from sentinel.provenance import ScenarioClock

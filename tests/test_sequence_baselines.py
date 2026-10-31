@@ -4,10 +4,10 @@ import unittest
 
 import numpy as np
 
-from sentinel.compare import CompareConfig, run_comparison
-from sentinel.comparison_data import build_comparison_dataset
-from sentinel.sequence_baselines import LSTMAnomalyDetector, TransformerAnomalyDetector
-from sentinel.sequence_features import SequencePreprocessor
+from sentinel_research.compare import CompareConfig, run_comparison
+from sentinel_research.comparison_data import build_comparison_dataset
+from sentinel_research.sequence_baselines import LSTMAnomalyDetector, TransformerAnomalyDetector
+from sentinel_research.sequence_features import SequencePreprocessor
 
 
 class SequenceFeatureTests(unittest.TestCase):

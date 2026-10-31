@@ -1,6 +1,6 @@
 import unittest
 from sentinel.models import Interaction
-from sentinel.verification_budget import VerificationBudget
+from sentinel_research.verification_budget import VerificationBudget
 
 
 class VerificationBudgetTests(unittest.TestCase):

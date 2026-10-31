@@ -19,3 +19,8 @@ dist/
 *.audit.jsonl
 certs/
 *.log
+.venv-wsl-mutmut/
+mutants/
+.mutmut-cache/
+.venv*/
+.coverage*

@@ -10,7 +10,7 @@ import urllib.error
 
 from sentinel.engine import SentinelEngine, ServerProfile
 from sentinel.gateway import GatewayConfig, SentinelGateway, create_gateway_server
-from sentinel.mock_server import create_mock_server
+from sentinel_research.mock_server import create_mock_server
 from sentinel.models import Action, Interaction
 
 

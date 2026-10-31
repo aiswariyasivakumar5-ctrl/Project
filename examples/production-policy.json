@@ -1,0 +1,28 @@
+{
+  "tools": {
+    "safe_read": {
+      "risk_class": "read",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "record_id": {"type": "string"}
+        }
+      },
+      "max_argument_bytes": 4096,
+      "max_argument_depth": 16
+    },
+    "calculate": {
+      "risk_class": "read",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "a": {"type": "number"},
+          "b": {"type": "number"}
+        },
+        "required": ["a", "b"]
+      },
+      "max_argument_bytes": 4096,
+      "max_argument_depth": 8
+    }
+  }
+}

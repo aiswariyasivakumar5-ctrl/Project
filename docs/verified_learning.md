@@ -56,8 +56,8 @@ selected policies received review grants.
 ## Reproduce
 
 ```powershell
-python -m sentinel.verified_learning_study --output results/adaptation/verified-learning-new
-python -m sentinel.matched_poisoning_report --output results/adaptation/verified-learning-new
+python -m sentinel_research.verified_learning_study --output results/adaptation/verified-learning-new
+python -m sentinel_research.matched_poisoning_report --output results/adaptation/verified-learning-new
 python -m unittest discover -s tests -v
 ```
 

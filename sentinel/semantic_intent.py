@@ -149,7 +149,7 @@ def semantic_intent_mismatch(intent: str, tool_name: str, arguments: dict[str, A
 
     # Overlap between intended tokens and operation tokens
     overlap_tokens = intended & operation
-    overlap = len(overlap_tokens)
+    overlap: float = float(len(overlap_tokens))
 
     if not overlap:
         # Check partial/sub-string matches

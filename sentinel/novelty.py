@@ -356,9 +356,9 @@ class NoveltySentinelEngine:
         )
         self.approvals = ReviewApprovals(self.base.retention.memory_entries)
         self.recovery_approvals = ReviewApprovals(self.base.retention.memory_entries)
-        self.recovery_sessions: dict[tuple, set[str]] = {}
+        self.recovery_sessions: dict[tuple[str, ...], set[str]] = {}
 
-    def approval_key(self, event):
+    def approval_key(self, event: Interaction) -> tuple[str, str, str, str]:
         return (
             event.server_id,
             event.tool_name,
@@ -366,7 +366,14 @@ class NoveltySentinelEngine:
             _hash(event.user_intent),
         )
 
-    def approve_promotion(self, event, *, reviewer, evidence_ref, ttl=300):
+    def approve_promotion(
+        self,
+        event: Interaction,
+        *,
+        reviewer: str,
+        evidence_ref: str,
+        ttl: int | float = 300,
+    ) -> None:
         """Operator grants reviewed shape/intent/manifest learning authority."""
         with self.base.lock:
             if (
@@ -378,7 +385,7 @@ class NoveltySentinelEngine:
                 self.approval_key(event), reviewer=reviewer, evidence_ref=evidence_ref, ttl=ttl
             )
 
-    def revoke_promotion(self, event):
+    def revoke_promotion(self, event: Interaction) -> None:
         with self.base.lock:
             self.approvals.consume(self.approval_key(event))
             self.memory.trusted.get((event.server_id, event.tool_name), set()).discard(
@@ -386,10 +393,17 @@ class NoveltySentinelEngine:
             )
             self.memory.reject(event)
 
-    def recovery_key(self, event):
+    def recovery_key(self, event: Interaction) -> tuple[str, str, str, str, str]:
         return (*self.approval_key(event), _hash(event.arguments))
 
-    def begin_recovery(self, event, *, reviewer, evidence_ref, ttl=300):
+    def begin_recovery(
+        self,
+        event: Interaction,
+        *,
+        reviewer: str,
+        evidence_ref: str,
+        ttl: int | float = 300,
+    ) -> None:
         """Authorize exact read-only probes after incident review; not a trust reset."""
         with self.base.lock:
             if (
@@ -414,13 +428,13 @@ class NoveltySentinelEngine:
             }
             self.recovery_sessions[key] = set()
 
-    def cancel_recovery(self, event):
+    def cancel_recovery(self, event: Interaction) -> None:
         with self.base.lock:
             key = self.recovery_key(event)
             self.recovery_approvals.consume(key)
             self.recovery_sessions.pop(key, None)
 
-    def invalidate_reviews(self, event, reason):
+    def invalidate_reviews(self, event: Interaction, reason: str) -> dict[str, Any]:
         """An observed incident supersedes reviews for this capability only."""
         with self.base.lock:
             capability = (event.server_id, event.tool_name)
@@ -429,7 +443,11 @@ class NoveltySentinelEngine:
                 ("promotion", self.approvals),
                 ("recovery", self.recovery_approvals),
             ):
-                keys = [key for key in registry.entries if key[:2] == capability]
+                keys = [
+                    key
+                    for key in registry.entries
+                    if isinstance(key, tuple) and key[:2] == capability
+                ]
                 for key in keys:
                     registry.consume(key)
                 counts[name] = len(keys)
@@ -444,7 +462,9 @@ class NoveltySentinelEngine:
                         candidate.attested = False
             return {"reason": reason, "revoked": counts}
 
-    def evaluate_recovery(self, event, *, independent_session, attested):
+    def evaluate_recovery(
+        self, event: Interaction, *, independent_session: str, attested: bool
+    ) -> Verdict:
         """Trusted probe path. Never trains or restores candidate-learning authority."""
         with self.base.lock:
             key = self.recovery_key(event)
@@ -456,7 +476,7 @@ class NoveltySentinelEngine:
             ):
                 raise ValueError("active recovery review and independent identity required")
             base = self.base.evaluate(event, learn=False)
-            claim = self.provenance.observe(event, base.trace_id)
+            claim = self.provenance.observe(event, base.trace_id or _hash(event)[:16])
             counterfactual = claim.counterfactual_risk if self.config.intent_provenance else 0
             risk = 1 - (1 - base.anomaly_score) * (1 - 0.55 * counterfactual)
             safe = (
@@ -512,11 +532,11 @@ class NoveltySentinelEngine:
         self,
         event: Interaction,
         *,
-        trusted_enrollment=False,
-        attested=False,
-        learn=True,
-        independent_session=None,
-    ):
+        trusted_enrollment: bool = False,
+        attested: bool = False,
+        learn: bool = True,
+        independent_session: str | None = None,
+    ) -> NoveltyVerdict:
         # attested is a trusted in-process assertion, never a client header.
         base = self.base.evaluate(event, learn=False)
         claim = self.provenance.observe(event, base.trace_id or _hash(event)[:16])
@@ -539,7 +559,8 @@ class NoveltySentinelEngine:
         else:
             action = self.base._action(fused, False)
             state = CapabilityState(base.trust_score)
-        disposition, promoted = "frozen", ()
+        disposition = "frozen"
+        promoted: tuple[Interaction, ...] = ()
         eligible = (
             event.success
             and not base.components["provenance"]

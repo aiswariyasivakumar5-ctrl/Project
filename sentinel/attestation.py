@@ -39,15 +39,15 @@ class AttestationManager:
         if type(max_pending) is not int or max_pending < 1:
             raise ValueError("max_pending must be a positive integer")
         self.clock, self.ttl_seconds, self.max_pending = clock, ttl_seconds, max_pending
-        self._last_time = None
+        self._last_time: float | None = None
         self._lock = threading.RLock()
         self.enrolled: dict[str, str] = {}
         self.pending: dict[str, AttestationChallenge] = {}
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, Any]:
         return {key: value for key, value in self.__dict__.items() if key != "_lock"}
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: dict[str, Any]) -> None:
         self.__dict__.update(state)
         self._lock = threading.RLock()
 

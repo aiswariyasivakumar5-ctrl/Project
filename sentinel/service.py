@@ -9,7 +9,7 @@ from .models import Interaction
 from .validation import load_json, read_body
 
 
-def make_handler(engine: SentinelEngine):
+def make_handler(engine: SentinelEngine) -> type[BaseHTTPRequestHandler]:
     class Handler(BaseHTTPRequestHandler):
         def _json(self, status: int, payload: object) -> None:
             body = json.dumps(payload).encode()
@@ -54,8 +54,13 @@ def make_handler(engine: SentinelEngine):
 
 
 def create_service_server(
-    engine=None, host="127.0.0.1", port=8787, *, max_connections=32, request_timeout=10.0
-):
+    engine: SentinelEngine | None = None,
+    host: str = "127.0.0.1",
+    port: int = 8787,
+    *,
+    max_connections: int = 32,
+    request_timeout: float = 10.0,
+) -> BoundedHTTPServer:
     return BoundedHTTPServer(
         (host, port),
         make_handler(engine or SentinelEngine()),
@@ -65,7 +70,11 @@ def create_service_server(
 
 
 def serve(
-    host: str = "127.0.0.1", port: int = 8787, *, max_connections=32, request_timeout=10.0
+    host: str = "127.0.0.1",
+    port: int = 8787,
+    *,
+    max_connections: int = 32,
+    request_timeout: float = 10.0,
 ) -> None:
     server = create_service_server(
         host=host, port=port, max_connections=max_connections, request_timeout=request_timeout

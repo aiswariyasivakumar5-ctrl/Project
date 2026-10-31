@@ -5,7 +5,7 @@ import threading
 import unittest
 from unittest.mock import patch
 
-from sentinel.dashboard import DemoSession, SCENARIOS, create_dashboard
+from sentinel_research.dashboard import DemoSession, SCENARIOS, create_dashboard
 
 
 class DashboardTests(unittest.TestCase):
@@ -66,13 +66,17 @@ class DashboardTests(unittest.TestCase):
         self.assertEqual(self.post('/api/reset', {'extra': True})[0], 400)
         self.assertEqual(self.demo.total, 0)
 
-    def test_live_mismatch_is_not_forwarded_and_reset_restores_learning(self):
+    def test_live_mismatch_is_detected_after_dispatch_and_reset_restores_learning(self):
         before = self.demo.live.learning_state()
         status, body, _ = self.post('/api/run', {'scenario': 'intent_mismatch'})
         self.assertEqual(status, 200)
         row = json.loads(body)['events'][0]
         self.assertEqual(row['tool'], 'simulated_delete')
-        self.assertFalse(row['forwarded'])
+        # Intent mismatch is detector evidence, not a policy decision. The
+        # synthetic fixture classifies this tool as read, so analysis may
+        # withhold its response only after upstream execution.
+        self.assertTrue(row['forwarded'])
+        self.assertEqual(row['decision'], 'contained-withheld')
         self.assertEqual(row['model_updates'], 0)
         self.assertEqual(self.post('/api/reset', {})[0], 200)
         self.assertEqual(self.demo.total, 0)
@@ -107,7 +111,7 @@ class DashboardTests(unittest.TestCase):
             if count == 2:
                 raise TimeoutError('fixture')
             return original(*args, **kwargs)
-        with patch.object(self.demo.live, 'execute', side_effect=fail_second), patch('sentinel.dashboard.traceback.print_exc'):
+        with patch.object(self.demo.live, 'execute', side_effect=fail_second), patch('sentinel_research.dashboard.traceback.print_exc'):
             status, _, _ = self.post('/api/run', {'scenario': 'normal'})
         self.assertEqual(status, 502)
         self.assertEqual(count, 2)

@@ -2,6 +2,7 @@
 
 import math
 import time
+from collections.abc import Callable, Hashable
 from dataclasses import dataclass
 
 
@@ -13,12 +14,14 @@ class ReviewApproval:
 
 
 class ReviewApprovals:
-    def __init__(self, max_entries=4096, clock=time.monotonic):
+    def __init__(
+        self, max_entries: int = 4096, clock: Callable[[], float] = time.monotonic
+    ) -> None:
         self.max_entries, self.clock = max_entries, clock
-        self.entries = {}
-        self.last_time = None
+        self.entries: dict[Hashable, ReviewApproval] = {}
+        self.last_time: float | None = None
 
-    def _now(self):
+    def _now(self) -> float:
         now = self.clock()
         if (
             type(now) not in (int, float)
@@ -31,7 +34,14 @@ class ReviewApprovals:
         self.entries = {key: value for key, value in self.entries.items() if now < value.expires_at}
         return now
 
-    def grant(self, key, *, reviewer, evidence_ref, ttl=300):
+    def grant(
+        self,
+        key: Hashable,
+        *,
+        reviewer: str,
+        evidence_ref: str,
+        ttl: int | float = 300,
+    ) -> None:
         if not all(
             isinstance(value, str) and 0 < len(value.strip()) <= 512
             for value in (reviewer, evidence_ref)
@@ -44,12 +54,12 @@ class ReviewApprovals:
             raise ValueError("review approval capacity exhausted")
         self.entries[key] = ReviewApproval(reviewer, evidence_ref, now + ttl)
 
-    def get(self, key):
+    def get(self, key: Hashable) -> ReviewApproval | None:
         try:
             self._now()
         except ValueError:
             return None
         return self.entries.get(key)
 
-    def consume(self, key):
+    def consume(self, key: Hashable) -> ReviewApproval | None:
         return self.entries.pop(key, None)

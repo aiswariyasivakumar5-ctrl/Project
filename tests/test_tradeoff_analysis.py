@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from sentinel.tradeoff_analysis import (TradeoffConfig, _contributions, run_tradeoff_analysis,
+from sentinel_research.tradeoff_analysis import (TradeoffConfig, _contributions, run_tradeoff_analysis,
                                          sequence_locality_probe)
 
 

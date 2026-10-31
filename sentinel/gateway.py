@@ -101,8 +101,11 @@ class GatewayConfig:
     trust_proxy_headers: bool = False
     credentials_file: str | None = None
     policy_file: str | None = None
+    enable_learning: bool = False
 
     def __post_init__(self) -> None:
+        if type(self.enable_learning) is not bool:
+            raise ValueError("enable_learning must be boolean")
         if not isinstance(self.novelty_config, NoveltyConfig):
             raise ValueError("novelty_config must be a NoveltyConfig")
         for key, value in asdict(self.novelty_config).items():
@@ -283,6 +286,13 @@ class GatewayAudit:
     analysis_latency_ms: float | None = None
     provenance: dict[str, Any] | None = None
     novelty: dict[str, Any] | None = None
+    risk_class: str | None = None
+    detector_role: str | None = None
+    execution_stage: str | None = None
+    response_withheld: bool = False
+    policy_decision: str | None = None
+    baseline_change: dict[str, Any] | None = None
+    detector_decision: str | None = None
 
 
 class SentinelGateway:
@@ -308,7 +318,16 @@ class SentinelGateway:
         self.audit: deque[GatewayAudit] = deque(maxlen=self.engine.retention.audit_records)
         self.tool_metadata: dict[str, dict[str, Any]] = {}
         self.capability_digest: str | None = None
-        self.learning_enabled = True
+        self.learning_enabled = config.enable_learning
+        self.baseline_metadata: dict[str, Any] = {
+            "version": 1,
+            "status": "unapproved",
+            "approved_by": None,
+            "approved_at": None,
+            "changed_by": "initialization",
+            "changed_at": time.time(),
+            "diff_summary": "initial empty baseline",
+        }
         self.trusted_enrollment = False
         # Research runner may inject deterministic workload latency while the
         # audit continues to record measured transport latency separately.
@@ -349,7 +368,9 @@ class SentinelGateway:
     def reload_client_credentials(self) -> None:
         if self.config.credentials_file:
             try:
-                self.client_credentials = self._credentials_from_file(self.config.credentials_file)
+                credentials = self._credentials_from_file(self.config.credentials_file)
+                with self._auth_lock:
+                    self.client_credentials = credentials
             except ValueError as exc:
                 self.logger.error(
                     json.dumps({"event": "credentials_reload_failed", "reason": str(exc)})
@@ -640,6 +661,7 @@ class SentinelGateway:
                 "schema_version": STATE_SCHEMA_VERSION,
                 "server_id": self.config.server_id,
                 "exported_at": time.time(),
+                "baseline": dict(self.baseline_metadata),
                 "engine": engine_state,
                 "novelty": novelty_state,
                 "tool_metadata": self.tool_metadata,
@@ -716,7 +738,7 @@ class SentinelGateway:
                 "tool_metadata",
                 "capability_digest",
             }
-            optional_top = {"hmac_sha256", "pending_actions"}
+            optional_top = {"hmac_sha256", "pending_actions", "baseline"}
             if set(state) - (required_top | optional_top) or not required_top.issubset(state):
                 raise ValueError("state fields do not match the supported schema")
             if (
@@ -853,6 +875,48 @@ class SentinelGateway:
                 raise ValueError("capability_digest must be a string or null")
             if state["server_id"] != self.config.server_id:
                 raise ValueError("state server_id does not match this gateway")
+            baseline = state.get(
+                "baseline",
+                {
+                    "version": 1,
+                    "status": "unapproved",
+                    "approved_by": None,
+                    "approved_at": None,
+                    "changed_by": "legacy-state-import",
+                    "changed_at": state["exported_at"],
+                    "diff_summary": "legacy baseline requires explicit operator approval",
+                },
+            )
+            baseline = self._state_mapping(baseline, "baseline")
+            expected_baseline = {
+                "version",
+                "status",
+                "approved_by",
+                "approved_at",
+                "changed_by",
+                "changed_at",
+                "diff_summary",
+            }
+            if set(baseline) != expected_baseline:
+                raise ValueError("baseline metadata fields do not match the supported schema")
+            self._state_count(baseline["version"], "baseline.version")
+            if baseline["version"] < 1 or baseline["status"] not in {"approved", "unapproved"}:
+                raise ValueError("baseline version or status is invalid")
+            if baseline["approved_by"] is not None and (
+                not isinstance(baseline["approved_by"], str) or not baseline["approved_by"]
+            ):
+                raise ValueError("baseline.approved_by must be a nonempty string or null")
+            if baseline["approved_at"] is not None:
+                self._state_number(baseline["approved_at"], "baseline.approved_at", minimum=0)
+            if baseline["status"] == "approved" and (
+                baseline["approved_by"] is None or baseline["approved_at"] is None
+            ):
+                raise ValueError("approved baseline requires an operator and timestamp")
+            if not isinstance(baseline["changed_by"], str) or not baseline["changed_by"]:
+                raise ValueError("baseline.changed_by must be a nonempty string")
+            self._state_number(baseline["changed_at"], "baseline.changed_at", minimum=0)
+            if not isinstance(baseline["diff_summary"], str) or not baseline["diff_summary"]:
+                raise ValueError("baseline.diff_summary must be a nonempty string")
             pending_actions: list[PendingAction] = []
             raw_actions = state.get("pending_actions", [])
             if (
@@ -965,6 +1029,7 @@ class SentinelGateway:
                 "tool_metadata": metadata,
                 "capability_digest": digest,
                 "pending_actions": pending_actions,
+                "baseline": baseline,
             }
         except (TypeError, KeyError, OverflowError, RecursionError) as exc:
             raise ValueError(f"Invalid gateway state: {exc}") from exc
@@ -1004,6 +1069,7 @@ class SentinelGateway:
                     )
             self.tool_metadata = prepared["tool_metadata"]
             self.capability_digest = prepared["capability_digest"]
+            self.baseline_metadata = prepared["baseline"]
             now = time.time()
             self.pending_actions = {
                 action.action_id: action
@@ -1069,7 +1135,11 @@ class SentinelGateway:
         if self.novelty is None:
             return None
         with self.engine.lock:
-            state = self.novelty.capabilities.states.get((self.config.server_id, tool))
+            state = (
+                self.novelty.capabilities.states.get((self.config.server_id, tool))
+                if tool is not None
+                else None
+            )
             return {
                 "capability": tool,
                 "capability_trust": state.trust if state else None,
@@ -1254,10 +1324,8 @@ class SentinelGateway:
     def _preflight_block(self, tool: str, arguments: dict[str, Any], intent: str) -> str | None:
         if tool not in self.config.allowed_tools:
             return "tool is not in the operator-configured allowlist"
-        metadata = self.tool_metadata.get(tool, {})
-        annotations = metadata.get("annotations", {}) if isinstance(metadata, dict) else {}
-        destructive = bool(annotations.get("destructiveHint"))
-        intent_risk = intent_mismatch(intent, tool, arguments)
+        if self.policy is None or self.policy.risk_class(tool) is None:
+            return "tool has no operator-assigned risk class"
         profile = self.engine.profiles.get(self.config.server_id)
         if self.novelty and self.novelty.config.capability_trust:
             state = self.novelty.capabilities.states.get((self.config.server_id, tool))
@@ -1265,8 +1333,6 @@ class SentinelGateway:
                 return "capability trust below isolation threshold"
         elif profile and profile.trust < 0.15:
             return "server trust below isolation threshold"
-        if destructive and intent_risk >= 0.70:
-            return "destructive tool conflicts with stated intent"
         return None
 
     def _recovery_event(
@@ -1366,27 +1432,27 @@ class SentinelGateway:
             except Exception:
                 novelty.invalidate_reviews(event, "recovery transport or analysis failure")
                 raise
-            with self._lock:
-                self._append_audit(
-                    GatewayAudit(
-                        time.time(),
-                        event.session_id,
-                        event.server_id,
-                        "sentinel/recovery-probe",
-                        payload["id"],
-                        tool,
-                        fingerprint(arguments),
-                        fingerprint(result),
-                        event.latency_ms,
-                        True,
-                        verdict.action.value,
-                        trace_id=verdict.trace_id,
-                        reasons=verdict.reasons,
-                        provenance=verdict.provenance,
-                        attestation_verified=attested,
-                    )
+        with self._lock:
+            self._append_audit(
+                GatewayAudit(
+                    time.time(),
+                    event.session_id,
+                    event.server_id,
+                    "sentinel/recovery-probe",
+                    payload["id"],
+                    tool,
+                    fingerprint(arguments),
+                    fingerprint(result),
+                    event.latency_ms,
+                    True,
+                    verdict.action.value,
+                    trace_id=verdict.trace_id,
+                    reasons=verdict.reasons,
+                    provenance=verdict.provenance,
+                    attestation_verified=attested,
                 )
-            return cast(dict[str, Any], verdict.to_dict())
+            )
+        return verdict.to_dict()
 
     @request_budget
     def handle(self, body: bytes, headers: dict[str, str]) -> tuple[int, bytes, dict[str, str]]:
@@ -1455,8 +1521,11 @@ class SentinelGateway:
                 return 404, b'{"error":"unknown MCP session"}', {"Content-Type": "application/json"}
             upstream_session_id = binding.upstream_session_id
             protocol_version = protocol_version or binding.protocol_version
-        elif self._uses_upstream_sessions:
-            raise JsonRpcError(-32600, "MCP session id is required", request.request_id)
+        else:
+            with self._session_lock:
+                uses_upstream_sessions = self._uses_upstream_sessions
+            if uses_upstream_sessions:
+                raise JsonRpcError(-32600, "MCP session id is required", request.request_id)
         started = time.perf_counter()
         tool = request.params.get("name") if request.method == "tools/call" else None
         arguments = (
@@ -1470,20 +1539,25 @@ class SentinelGateway:
             raise JsonRpcError(-32602, "Invalid params", request.request_id)
         block_reason = None
         policy_requires_approval = False
+        risk_class: str | None = None
         if tool:
+            risk_class = self.policy.risk_class(tool) if self.policy else None
+            policy_reasons: list[str] = []
+            if self.policy is not None:
+                policy_reasons, policy_requires_approval = self.policy.evaluate(
+                    tool, arguments, owner
+                )
+            elif tool in self.config.allowed_tools:
+                policy_reasons = ["tool has no operator-assigned risk class"]
+            if policy_reasons:
+                block_reason = "; ".join(policy_reasons)
             with self._engine_lock():
-                block_reason = self._preflight_block(tool, arguments, intent)
+                block_reason = block_reason or self._preflight_block(tool, arguments, intent)
                 if not block_reason:
                     try:
                         self.engine.admit(self.config.server_id, session_id, tool)
                     except StateCapacityError as exc:
                         block_reason = str(exc)
-            if self.policy is not None and not block_reason:
-                policy_reasons, policy_requires_approval = self.policy.evaluate(
-                    tool, arguments, owner
-                )
-                if policy_reasons:
-                    block_reason = "; ".join(policy_reasons)
         provenance_evidence = None
         if tool and not block_reason:
             claim_id = headers.get("x-sentinel-provenance")
@@ -1527,15 +1601,46 @@ class SentinelGateway:
                 reasons=[block_reason],
                 provenance=provenance_evidence,
                 novelty=self._novelty_audit(tool),
+                risk_class=risk_class,
+                detector_role="not-run-policy-denied",
+                execution_stage="pre-dispatch",
+                policy_decision="deny",
             )
             with self._lock:
                 self._append_audit(record)
             error = JsonRpcError(-32041, "Sentinel blocked request", request.request_id).response(
                 {"reason": block_reason}
             )
-            return 200, json.dumps(error).encode(), {"X-Sentinel-Decision": "isolate"}
+            return 200, json.dumps(error).encode(), {
+                "X-Sentinel-Decision": "isolate",
+                "X-Sentinel-Risk-Class": risk_class or "unclassified",
+                "X-Sentinel-Detector-Role": "not-run-policy-denied",
+                "X-Sentinel-Execution-Stage": "pre-dispatch",
+                "X-Sentinel-Response-Withheld": "false",
+            }
 
         if tool and policy_requires_approval:
+            with self._lock:
+                self._append_audit(
+                    GatewayAudit(
+                        time.time(),
+                        session_id,
+                        self.config.server_id,
+                        request.method,
+                        request.request_id,
+                        tool,
+                        fingerprint(arguments),
+                        None,
+                        0.0,
+                        False,
+                        "approval-required",
+                        reasons=["operator approval required before upstream dispatch"],
+                        risk_class=risk_class,
+                        detector_role="not-run-approval-required",
+                        execution_stage="pre-dispatch",
+                        policy_decision="approval-required",
+                    )
+                )
             try:
                 approval_status = self._await_preexecution_approval(
                     session_id, tool, arguments, None
@@ -1557,13 +1662,23 @@ class SentinelGateway:
                     False,
                     Action.ISOLATE.value,
                     reasons=[reason],
+                    risk_class=risk_class,
+                    detector_role="not-run-policy-denied",
+                    execution_stage="pre-dispatch",
+                    policy_decision="approval-required",
                 )
                 with self._lock:
                     self._append_audit(record)
                 error = JsonRpcError(
                     -32043, "Sentinel isolated request", request.request_id
                 ).response({"decision": "isolate", "reason": reason})
-                return 200, json.dumps(error).encode(), {"X-Sentinel-Decision": "isolate"}
+                return 200, json.dumps(error).encode(), {
+                    "X-Sentinel-Decision": "isolate",
+                    "X-Sentinel-Risk-Class": risk_class or "unclassified",
+                    "X-Sentinel-Detector-Role": "not-run-policy-denied",
+                    "X-Sentinel-Execution-Stage": "pre-dispatch",
+                    "X-Sentinel-Response-Withheld": "false",
+                }
 
         try:
             status, response_body, content_type, upstream_headers = self._forward(
@@ -1592,6 +1707,15 @@ class SentinelGateway:
                 reasons=["upstream dispatch failed"],
                 provenance=provenance_evidence,
                 novelty=self._novelty_audit(tool),
+                risk_class=risk_class,
+                detector_role=(
+                    "advisory-only"
+                    if risk_class in {"write", "destructive"}
+                    else "response-gating"
+                ),
+                execution_stage="upstream-dispatch-attempted",
+                response_withheld=False,
+                policy_decision="allow-after-approval" if policy_requires_approval else "allow",
             )
             with self._lock:
                 self._append_audit(record)
@@ -1699,13 +1823,18 @@ class SentinelGateway:
                 self.capability_digest = fingerprint(tools)
             # Do not advertise tools this gateway will deny at call time.
             upstream["result"]["tools"] = [
-                item for item in tools if item["name"] in self.config.allowed_tools
+                item
+                for item in tools
+                if item["name"] in self.config.allowed_tools
+                and self.policy is not None
+                and self.policy.risk_class(item["name"]) is not None
             ]
             response_body = json.dumps(upstream, separators=(",", ":")).encode()
 
         verdict = None
         analysis_latency_ms = None
         attestation_verified = None
+        baseline_change = None
         if request.method == "tools/call":
             if "result" in upstream and (
                 not isinstance(upstream["result"], dict)
@@ -1720,7 +1849,7 @@ class SentinelGateway:
             annotations = metadata.get("annotations", {}) if isinstance(metadata, dict) else {}
             event = Interaction(
                 self.config.server_id,
-                tool,
+                cast(str, tool),
                 arguments,
                 response_value,
                 self.telemetry_latency_override_ms
@@ -1740,6 +1869,12 @@ class SentinelGateway:
             )
             try:
                 analysis_started = time.perf_counter()
+                before_profile = self.engine.profiles.get(self.config.server_id)
+                counts_before = (
+                    (before_profile.trusted_count, before_profile.quarantined_count)
+                    if before_profile
+                    else (0, 0)
+                )
                 with self._engine_lock():
                     if self.novelty:
                         identity = self.session_identity(headers) if self.session_identity else None
@@ -1766,6 +1901,33 @@ class SentinelGateway:
                         )
                     if provenance_evidence is not None:
                         verdict.provenance = {**(verdict.provenance or {}), **provenance_evidence}
+                    after_profile = self.engine.profiles.get(self.config.server_id)
+                    counts_after = (
+                        (after_profile.trusted_count, after_profile.quarantined_count)
+                        if after_profile
+                        else (0, 0)
+                    )
+                    if self.learning_enabled and counts_after != counts_before:
+                        now = time.time()
+                        self.baseline_metadata.update(
+                            {
+                                "version": self.baseline_metadata["version"] + 1,
+                                "status": "unapproved",
+                                "approved_by": None,
+                                "approved_at": None,
+                                "changed_by": owner,
+                                "changed_at": now,
+                                "diff_summary": (
+                                    f"online update for {tool}: trusted {counts_before[0]}->"
+                                    f"{counts_after[0]}, quarantined {counts_before[1]}->"
+                                    f"{counts_after[1]}"
+                                ),
+                            }
+                        )
+                        baseline_change = {
+                            **self.baseline_metadata,
+                            "actor": owner,
+                        }
                 analysis_latency_ms = (time.perf_counter() - analysis_started) * 1000
             except Exception as exc:
                 if self.config.fail_closed:
@@ -1787,7 +1949,11 @@ class SentinelGateway:
             fingerprint(upstream),
             latency_ms,
             True,
-            verdict.action.value
+            (
+                f"advisory-{verdict.action.value}"
+                if verdict and risk_class in {"write", "destructive"}
+                else verdict.action.value
+            )
             if verdict
             else ("forward-unscored" if request.method in OPERATOR_GATED_METHODS else "forward"),
             verdict.trace_id if verdict else None,
@@ -1802,6 +1968,21 @@ class SentinelGateway:
             attestation_verified,
             analysis_latency_ms,
             verdict.provenance if verdict else None,
+            risk_class=risk_class,
+            detector_role=(
+                "advisory-only"
+                if risk_class in {"write", "destructive"}
+                else "response-gating" if risk_class == "read" else "not-applicable"
+            ),
+            execution_stage="after-upstream" if verdict else "upstream-response",
+            response_withheld=bool(
+                verdict
+                and risk_class == "read"
+                and verdict.action in BLOCKING_ACTIONS
+            ),
+            policy_decision="allow-after-approval" if policy_requires_approval else "allow",
+            baseline_change=baseline_change,
+            detector_decision=verdict.action.value if verdict else None,
         )
         if verdict and self.novelty:
             record.novelty = {
@@ -1820,6 +2001,11 @@ class SentinelGateway:
             "X-Sentinel-Decision": (
                 "forward-unscored" if request.method in OPERATOR_GATED_METHODS else record.decision
             ),
+            "X-Sentinel-Detector-Role": record.detector_role or "not-applicable",
+            "X-Sentinel-Execution-Stage": record.execution_stage or "upstream-response",
+            "X-Sentinel-Response-Withheld": str(record.response_withheld).lower(),
+            "X-Sentinel-Risk-Class": risk_class or "not-applicable",
+            "X-Sentinel-Detector-Decision": verdict.action.value if verdict else "not-run",
         }
         if downstream_session_header is not None:
             response_headers["Mcp-Session-Id"] = downstream_session_header
@@ -1827,7 +2013,7 @@ class SentinelGateway:
             response_headers["MCP-Protocol-Version"] = response_protocol_version
         if verdict and verdict.trace_id:
             response_headers["X-Sentinel-Trace"] = verdict.trace_id
-        if verdict and verdict.action in BLOCKING_ACTIONS:
+        if verdict and risk_class == "read" and verdict.action in BLOCKING_ACTIONS:
             if verdict.action == Action.CONFIRM:
                 try:
                     action = self.create_pending_action(
@@ -2088,9 +2274,11 @@ def make_gateway_handler(gateway: SentinelGateway) -> type[BaseHTTPRequestHandle
             provided = auth_header[7:].strip()
             client_id = "single-client"
             valid = False
-            if gateway.client_credentials:
+            with gateway._auth_lock:
+                credentials = gateway.client_credentials
+            if credentials:
                 digest = hashlib.sha256(provided.encode("utf-8")).hexdigest()
-                for token_hash, mapped_client in gateway.client_credentials.items():
+                for token_hash, mapped_client in credentials.items():
                     matched = hmac.compare_digest(digest, token_hash)
                     if matched:
                         valid = True
@@ -2431,6 +2619,8 @@ def serve_gateway(
         )
     if state_file is None:
         raise ValueError("Refusing to start gateway without a trained --state-file baseline")
+    if config.policy_file is None:
+        raise ValueError("Refusing to start gateway without an operator --policy-file")
     state_path = Path(state_file)
     if not state_path.is_file():
         raise FileNotFoundError(f"Trained baseline state file not found: {state_path}")
@@ -2442,6 +2632,8 @@ def serve_gateway(
         if profile is None or profile.trusted_count < gateway.engine.warmup_events:
             raise ValueError("Baseline has insufficient trusted enrollment for this server")
         gateway.baseline_loaded = True
+        if gateway.baseline_metadata["status"] != "approved":
+            raise ValueError("Refusing to serve an unapproved baseline; run baseline approve")
         print(f"Loaded trained baseline from {state_path}")
     except Exception:
         server.server_close()
@@ -2516,6 +2708,7 @@ def build_baseline(
     )
     gateway = SentinelGateway(config)
     gateway.trusted_enrollment = True
+    gateway.learning_enabled = True
     session_headers: dict[str, dict[str, str]] = {}
     for index in range(4):
         session_key = f"baseline-{index}"
@@ -2571,6 +2764,17 @@ def build_baseline(
             gateway.handle(body, headers)
             sent += 1
     gateway.trusted_enrollment = False
+    gateway.baseline_metadata.update(
+        {
+            "version": 1,
+            "status": "unapproved",
+            "approved_by": None,
+            "approved_at": None,
+            "changed_by": "baseline-enrollment",
+            "changed_at": time.time(),
+            "diff_summary": f"initial enrollment from {sent} explicit training calls",
+        }
+    )
     gateway.save_state(state_file)
     profile = gateway.engine.profiles.get(config.server_id)
     return {

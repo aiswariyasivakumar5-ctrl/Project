@@ -32,6 +32,14 @@ class TestReleaseArchive(unittest.TestCase):
         (self.root / ".venv" / "Scripts" / "python.exe").write_bytes(b"dummy")
         (self.root / ".venv-repro" / "bin").mkdir(parents=True)
         (self.root / ".venv-repro" / "bin" / "python").write_bytes(b"dummy")
+        (self.root / ".venv-clean-verify" / "Scripts").mkdir(parents=True)
+        (self.root / ".venv-clean-verify" / "Scripts" / "python.exe").write_bytes(b"dummy")
+        (self.root / ".venv-wsl-mutmut" / "bin").mkdir(parents=True)
+        (self.root / ".venv-wsl-mutmut" / "bin" / "python").write_bytes(b"dummy")
+        (self.root / "mutants" / "sentinel").mkdir(parents=True)
+        (self.root / "mutants" / "sentinel" / "mutation.py").write_text("# mutant\n")
+        (self.root / ".mutmut-cache").mkdir()
+        (self.root / ".mutmut-cache" / "cache.json").write_text("{}")
 
         (sentinel_dir / "__pycache__").mkdir()
         (sentinel_dir / "__pycache__" / "gateway.cpython-312.pyc").write_bytes(b"dummy")
@@ -79,6 +87,10 @@ class TestReleaseArchive(unittest.TestCase):
         excluded_markers = [
             ".venv",
             ".venv-repro",
+            ".venv-clean-verify",
+            ".venv-wsl-mutmut",
+            "mutants",
+            ".mutmut-cache",
             "__pycache__",
             ".pyc",
             ".pyo",

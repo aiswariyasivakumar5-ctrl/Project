@@ -6,7 +6,7 @@ import urllib.request
 
 from sentinel.engine import SentinelEngine
 from sentinel.gateway import GatewayConfig, create_gateway_server
-from sentinel.mock_server import create_mock_server
+from sentinel_research.mock_server import create_mock_server
 
 
 class GatewayIntegrationTests(unittest.TestCase):
@@ -64,15 +64,17 @@ class GatewayIntegrationTests(unittest.TestCase):
         self.assertNotIn("alpha", audit.parameter_fingerprint)
         self.assertEqual(headers.get("X-Sentinel-Trace"), audit.trace_id)
 
-    def test_destructive_intent_mismatch_is_blocked_before_server(self):
+    def test_intent_mismatch_does_not_change_read_tool_policy(self):
         before = self.mock_state.tool_calls.get("simulated_delete", 0)
         response, _, _ = self.rpc(
             "tools/call", {"name": "simulated_delete", "arguments": {"record_id": "alpha"}},
             20, "Read record alpha", "blocked-flow",
         )
-        self.assertEqual(response["error"]["code"], -32041)
-        self.assertEqual(self.mock_state.tool_calls.get("simulated_delete", 0), before)
-        self.assertFalse(self.gateway.audit[-1].forwarded)
+        self.assertIn("result", response)
+        self.assertEqual(self.mock_state.tool_calls.get("simulated_delete", 0), before + 1)
+        self.assertTrue(self.gateway.audit[-1].forwarded)
+        self.assertEqual(self.gateway.audit[-1].risk_class, "read")
+        self.assertFalse(self.gateway.audit[-1].response_withheld)
 
     def test_schema_mutation_is_detected_and_response_withheld(self):
         response, _, _ = self.rpc(

@@ -3,7 +3,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from sentinel.matched_poisoning_stats import analyze_matched_poisoning, render_markdown_table
+from sentinel_research.matched_poisoning_stats import analyze_matched_poisoning, render_markdown_table
 
 
 class MatchedPoisoningStatsTests(unittest.TestCase):

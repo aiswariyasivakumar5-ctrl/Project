@@ -44,8 +44,8 @@ gateway = SentinelGateway(GatewayConfig(
 CLI example (component ablation for development; set both credentials and enroll a baseline first):
 
 ```sh
-python -m sentinel.cli baseline --upstream http://127.0.0.1:8790 --server-id srv --state-file sentinel-state.json
-python -m sentinel.cli gateway --upstream http://127.0.0.1:8790 --server-id srv --state-file sentinel-state.json --novelty --no-capability-trust --allow-tool safe_read --allow-tool calculate
+python -m sentinel_research.cli baseline --upstream http://127.0.0.1:8790 --server-id srv --state-file sentinel-state.json
+python -m sentinel_research.cli gateway --upstream http://127.0.0.1:8790 --server-id srv --state-file sentinel-state.json --novelty --no-capability-trust --allow-tool safe_read --allow-tool calculate
 ```
 
 Available pairs: `--intent-provenance` / `--no-intent-provenance`,
@@ -88,8 +88,8 @@ changes, run checks and open a PR. Teammate approval, GitHub CI, merge and relea
 freeze are pending. This work does not approve final experiments or assign human
 conception/inventorship.
 
-Audit remains bounded, in-memory and unauthenticated at the existing loopback
-research endpoint. This is not a durable signed audit chain. Post-response
+Audit remains bounded and in-memory; its endpoint requires the operator Bearer
+credential. The hash chain is not signed or durable. Post-response
 blocking cannot undo upstream side effects; metadata and trusted issuer quality
 remain assumptions. Dispatch errors are covered here; HTTP parsing errors and
 malformed upstream response errors are not converted into complete tool audits.

@@ -85,4 +85,4 @@ Minimum retained figure set:
 
 ## Known limitations
 
-The consolidated limitations are in `docs/final_limitations.md`. Key boundaries are synthetic traffic, five seeds, constrained sequence training, calibration ties, session-local evidence, weak difficult-family recall, experimental attestation, local unauthenticated audit, incomplete MCP transports, in-memory state, and no production deployment validation.
+The consolidated limitations are in `docs/final_limitations.md`. Key boundaries are synthetic traffic, five seeds, constrained sequence training, calibration ties, session-local evidence, weak difficult-family recall, experimental attestation, operator-authenticated but in-memory audit, unsupported MCP features, in-memory state, and no production deployment validation.

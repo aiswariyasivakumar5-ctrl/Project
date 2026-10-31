@@ -16,11 +16,11 @@ import sys
 import time
 from pathlib import Path
 
-from sentinel.ablation import AblationConfig, analyze_existing_baselines, run_ablation_matrix
-from sentinel.compare import CompareConfig, run_comparison
-from sentinel.gateway_benchmark import run_gateway_benchmark
-from sentinel.plots import generate_figures
-from sentinel.research_tables import generate_research_tables
+from sentinel_research.ablation import AblationConfig, analyze_existing_baselines, run_ablation_matrix
+from sentinel_research.compare import CompareConfig, run_comparison
+from sentinel_research.gateway_benchmark import run_gateway_benchmark
+from sentinel_research.plots import generate_figures
+from sentinel_research.research_tables import generate_research_tables
 
 SEEDS_20 = tuple(range(20001, 20021))
 

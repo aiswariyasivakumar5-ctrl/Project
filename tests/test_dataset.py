@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from sentinel.dataset import export_dataset
+from sentinel_research.dataset import export_dataset
 from sentinel.models import Interaction
 
 

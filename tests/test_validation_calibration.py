@@ -6,8 +6,8 @@ from dataclasses import FrozenInstanceError, replace
 from pathlib import Path
 from unittest.mock import patch
 
-from sentinel.metrics import Observation
-from sentinel.novelty_experiment import (NoveltyLiveExperiment, NoveltyStudyConfig,
+from sentinel_research.metrics import Observation
+from sentinel_research.novelty_experiment import (NoveltyLiveExperiment, NoveltyStudyConfig,
     ValidationCalibration, run_novelty_study)
 
 

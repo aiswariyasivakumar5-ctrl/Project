@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import math
+from http.server import BaseHTTPRequestHandler
+from typing import Any, NoReturn
 
 from .http_limits import budget, remaining
 
@@ -12,7 +14,7 @@ class PayloadTooLargeError(ValueError):
     """Raised when request payload exceeds configured size limits."""
 
 
-def validate_json(value, *, max_depth=64, max_items=100_000):
+def validate_json(value: Any, *, max_depth: int = 64, max_items: int = 100_000) -> None:
     pending, visited = [(value, 0)], 0
     while pending:
         item, depth = pending.pop()
@@ -38,16 +40,16 @@ def validate_json(value, *, max_depth=64, max_items=100_000):
             raise ValueError("finite JSON values required")
 
 
-def load_json(body):
-    def pairs(items):
-        result = {}
+def load_json(body: bytes | str) -> Any:
+    def pairs(items: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
         for key, value in items:
             if key in result:
                 raise ValueError("duplicate JSON key")
             result[key] = value
         return result
 
-    def constant(value):
+    def constant(value: str) -> NoReturn:
         raise ValueError("nonfinite JSON constant")
 
     try:
@@ -58,7 +60,7 @@ def load_json(body):
         raise ValueError("invalid JSON encoding or nesting") from exc
 
 
-def read_body(handler, maximum: int, timeout: float):
+def read_body(handler: BaseHTTPRequestHandler, maximum: int, timeout: float) -> bytes:
     lengths = handler.headers.get_all("Content-Length", [])
     if handler.headers.get_all("Transfer-Encoding", []) or len(lengths) != 1:
         raise ValueError("one Content-Length and no Transfer-Encoding required")
@@ -70,7 +72,7 @@ def read_body(handler, maximum: int, timeout: float):
         raise PayloadTooLargeError("request size exceeds limits")
     if length <= 0:
         raise ValueError("request size exceeds limits")
-    chunks = []
+    chunks: list[bytes] = []
     left = length
     with budget(timeout):
         while left:

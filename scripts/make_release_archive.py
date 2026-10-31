@@ -14,16 +14,18 @@ from typing import Sequence
 import zipfile
 
 EXCLUDED_DIR_NAMES = {
-    ".venv",
-    ".venv-repro",
     "__pycache__",
     ".mypy_cache",
     ".ruff_cache",
     ".pytest_cache",
+    ".mutmut-cache",
+    "mutants",
     ".tmp",
     "build",
     "dist",
     "certs",
+    "results",
+    "archives",
     ".git",
 }
 
@@ -44,6 +46,8 @@ EXCLUDED_FILE_SUFFIXES = (
 def is_excluded_dir(name: str) -> bool:
     if name in EXCLUDED_DIR_NAMES:
         return True
+    if name.startswith(".venv"):
+        return True
     if name.endswith(".egg-info"):
         return True
     return False
@@ -51,6 +55,8 @@ def is_excluded_dir(name: str) -> bool:
 
 def is_excluded_file(name: str) -> bool:
     if name in EXCLUDED_FILE_EXACT:
+        return True
+    if name.startswith(".coverage."):
         return True
     if name.endswith(EXCLUDED_FILE_SUFFIXES):
         return True
@@ -62,7 +68,7 @@ def collect_files_from_git(root: Path) -> list[Path] | None:
         return None
     try:
         result = subprocess.run(
-            ["git", "-C", str(root), "ls-files"],
+            ["git", "-C", str(root), "ls-files", "--cached", "--others", "--exclude-standard"],
             capture_output=True,
             text=True,
             check=True,

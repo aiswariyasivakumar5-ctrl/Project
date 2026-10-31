@@ -3,10 +3,10 @@ import unittest
 
 import numpy as np
 
-from sentinel.compare import CompareConfig, aggregate_results, calibrate_threshold, run_comparison
-from sentinel.comparison_data import ATTACK_FAMILIES, build_comparison_dataset
-from sentinel.ml_baselines import DenseAutoencoderDetector, IsolationForestDetector, OneClassSVMDetector
-from sentinel.ml_features import FEATURE_DESCRIPTION, feature_matrix
+from sentinel_research.compare import CompareConfig, aggregate_results, calibrate_threshold, run_comparison
+from sentinel_research.comparison_data import ATTACK_FAMILIES, build_comparison_dataset
+from sentinel_research.ml_baselines import DenseAutoencoderDetector, IsolationForestDetector, OneClassSVMDetector
+from sentinel_research.ml_features import FEATURE_DESCRIPTION, feature_matrix
 
 
 class BaselineModelTests(unittest.TestCase):

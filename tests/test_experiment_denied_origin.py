@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import patch
 
-from sentinel.experiment import ExperimentConfig
-from sentinel.novelty_experiment import NoveltyLiveExperiment
-from sentinel.novelty_scenarios import build_novelty_scenarios
+from sentinel_research.experiment import ExperimentConfig
+from sentinel_research.novelty_experiment import NoveltyLiveExperiment
+from sentinel_research.novelty_scenarios import build_novelty_scenarios
 
 
 class DeniedOriginTests(unittest.TestCase):

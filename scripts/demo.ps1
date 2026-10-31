@@ -42,12 +42,12 @@ Write-Host "Mock: $MockUrl  Gateway: $GatewayUrl  Audit remains loopback-only."
 Set-Location -LiteralPath $ProjectRoot
 $MockProcess = $null; $GatewayProcess = $null
 try {
-    $MockProcess = Start-Process -FilePath $Python -ArgumentList @("-u","-m","sentinel.cli","mock-server","--host","127.0.0.1","--port",$MockPort) `
+    $MockProcess = Start-Process -FilePath $Python -ArgumentList @("-u","-m","sentinel_research.cli","mock-server","--host","127.0.0.1","--port",$MockPort) `
         -RedirectStandardOutput $MockLog -RedirectStandardError $MockErrorLog -WindowStyle Hidden -PassThru
     Start-Sleep -Milliseconds 600
-    & $Python -m sentinel.cli baseline --upstream $MockUrl --server-id demo-mcp --state-file $StateFile --rounds 10
+    & $Python -m sentinel_research.cli baseline --upstream $MockUrl --server-id demo-mcp --state-file $StateFile --rounds 10
     if ($LASTEXITCODE -ne 0) { throw "Baseline enrollment failed with exit code $LASTEXITCODE" }
-    $GatewayProcess = Start-Process -FilePath $Python -ArgumentList @("-u","-m","sentinel.cli","gateway","--host","127.0.0.1","--port",$GatewayPort,"--upstream",$MockUrl,"--server-id","demo-mcp","--auth-token","demo-operator-auth-token-change-this-123456","--client-auth-token","demo-client-token-change-this-value-123456","--state-file",$StateFile,"--allow-tool","safe_read","--allow-tool","calculate","--allow-tool","schema_mutation") `
+    $GatewayProcess = Start-Process -FilePath $Python -ArgumentList @("-u","-m","sentinel_research.cli","gateway","--host","127.0.0.1","--port",$GatewayPort,"--upstream",$MockUrl,"--server-id","demo-mcp","--auth-token","demo-operator-auth-token-change-this-123456","--client-auth-token","demo-client-token-change-this-value-123456","--state-file",$StateFile,"--allow-tool","safe_read","--allow-tool","calculate","--allow-tool","schema_mutation") `
         -RedirectStandardOutput $GatewayLog -RedirectStandardError $GatewayErrorLog -WindowStyle Hidden -PassThru
     for ($attempt=0; $attempt -lt 20; $attempt++) {
         try { Invoke-RestMethod -Uri "$GatewayUrl/health" | Out-Null; break } catch { Start-Sleep -Milliseconds 200 }

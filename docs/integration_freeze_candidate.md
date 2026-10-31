@@ -32,7 +32,7 @@ Verification command:
 ```powershell
 python -m pip check
 python -m unittest discover -s tests -v
-python -m sentinel.final_verification
+python -m sentinel_research.final_verification
 ```
 
 ## Human gates that remain open

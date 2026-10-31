@@ -7,7 +7,7 @@ from unittest.mock import Mock
 from sentinel.gateway import GatewayConfig, SentinelGateway
 from sentinel.models import Interaction
 from sentinel.novelty import CapabilityState, NoveltySentinelEngine
-from sentinel.mock_server import create_mock_server
+from sentinel_research.mock_server import create_mock_server
 from sentinel.provenance import ScenarioClock
 from sentinel.approvals import ReviewApprovals
 
