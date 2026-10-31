@@ -14,7 +14,9 @@ services:
     tmpfs: ["/tmp"]
 
   enroll:
-    build: .
+    build:
+      context: .
+      target: runtime
     command: ["baseline", "enroll", "--upstream", "http://mock-upstream:8790", "--server-id", "local-mcp", "--state-file", "/data/state.json", "--policy-file", "/etc/mcp-sentinel/policy.json"]
     healthcheck:
       disable: true
@@ -30,7 +32,9 @@ services:
     tmpfs: ["/tmp"]
 
   approve-baseline:
-    build: .
+    build:
+      context: .
+      target: runtime
     command: ["baseline", "approve", "--state-file", "/data/state.json", "--actor", "${MCP_SENTINEL_OPERATOR_ID:?set an operator identity}", "--audit-log", "/data/audit.jsonl"]
     depends_on:
       enroll:
@@ -43,7 +47,9 @@ services:
     tmpfs: ["/tmp"]
 
   gateway:
-    build: .
+    build:
+      context: .
+      target: runtime
     command:
       - gateway
       - --upstream
