@@ -56,6 +56,11 @@ jobs:
       - run: docker compose -f docker-compose.example.yml restart gateway
       - run: python scripts/docker_smoke.py
       - run: docker compose -f docker-compose.example.yml exec -T gateway python -m sentinel.cli verify-audit /data/audit.jsonl
+      - name: Capture Docker diagnostics on failure
+        if: failure()
+        run: |
+          docker compose -f docker-compose.example.yml ps -a
+          docker compose -f docker-compose.example.yml logs --no-color
       - if: always()
         run: docker compose -f docker-compose.example.yml down -v
 
