@@ -51,6 +51,11 @@ jobs:
         with:
           python-version: '3.12'
       - run: mkdir -p certs && openssl req -x509 -newkey rsa:2048 -nodes -keyout certs/server.key -out certs/server.crt -days 1 -subj '/CN=localhost' -addext 'subjectAltName=DNS:localhost,IP:127.0.0.1'
+      - name: Set TLS test certificate permissions
+        run: |
+          sudo chown 10001:10001 certs/server.key certs/server.crt
+          chmod 600 certs/server.key
+          chmod 644 certs/server.crt
       - run: docker compose -f docker-compose.example.yml up --build -d
       - run: python scripts/docker_smoke.py
       - run: docker compose -f docker-compose.example.yml restart gateway
