@@ -186,7 +186,8 @@ class GatewayStateTests(unittest.TestCase):
                     gateway.save_state(path)
             self.assertEqual(path.read_bytes(), b"previous-good-state")
             self.assertEqual(list(Path(directory).iterdir()), [path])
-        def test_state_mac_is_independent_of_dictionary_key_order(self):
+            
+    def test_state_mac_is_independent_of_dictionary_key_order(self):
         key = "test-state-integrity-key"
         first = {"server_id": "state-test", "version": 1}
         second = {"version": 1, "server_id": "state-test"}
