@@ -186,7 +186,37 @@ class GatewayStateTests(unittest.TestCase):
                     gateway.save_state(path)
             self.assertEqual(path.read_bytes(), b"previous-good-state")
             self.assertEqual(list(Path(directory).iterdir()), [path])
+        def test_state_mac_is_independent_of_dictionary_key_order(self):
+        key = "test-state-integrity-key"
+        first = {"server_id": "state-test", "version": 1}
+        second = {"version": 1, "server_id": "state-test"}
 
+        self.assertEqual(
+            SentinelGateway._state_mac(first, key),
+            SentinelGateway._state_mac(second, key),
+        )
+
+    def test_state_mac_uses_compact_canonical_json(self):
+        import hashlib
+        import hmac
+
+        key = "test-state-integrity-key"
+        state = {"server_id": "state-test", "version": 1}
+        canonical = json.dumps(
+            state, sort_keys=True, separators=(",", ":"), allow_nan=False
+        ).encode("utf-8")
+        expected = hmac.digest(key.encode("utf-8"), canonical, "sha256").hex()
+
+        self.assertEqual(SentinelGateway._state_mac(state, key), expected)
+
+    def test_state_mac_rejects_non_finite_numbers(self):
+        key = "test-state-integrity-key"
+
+        for value in (float("nan"), float("inf"), float("-inf")):
+            with self.subTest(value=value):
+                with self.assertRaises(ValueError):
+                    SentinelGateway._state_mac({"value": value}, key)
+                    
     def test_hmac_state_rejects_unsigned_and_tampered_files(self):
         gateway = self.make_gateway()
         key = "test-state-integrity-key-with-sufficient-entropy"
